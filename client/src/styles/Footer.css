@@ -1,0 +1,35 @@
+.footer {
+  display: flex;
+  flex: 0.05;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  background: #e1ebee;
+  border-top: 1px solid #d3d3d3;
+  z-index: 1000;
+}
+
+.circles {
+  display: flex;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 5px 5px;
+  border: 1px solid gray;
+}
+
+.green {
+  background-color: green;
+}
+
+.gray {
+  background-color: gray;
+}
+
+.white {
+  background-color: white;
+}

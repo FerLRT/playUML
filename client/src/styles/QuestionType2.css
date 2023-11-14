@@ -1,0 +1,42 @@
+/* Estilos para el contenedor principal */
+.question-type2-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Estilos para la sección de imágenes */
+.image-container {
+  flex: 0 0 50%; /* Ocupa el 50% del ancho del contenedor principal */
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: 20px;
+}
+
+.individual-image-container {
+  width: 50%; /* Ocupa el 50% del ancho de su contenedor */
+  box-sizing: border-box;
+  padding-right: 10px; /* Espacio entre las imágenes */
+  margin-bottom: 10px; /* Espacio entre las filas de imágenes */
+}
+
+/* Estilos para la sección de texto */
+.text-container {
+  flex: 1; /* Ocupa todo el espacio restante */
+}
+
+/* Media query para cambiar a una sola columna en pantallas más pequeñas */
+@media (max-width: 600px) {
+  .question-type2-container {
+    flex-direction: column; /* Cambia a una columna en pantallas más pequeñas */
+  }
+
+  .image-container {
+    flex: 0 0 100%; /* Ocupa el 100% del ancho en pantallas más pequeñas */
+    margin-right: 0; /* Elimina el margen en pantallas más pequeñas */
+  }
+
+  .individual-image-container {
+    width: 100%; /* Ocupa el 100% del ancho en pantallas más pequeñas */
+    margin-right: 0; /* Elimina el margen en pantallas más pequeñas */
+  }
+}

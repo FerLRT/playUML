@@ -1,0 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.quiz-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.quiz-container {
+  flex: 0.85;
+}

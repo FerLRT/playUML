@@ -22,3 +22,7 @@ pids
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Config
+config.js
+config/
