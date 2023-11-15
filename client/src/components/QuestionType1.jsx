@@ -3,7 +3,14 @@ import { MapInteractionCSS } from "react-map-interaction";
 import CustomRadioButton from "./CustomRadioButton";
 import "../styles/QuestionType1.css";
 
-function QuestionType1({ question, onAnswerSelect }) {
+function QuestionType1({
+  question,
+  onAnswerSelect,
+  onNextButtonClick,
+  isNextButtonDisabled,
+  currentIndex,
+  questions,
+}) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   const letters = ["A", "B", "C", "D"];
@@ -14,7 +21,7 @@ function QuestionType1({ question, onAnswerSelect }) {
   };
 
   return (
-    <div className="question-type1-container">
+    <div className="question-type-container">
       <div className="image-container">
         {/* Usar la cadena base64 para mostrar la imagen */}
         {/* MapInteractionCSS permite interactuar con la imagen */}
@@ -39,7 +46,16 @@ function QuestionType1({ question, onAnswerSelect }) {
         </MapInteractionCSS>
       </div>
       <div className="text-container">
-        <h2>{question.question_text}</h2>
+        <div className="question-header">
+          <h2>{question.question_text}</h2>
+          <button
+            className="next-btn"
+            onClick={onNextButtonClick}
+            disabled={isNextButtonDisabled()}
+          >
+            {currentIndex < questions.length - 1 ? "Siguiente" : "Finalizar"}
+          </button>
+        </div>
         {question.answers.map((answer, index) => (
           <CustomRadioButton
             key={answer.id}
@@ -48,6 +64,7 @@ function QuestionType1({ question, onAnswerSelect }) {
             text={answer.answer_text}
             selected={selectedAnswer === answer.id}
             onChange={handleAnswerChange}
+            questionType={1}
           />
         ))}
       </div>

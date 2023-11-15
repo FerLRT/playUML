@@ -69,8 +69,6 @@ function Quiz() {
 
       const selectedAnswers = selectedAnswersIds();
 
-      console.log("asdasdadasd" + selectedAnswers);
-
       submitAnswers(selectedAnswers)
         .then((response) => {
           // Manejar la respuesta del servidor (puntuación, retroalimentación, etc.)
@@ -101,6 +99,10 @@ function Quiz() {
           <QuestionType1
             question={currentQuestion}
             onAnswerSelect={handleAnswerSelect}
+            onNextButtonClick={handleNext}
+            isNextButtonDisabled={isNextButtonDisabled}
+            currentIndex={currentIndex}
+            questions={questions}
           />
         );
       case 2:
@@ -108,6 +110,10 @@ function Quiz() {
           <QuestionType2
             question={currentQuestion}
             onAnswerSelect={handleAnswerSelect}
+            onNextButtonClick={handleNext}
+            isNextButtonDisabled={isNextButtonDisabled}
+            currentIndex={currentIndex}
+            questions={questions}
           />
         );
       case 3:
@@ -115,6 +121,10 @@ function Quiz() {
           <QuestionType3
             question={currentQuestion}
             onAnswerSelect={handleAnswerSelect}
+            onNextButtonClick={handleNext}
+            isNextButtonDisabled={isNextButtonDisabled}
+            currentIndex={currentIndex}
+            questions={questions}
           />
         );
       default:
@@ -125,12 +135,7 @@ function Quiz() {
   return (
     <div className="quiz-page">
       <Header />
-      <div className="quiz-container">
-        <button onClick={handleNext} disabled={isNextButtonDisabled()}>
-          {currentIndex < questions.length - 1 ? "Siguiente" : "Finalizar"}
-        </button>
-        {renderQuestion()}
-      </div>
+      {renderQuestion()}
       <Footer
         questions={questions}
         currentIndex={currentIndex}
