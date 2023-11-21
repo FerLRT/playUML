@@ -23,14 +23,14 @@
   border: 1px solid gray;
 }
 
-.green {
-  background-color: green;
+.answered {
+  background-color: dodgerblue;
 }
 
-.gray {
-  background-color: gray;
+.current {
+  background-color: lightblue;
 }
 
-.white {
+.unanswered {
   background-color: white;
 }
