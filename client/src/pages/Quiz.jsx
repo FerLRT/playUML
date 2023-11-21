@@ -132,6 +132,12 @@ function Quiz() {
     }
   };
 
+  const handleCircleClick = (index) => {
+    if (index < questions.length) {
+      setCurrentIndex(index);
+    }
+  };
+
   return (
     <div className="quiz-page">
       <Header />
@@ -140,6 +146,7 @@ function Quiz() {
         questions={questions}
         currentIndex={currentIndex}
         userAnswers={userAnswers}
+        onCircleClick={handleCircleClick}
       />
     </div>
   );
