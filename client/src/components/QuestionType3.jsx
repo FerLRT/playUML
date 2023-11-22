@@ -13,7 +13,7 @@ function QuestionType3({
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  const letters = ["A", "B", "C", "D"];
+  const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
   const handleAnswerChange = (selectedValue) => {
     setSelectedAnswer(selectedValue);
