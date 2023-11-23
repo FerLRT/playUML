@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MapInteractionCSS } from "react-map-interaction";
 import "../styles/CustomRadioButton.css";
 
@@ -10,13 +10,17 @@ function CustomRadioButton({
   onChange,
   questionType,
 }) {
+  const [isChecked, setIsChecked] = useState(selected);
+
   const handleClick = () => {
-    onChange(id);
+    const newCheckedState = !isChecked;
+    setIsChecked(newCheckedState);
+    onChange(id, newCheckedState);
   };
 
   return (
     <div
-      className={`custom-radio ${selected ? "selected-radio" : ""}`}
+      className={`custom-radio ${isChecked ? "selected-radio" : ""}`}
       onClick={handleClick}
     >
       <div className="radio-circle">

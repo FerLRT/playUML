@@ -36,23 +36,29 @@ const submitAnswers = (req, res) => {
   }
 };
 
-const calculateScore = (userAnswers, correctAnswers) => {
-  // Filtrar las respuestas marcadas como correctas por el usuario
-  const userCorrectAnswers = userAnswers.filter((userAnswer) => {
-    // Convertir answerId a número para asegurar la comparación
-    const userAnswerId = parseInt(userAnswer.answerId, 10);
+const calculateScore = (userAnswers, answers) => {
+  // Calcular la puntuación total
+  const totalScore = userAnswers.reduce((accumulator, userAnswer) => {
+    const { questionId, answerIds } = userAnswer;
 
-    const matchingCorrectAnswer = correctAnswers.find(
-      (correctAnswer) => correctAnswer.answerId === userAnswerId
+    // Filtrar las respuestas correctas para la pregunta actual
+    const answersForQuestion = answers.filter(
+      (answer) => answer.questionId === questionId
     );
 
-    return matchingCorrectAnswer !== undefined;
-  });
+    // Sumar los puntajes correspondientes a las respuestas marcadas por el usuario
+    const questionScore = answerIds.reduce((questionAccumulator, answerId) => {
+      const matchingAnswer = answersForQuestion.find(
+        (answer) => answer.answerId === answerId
+      );
 
-  // Calcular la puntuación (número de respuestas correctas)
-  const score = userCorrectAnswers.length;
+      return questionAccumulator + (matchingAnswer ? matchingAnswer.score : 0);
+    }, 0);
 
-  return score;
+    return accumulator + questionScore;
+  }, 0);
+
+  return totalScore;
 };
 
 module.exports = {

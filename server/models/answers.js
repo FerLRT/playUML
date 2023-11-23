@@ -34,21 +34,20 @@ const getAnswersByQuestionId = async (questionId) => {
 //   }
 // };
 
-//----------------------------------------------------------
-// Modificar para que dado el id de un test devuelva las respuestas correctas
 const getCorrectAnswersForQuestions = async (questionIds) => {
   try {
     // Extraer los IDs de las preguntas de los objetos en questionIds
     const questionIdsArray = questionIds.map((item) => item.questionId);
 
     const query =
-      "SELECT id, question_id FROM answers WHERE question_id = ANY($1) AND is_correct = true";
+      "SELECT id, question_id, score FROM answers WHERE question_id = ANY($1)";
     const result = await pool.query(query, [questionIdsArray]);
 
     // Realizar la transformación de los resultados para que coincidan con el formato deseado
     const correctAnswers = result.rows.map((row) => ({
       questionId: row.question_id,
       answerId: row.id,
+      score: row.score,
     }));
 
     return correctAnswers;

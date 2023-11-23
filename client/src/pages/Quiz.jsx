@@ -1,3 +1,5 @@
+// Quiz.js
+
 import React, { useState, useEffect } from "react";
 import {
   fetchQuestions,
@@ -32,15 +34,10 @@ function Quiz() {
         setQuestions(combinedQuestions);
 
         // Inicializa userAnswers con la misma longitud que questions
-        setUserAnswers(new Array(combinedQuestions.length).fill(null));
+        setUserAnswers(new Array(combinedQuestions.length).fill([]));
       });
     });
   }, []);
-
-  const isNextButtonDisabled = () => {
-    // Devuelve true si el usuario no ha marcado una respuesta para la pregunta actual
-    return userAnswers[currentIndex] === null;
-  };
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
@@ -49,25 +46,14 @@ function Quiz() {
       setCurrentIndex(currentIndex + 1); // Para que el footer cambie a "Finalizar"
 
       // En este punto, el usuario ha completado el cuestionario y transformamos las respuestas a un JSON para enviar al server y obtener el resultado
-      const selectedAnswersIds = () => {
-        const answersJson = {
-          answers: [],
+      const selectedAnswersIds = userAnswers.map((selectedAnswerIds, index) => {
+        return {
+          questionId: questions[index].id,
+          answerIds: selectedAnswerIds,
         };
+      });
 
-        userAnswers.forEach((selectedAnswerId, index) => {
-          if (selectedAnswerId !== null) {
-            // Agrega la respuesta al JSON
-            answersJson.answers.push({
-              questionId: questions[index].id,
-              answerId: selectedAnswerId,
-            });
-          }
-        });
-
-        return answersJson;
-      };
-
-      const selectedAnswers = selectedAnswersIds();
+      const selectedAnswers = { answers: selectedAnswersIds };
 
       submitAnswers(selectedAnswers)
         .then((response) => {
@@ -82,9 +68,9 @@ function Quiz() {
     }
   };
 
-  const handleAnswerSelect = (selectedAnswerId) => {
+  const handleAnswerSelect = (selectedAnswerIds) => {
     const updatedUserAnswers = [...userAnswers];
-    updatedUserAnswers[currentIndex] = selectedAnswerId;
+    updatedUserAnswers[currentIndex] = selectedAnswerIds;
     setUserAnswers(updatedUserAnswers);
   };
 
@@ -100,7 +86,6 @@ function Quiz() {
             question={currentQuestion}
             onAnswerSelect={handleAnswerSelect}
             onNextButtonClick={handleNext}
-            isNextButtonDisabled={isNextButtonDisabled}
             currentIndex={currentIndex}
             questions={questions}
           />
@@ -111,7 +96,6 @@ function Quiz() {
             question={currentQuestion}
             onAnswerSelect={handleAnswerSelect}
             onNextButtonClick={handleNext}
-            isNextButtonDisabled={isNextButtonDisabled}
             currentIndex={currentIndex}
             questions={questions}
           />
@@ -122,7 +106,6 @@ function Quiz() {
             question={currentQuestion}
             onAnswerSelect={handleAnswerSelect}
             onNextButtonClick={handleNext}
-            isNextButtonDisabled={isNextButtonDisabled}
             currentIndex={currentIndex}
             questions={questions}
           />

@@ -7,17 +7,29 @@ function QuestionType3({
   question,
   onAnswerSelect,
   onNextButtonClick,
-  isNextButtonDisabled,
   currentIndex,
   questions,
 }) {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
   const handleAnswerChange = (selectedValue) => {
-    setSelectedAnswer(selectedValue);
-    onAnswerSelect(selectedValue);
+    const updatedSelectedAnswers = [...selectedAnswers];
+
+    if (updatedSelectedAnswers.includes(selectedValue)) {
+      // Desmarcar la respuesta si ya estaba marcada
+      updatedSelectedAnswers.splice(
+        updatedSelectedAnswers.indexOf(selectedValue),
+        1
+      );
+    } else {
+      // Marcar la respuesta si no estaba marcada
+      updatedSelectedAnswers.push(selectedValue);
+    }
+
+    setSelectedAnswers(updatedSelectedAnswers);
+    onAnswerSelect(updatedSelectedAnswers);
   };
 
   return (
@@ -46,11 +58,7 @@ function QuestionType3({
       <div className="text-container">
         <div className="question-header">
           <h2>{question.question_text}</h2>
-          <button
-            className="next-btn"
-            onClick={onNextButtonClick}
-            disabled={isNextButtonDisabled()}
-          >
+          <button className="next-btn" onClick={onNextButtonClick}>
             {currentIndex < questions.length - 1 ? "Siguiente" : "Finalizar"}
           </button>
         </div>
@@ -61,8 +69,8 @@ function QuestionType3({
               id={answer.id}
               letter={letters[index]}
               text={`data:image/jpeg;base64,${answer.answer_image}`}
-              selected={selectedAnswer === answer.id}
-              onChange={() => handleAnswerChange(answer.id)}
+              selected={selectedAnswers.includes(answer.id)}
+              onChange={handleAnswerChange}
               questionType={3}
             >
               <MapInteractionCSS
