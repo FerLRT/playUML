@@ -1,5 +1,3 @@
-// Quiz.js
-
 import React, { useState, useEffect } from "react";
 import {
   fetchQuestions,
@@ -88,6 +86,7 @@ function Quiz() {
             onNextButtonClick={handleNext}
             currentIndex={currentIndex}
             questions={questions}
+            selectedAnswers={userAnswers[currentIndex]}
           />
         );
       case 2:
@@ -98,6 +97,7 @@ function Quiz() {
             onNextButtonClick={handleNext}
             currentIndex={currentIndex}
             questions={questions}
+            selectedAnswers={userAnswers[currentIndex]}
           />
         );
       case 3:
@@ -108,6 +108,7 @@ function Quiz() {
             onNextButtonClick={handleNext}
             currentIndex={currentIndex}
             questions={questions}
+            selectedAnswers={userAnswers[currentIndex]}
           />
         );
       default:

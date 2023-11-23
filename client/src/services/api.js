@@ -11,7 +11,6 @@ export const fetchAnswersByQuestionId = (questionId) => {
 };
 
 export const submitAnswers = (answers) => {
-  console.log("answers", answers);
   return axios
     .post(`${BASE_URL}/answers/score`, { answers })
     .then((response) => {

@@ -1,10 +1,12 @@
 import React from "react";
 import "../styles/Footer.css";
 
-function Footer({ questions, currentIndex, onCircleClick }) {
+function Footer({ questions, currentIndex, userAnswers, onCircleClick }) {
   // Función para determinar el estado de un círculo (verde, gris o blanco)
   const getCircleStatus = (index) => {
-    if (index < currentIndex) {
+    const hasAnswer = userAnswers[index].length > 0;
+
+    if (hasAnswer) {
       return "answered"; // Pregunta respondida
     } else if (index === currentIndex) {
       return "current"; // Pregunta actual

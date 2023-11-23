@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { MapInteractionCSS } from "react-map-interaction";
 import CustomRadioButton from "./CustomRadioButton";
 import "../styles/QuestionType3.css";
@@ -9,26 +8,24 @@ function QuestionType3({
   onNextButtonClick,
   currentIndex,
   questions,
+  selectedAnswers,
 }) {
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
-
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
   const handleAnswerChange = (selectedValue) => {
-    const updatedSelectedAnswers = [...selectedAnswers];
+    const updatedSelectedAnswers = Array.isArray(selectedAnswers)
+      ? [...selectedAnswers]
+      : [];
 
     if (updatedSelectedAnswers.includes(selectedValue)) {
-      // Desmarcar la respuesta si ya estaba marcada
       updatedSelectedAnswers.splice(
         updatedSelectedAnswers.indexOf(selectedValue),
         1
       );
     } else {
-      // Marcar la respuesta si no estaba marcada
       updatedSelectedAnswers.push(selectedValue);
     }
 
-    setSelectedAnswers(updatedSelectedAnswers);
     onAnswerSelect(updatedSelectedAnswers);
   };
 
