@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MapInteractionCSS } from "react-map-interaction";
+import DiagramImage from "./DiagramImage";
 import "../styles/CustomRadioButton.css";
 
 function CustomRadioButton({
@@ -27,18 +27,7 @@ function CustomRadioButton({
         <span className="custom-radio-content">{letter}</span>
       </div>
       {questionType === 3 ? (
-        <MapInteractionCSS
-          showControls
-          defaultValue={{
-            scale: 1,
-            translation: { x: 0, y: 0 },
-          }}
-          minScale={0.5}
-          maxScale={3}
-          controlsClass="custom-controls"
-        >
-          <img src={text} alt={`Respuesta ${id}`} />
-        </MapInteractionCSS>
+        <DiagramImage image={text} />
       ) : (
         <div className="custom-radio-text">{text}</div>
       )}

@@ -1,17 +1,16 @@
-import { MapInteractionCSS } from "react-map-interaction";
 import CustomRadioButton from "./CustomRadioButton";
+import DiagramImage from "./DiagramImage";
 import "../styles/QuestionType2.css";
 
 function QuestionType2({
   question,
+  letters,
   onAnswerSelect,
   onNextButtonClick,
   currentIndex,
   questions,
   selectedAnswers,
 }) {
-  const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-
   const handleAnswerChange = (selectedValue) => {
     const updatedSelectedAnswers = Array.isArray(selectedAnswers)
       ? [...selectedAnswers]
@@ -39,25 +38,7 @@ function QuestionType2({
               {String.fromCharCode(65 + index)}
             </div>
             <div className="individual-image">
-              <MapInteractionCSS
-                showControls
-                defaultValue={{
-                  scale: 1,
-                  translation: { x: 0, y: 0 },
-                }}
-                minScale={0.5}
-                maxScale={3}
-                translationBounds={{
-                  xMax: 400,
-                  yMax: 200,
-                }}
-                controlsClass="custom-controls"
-              >
-                <img
-                  src={`data:image/jpeg;base64,${image.image_data}`}
-                  alt={`Imagen ${index + 1}`}
-                />
-              </MapInteractionCSS>
+              <DiagramImage image={image.image_data} />
             </div>
           </div>
         ))}

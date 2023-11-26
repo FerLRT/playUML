@@ -31,6 +31,20 @@
   align-items: center;
 }
 
+.react-transform-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.react-transform-component {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
 .text-container {
   flex: 1;
   background: #e1ebee;

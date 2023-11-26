@@ -18,6 +18,8 @@ function Quiz() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
 
+  const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+
   useEffect(() => {
     fetchQuestions(quizId).then((response) => {
       const questionsList = response.data;
@@ -84,6 +86,7 @@ function Quiz() {
         return (
           <QuestionType1
             question={currentQuestion}
+            letters={letters}
             onAnswerSelect={handleAnswerSelect}
             onNextButtonClick={handleNext}
             currentIndex={currentIndex}
@@ -95,6 +98,7 @@ function Quiz() {
         return (
           <QuestionType2
             question={currentQuestion}
+            letters={letters}
             onAnswerSelect={handleAnswerSelect}
             onNextButtonClick={handleNext}
             currentIndex={currentIndex}
@@ -106,6 +110,7 @@ function Quiz() {
         return (
           <QuestionType3
             question={currentQuestion}
+            letters={letters}
             onAnswerSelect={handleAnswerSelect}
             onNextButtonClick={handleNext}
             currentIndex={currentIndex}
