@@ -17,3 +17,7 @@ export const submitAnswers = (answers) => {
       return response.data;
     });
 };
+
+export const fetchQuizzes = () => {
+  return axios.get(`${BASE_URL}/quizzes`);
+};

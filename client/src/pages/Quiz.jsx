@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   fetchQuestions,
   fetchAnswersByQuestionId,
@@ -12,12 +13,13 @@ import Footer from "../components/Footer";
 import "../styles/Quiz.css";
 
 function Quiz() {
+  const { quizId } = useParams();
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
 
   useEffect(() => {
-    fetchQuestions(1).then((response) => {
+    fetchQuestions(quizId).then((response) => {
       const questionsList = response.data;
       const promises = questionsList.map((q) => {
         return fetchAnswersByQuestionId(q.id);
@@ -35,7 +37,7 @@ function Quiz() {
         setUserAnswers(new Array(combinedQuestions.length).fill([]));
       });
     });
-  }, []);
+  }, [quizId]);
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {

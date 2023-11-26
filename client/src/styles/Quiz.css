@@ -11,12 +11,6 @@
   width: 100%;
 }
 
-.quiz-container {
-  display: flex;
-  flex-direction: row;
-  flex: 0.85;
-}
-
 /* Si quito esto se queda formato movil */
 .question-type-container {
   display: flex;

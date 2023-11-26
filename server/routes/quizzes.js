@@ -3,7 +3,7 @@ const router = express.Router();
 const quizzesController = require("../controllers/quizzesController");
 
 // Rutas específicas para quizzes
-router.get("/quizzes", quizzesController.getQuizzes);
-router.get("/quizzes/:id", quizzesController.getQuiz);
+router.get("/", quizzesController.getQuizzes);
+router.get("/:id", quizzesController.getQuiz);
 
 module.exports = router;
