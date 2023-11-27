@@ -10,6 +10,7 @@ function QuestionType1({
   currentIndex,
   questions,
   selectedAnswers,
+  quizCompleted,
 }) {
   const handleAnswerChange = (selectedValue) => {
     const updatedSelectedAnswers = Array.isArray(selectedAnswers)
@@ -47,6 +48,7 @@ function QuestionType1({
             selected={selectedAnswers.includes(answer.id)}
             onChange={handleAnswerChange}
             questionType={1}
+            quizCompleted={quizCompleted}
           />
         ))}
       </div>

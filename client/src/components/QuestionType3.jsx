@@ -10,6 +10,7 @@ function QuestionType3({
   currentIndex,
   questions,
   selectedAnswers,
+  quizCompleted,
 }) {
   const handleAnswerChange = (selectedValue) => {
     const updatedSelectedAnswers = Array.isArray(selectedAnswers)
@@ -48,6 +49,7 @@ function QuestionType3({
               selected={selectedAnswers.includes(answer.id)}
               onChange={handleAnswerChange}
               questionType={3}
+              quizCompleted={quizCompleted}
             >
               <DiagramImage image={answer.answer_image} />
             </CustomRadioButton>

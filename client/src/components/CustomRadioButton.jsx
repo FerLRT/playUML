@@ -9,10 +9,13 @@ function CustomRadioButton({
   selected,
   onChange,
   questionType,
+  quizCompleted,
 }) {
   const [isChecked, setIsChecked] = useState(selected);
 
   const handleClick = () => {
+    if (quizCompleted) return;
+
     const newCheckedState = !isChecked;
     setIsChecked(newCheckedState);
     onChange(id, newCheckedState);

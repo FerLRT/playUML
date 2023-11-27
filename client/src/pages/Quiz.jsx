@@ -17,6 +17,7 @@ function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
@@ -41,6 +42,11 @@ function Quiz() {
     });
   }, [quizId]);
 
+  /* Marca cuando un test esta completado */
+  useEffect(() => {
+    if (quizCompleted) console.log("Test completado");
+  }, [quizCompleted]);
+
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -60,6 +66,7 @@ function Quiz() {
       submitAnswers(selectedAnswers)
         .then((response) => {
           // Manejar la respuesta del servidor (puntuación, retroalimentación, etc.)
+          setQuizCompleted(true);
           const score = response.score;
           alert(`Puntuación: ${score}/${questions.length}`);
         })
@@ -92,6 +99,7 @@ function Quiz() {
             currentIndex={currentIndex}
             questions={questions}
             selectedAnswers={userAnswers[currentIndex]}
+            quizCompleted={quizCompleted}
           />
         );
       case 2:
@@ -104,6 +112,7 @@ function Quiz() {
             currentIndex={currentIndex}
             questions={questions}
             selectedAnswers={userAnswers[currentIndex]}
+            quizCompleted={quizCompleted}
           />
         );
       case 3:
@@ -116,6 +125,7 @@ function Quiz() {
             currentIndex={currentIndex}
             questions={questions}
             selectedAnswers={userAnswers[currentIndex]}
+            quizCompleted={quizCompleted}
           />
         );
       default:

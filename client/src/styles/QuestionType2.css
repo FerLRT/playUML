@@ -8,8 +8,19 @@
   border-bottom: 2px solid #ddd;
 }
 
+.image-container-type2 {
+  display: flex;
+  flex: 0 0 50%;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow-y: scroll;
+}
+
 .individual-image-container {
-  width: 40%;
+  width: 45%;
+  height: auto;
+  min-width: 250px;
+  max-width: 600px;
   padding: 0;
   margin: 10px;
   border: 2px solid #ddd;
@@ -17,10 +28,8 @@
   overflow: hidden;
 }
 
-.image-container-type2 {
-  display: flex;
-  flex: 0 0 50%;
-  flex-wrap: wrap;
-  justify-content: center;
-  overflow-y: scroll;
+.react-transform-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }

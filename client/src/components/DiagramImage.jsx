@@ -1,5 +1,6 @@
 import React from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import "../styles/DiagramImage.css";
 
 function DiagramImage({ image }) {
   const imageData = image.startsWith("data:image/jpeg;base64,")
