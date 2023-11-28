@@ -1,17 +1,45 @@
 import React from "react";
 import "../styles/Footer.css";
 
-function Footer({ questions, currentIndex, userAnswers, onCircleClick }) {
-  // Función para determinar el estado de un círculo (verde, gris o blanco)
+function Footer({
+  questions,
+  currentIndex,
+  userAnswers,
+  onCircleClick,
+  quizCompleted,
+  answersScore,
+}) {
+  // Función para determinar el estado de un círculo
   const getCircleStatus = (index) => {
-    const hasAnswer = userAnswers[index].length > 0;
+    const selectedAnswers = userAnswers[index];
 
-    if (hasAnswer) {
-      return "answered"; // Pregunta respondida
-    } else if (index === currentIndex) {
-      return "current"; // Pregunta actual
+    if (quizCompleted) {
+      if (selectedAnswers.length === 0) {
+        return "unanswered"; // Pregunta no respondida
+      }
+
+      const totalScore = selectedAnswers.reduce((acc, answerId) => {
+        const answer = answersScore.find((a) => a.answerId === answerId);
+        return acc + (answer ? answer.score : 0);
+      }, 0);
+
+      if (totalScore === 1) {
+        return "all-answered-correct"; // Todas las respuestas seleccionadas son correctas
+      } else if (totalScore < 0) {
+        return "all-answered-incorrect"; // Ninguna respuesta correcta ha sido marcada
+      } else {
+        return "some-answered"; // Al menos una respuesta correcta o incorrecta ha sido marcada
+      }
     } else {
-      return "unanswered"; // Pregunta sin responder
+      const hasAnswer = selectedAnswers.length > 0;
+
+      if (hasAnswer) {
+        return "answered"; // Pregunta respondida
+      } else if (index === currentIndex) {
+        return "current"; // Pregunta actual
+      } else {
+        return "unanswered"; // Pregunta sin responder
+      }
     }
   };
 

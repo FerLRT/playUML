@@ -10,6 +10,7 @@ function CustomRadioButton({
   onChange,
   questionType,
   quizCompleted,
+  answersScore,
 }) {
   const [isChecked, setIsChecked] = useState(selected);
 
@@ -21,9 +22,33 @@ function CustomRadioButton({
     onChange(id, newCheckedState);
   };
 
+  const getCustomRadioClass = () => {
+    if (quizCompleted) {
+      if (isChecked) {
+        const currentAnswerScore =
+          answersScore.find((answer) => answer.answerId === id)?.score || 0;
+
+        return currentAnswerScore <= 0
+          ? "incorrect-selected"
+          : "correct-selected";
+      } else if (
+        answersScore.some(
+          (answer) => answer.answerId === id && answer.score > 0
+        )
+      ) {
+        return "unselected-positive-score";
+      } else {
+        return "unanswered";
+      }
+    } else {
+      // Mantén los estilos antiguos cuando el test no está completado
+      return isChecked ? "selected-radio" : "";
+    }
+  };
+
   return (
     <div
-      className={`custom-radio ${isChecked ? "selected-radio" : ""}`}
+      className={`custom-radio ${getCustomRadioClass()}`}
       onClick={handleClick}
     >
       <div className="radio-circle">

@@ -47,3 +47,18 @@
 .unanswered {
   background-color: white;
 }
+
+/* Estilo para cuando todas las respuestas seleccionadas son correctas */
+.all-answered-correct {
+  background-color: #4caf50; /* Verde */
+}
+
+/* Estilo para cuando al menos una respuesta seleccionada es incorrecta */
+.all-answered-incorrect {
+  background-color: #f44336; /* Rojo */
+}
+
+/* Estilo para cuando al menos una respuesta seleccionada y ninguna es incorrecta */
+.some-answered {
+  background-color: #ffeb3b; /* Amarillo */
+}

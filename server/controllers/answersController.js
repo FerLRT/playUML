@@ -25,8 +25,8 @@ const submitAnswers = (req, res) => {
         // Lógica para verificar las respuestas y calcular la puntuación
         const score = calculateScore(answers, correctAnswers);
 
-        // Devuelve la puntuación como respuesta
-        res.json({ score });
+        // Devuelve la puntuación final del usuario y la puntuación de cada respuesta
+        res.json({ score, correctAnswers });
       })
       .catch((err) => {
         res.status(500).send("Internal Server Error: " + err);

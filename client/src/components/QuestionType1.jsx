@@ -11,6 +11,7 @@ function QuestionType1({
   questions,
   selectedAnswers,
   quizCompleted,
+  answersScore,
 }) {
   const handleAnswerChange = (selectedValue) => {
     const updatedSelectedAnswers = Array.isArray(selectedAnswers)
@@ -49,6 +50,7 @@ function QuestionType1({
             onChange={handleAnswerChange}
             questionType={1}
             quizCompleted={quizCompleted}
+            answersScore={answersScore}
           />
         ))}
       </div>

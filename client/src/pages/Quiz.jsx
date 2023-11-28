@@ -18,6 +18,7 @@ function Quiz() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [answersScore, setAnswersScore] = useState([]);
 
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
@@ -68,6 +69,7 @@ function Quiz() {
           // Manejar la respuesta del servidor (puntuación, retroalimentación, etc.)
           setQuizCompleted(true);
           const score = response.score;
+          setAnswersScore(response.correctAnswers);
           alert(`Puntuación: ${score}/${questions.length}`);
         })
         .catch((err) => {
@@ -100,6 +102,7 @@ function Quiz() {
             questions={questions}
             selectedAnswers={userAnswers[currentIndex]}
             quizCompleted={quizCompleted}
+            answersScore={answersScore}
           />
         );
       case 2:
@@ -113,6 +116,7 @@ function Quiz() {
             questions={questions}
             selectedAnswers={userAnswers[currentIndex]}
             quizCompleted={quizCompleted}
+            answersScore={answersScore}
           />
         );
       case 3:
@@ -126,6 +130,7 @@ function Quiz() {
             questions={questions}
             selectedAnswers={userAnswers[currentIndex]}
             quizCompleted={quizCompleted}
+            answersScore={answersScore}
           />
         );
       default:
@@ -148,6 +153,8 @@ function Quiz() {
         currentIndex={currentIndex}
         userAnswers={userAnswers}
         onCircleClick={handleCircleClick}
+        quizCompleted={quizCompleted}
+        answersScore={answersScore}
       />
     </div>
   );

@@ -11,6 +11,7 @@ function QuestionType3({
   questions,
   selectedAnswers,
   quizCompleted,
+  answersScore,
 }) {
   const handleAnswerChange = (selectedValue) => {
     const updatedSelectedAnswers = Array.isArray(selectedAnswers)
@@ -50,6 +51,7 @@ function QuestionType3({
               onChange={handleAnswerChange}
               questionType={3}
               quizCompleted={quizCompleted}
+              answersScore={answersScore}
             >
               <DiagramImage image={answer.answer_image} />
             </CustomRadioButton>
