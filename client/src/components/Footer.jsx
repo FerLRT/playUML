@@ -8,6 +8,8 @@ function Footer({
   onCircleClick,
   quizCompleted,
   answersScore,
+  showSummary,
+  onSummaryButtonClick,
 }) {
   // Función para determinar el estado de un círculo
   const getCircleStatus = (index) => {
@@ -23,7 +25,9 @@ function Footer({
         return acc + (answer ? answer.score : 0);
       }, 0);
 
-      if (totalScore === 1) {
+      const maxScore = getMaxScoreForQuestion(index);
+
+      if (totalScore === maxScore) {
         return "all-answered-correct"; // Todas las respuestas seleccionadas son correctas
       } else if (totalScore < 0) {
         return "all-answered-incorrect"; // Ninguna respuesta correcta ha sido marcada
@@ -41,6 +45,21 @@ function Footer({
         return "unanswered"; // Pregunta sin responder
       }
     }
+  };
+
+  const getMaxScoreForQuestion = (questionIndex) => {
+    // Filtramos las respuestas que pertenecen a la pregunta específica
+    const answersForQuestion = answersScore.filter(
+      (answer) => answer.questionId === questionIndex + 1
+    );
+
+    // Sumamos los puntajes máximos de todas las respuestas
+    const maxScoreForQuestion = answersForQuestion.reduce(
+      (maxScore, answer) => maxScore + Math.max(answer.score, 0),
+      0
+    );
+
+    return maxScoreForQuestion;
   };
 
   const handleArrowClick = (direction) => {
@@ -71,6 +90,16 @@ function Footer({
         <div className="arrow" onClick={() => handleArrowClick("next")}>
           {"-->"}
         </div>
+        {quizCompleted && (
+          // Botón para volver al resumen cuando el test está completo
+          <button
+            className="summary-button"
+            onClick={onSummaryButtonClick}
+            disabled={showSummary}
+          >
+            Ver resumen
+          </button>
+        )}
       </div>
     </div>
   );

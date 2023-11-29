@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import QuestionType1 from "../components/QuestionType1";
 import QuestionType2 from "../components/QuestionType2";
 import QuestionType3 from "../components/QuestionType3";
+import SummaryView from "../components/SummaryView";
 import Footer from "../components/Footer";
 import "../styles/Quiz.css";
 
@@ -19,6 +20,8 @@ function Quiz() {
   const [userAnswers, setUserAnswers] = useState([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [answersScore, setAnswersScore] = useState([]);
+  const [showSummary, setShowSummary] = useState(false);
+  const [totalScore, setTotalScore] = useState(0);
 
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
@@ -48,6 +51,24 @@ function Quiz() {
     if (quizCompleted) console.log("Test completado");
   }, [quizCompleted]);
 
+  const renderContent = () => {
+    if (showSummary) {
+      // Renderizar la vista de resumen
+      // Puedes crear un nuevo componente para la vista de resumen y pasarlo aquí
+      return (
+        <SummaryView
+          questions={questions}
+          userAnswers={userAnswers}
+          answersScore={answersScore}
+          totalScore={totalScore}
+        />
+      );
+    } else {
+      // Renderizar la pregunta actual
+      return renderQuestion();
+    }
+  };
+
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -68,9 +89,10 @@ function Quiz() {
         .then((response) => {
           // Manejar la respuesta del servidor (puntuación, retroalimentación, etc.)
           setQuizCompleted(true);
-          const score = response.score;
+          setTotalScore(response.score);
           setAnswersScore(response.correctAnswers);
-          alert(`Puntuación: ${score}/${questions.length}`);
+          // alert(`Puntuación: ${score}/${questions.length}`);
+          setShowSummary(true);
         })
         .catch((err) => {
           console.log(err);
@@ -141,13 +163,14 @@ function Quiz() {
   const handleCircleClick = (index) => {
     if (index < questions.length) {
       setCurrentIndex(index);
+      setShowSummary(false); // Ocultar resumen al volver a una pregunta
     }
   };
 
   return (
     <div className="quiz-page">
       <Header />
-      {renderQuestion()}
+      {renderContent()}
       <Footer
         questions={questions}
         currentIndex={currentIndex}
@@ -155,6 +178,8 @@ function Quiz() {
         onCircleClick={handleCircleClick}
         quizCompleted={quizCompleted}
         answersScore={answersScore}
+        showSummary={showSummary}
+        onSummaryButtonClick={() => setShowSummary(!showSummary)}
       />
     </div>
   );
