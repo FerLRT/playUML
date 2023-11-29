@@ -54,11 +54,13 @@ function CustomRadioButton({
       <div className="radio-circle">
         <span className="custom-radio-content">{letter}</span>
       </div>
-      {questionType === 3 ? (
-        <DiagramImage image={text} />
-      ) : (
-        <div className="custom-radio-text">{text}</div>
-      )}
+      <div className="image-container-3">
+        {questionType === 3 ? (
+          <DiagramImage image={text} />
+        ) : (
+          <div className="custom-radio-text">{text}</div>
+        )}
+      </div>
     </div>
   );
 }

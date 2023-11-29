@@ -21,9 +21,27 @@
   margin-right: 8px;
 }
 
+.image-container-3 {
+  width: 100%;
+  height: 100%;
+}
+
 .custom-radio-content {
   font-weight: bold;
   line-height: 1;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.react-transform-wrapper {
+  height: 100%;
+  width: 100%;
 }
 
 /* Estilos predeterminados */
