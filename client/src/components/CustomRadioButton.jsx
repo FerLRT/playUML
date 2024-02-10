@@ -1,68 +1,77 @@
-import React, { useState } from "react";
-import DiagramImage from "./DiagramImage";
-import "../styles/CustomRadioButton.css";
+import React, { useEffect, useState } from "react";
+import { DiagramImage } from "./DiagramImage";
 
-function CustomRadioButton({
-  id,
-  letter,
-  text,
-  selected,
-  onChange,
-  questionType,
+import "../styles/customRadioButton.css";
+
+export function CustomRadioButton({
+  index,
+  answer,
+  onSelectionChange,
+  selectionState,
   quizCompleted,
-  answersScore,
+  score,
 }) {
-  const [isChecked, setIsChecked] = useState(selected);
+  const [isSelected, setIsSelected] = useState(selectionState);
 
-  const handleClick = () => {
+  const toggleSelection = () => {
     if (quizCompleted) return;
 
-    const newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
-    onChange(id, newCheckedState);
+    setIsSelected(!isSelected);
+    onSelectionChange(answer.id, !isSelected);
   };
 
-  const getCustomRadioClass = () => {
+  // Determinar el color del radio button según el score
+  const getRadioButtonColor = () => {
     if (quizCompleted) {
-      if (isChecked) {
-        const currentAnswerScore =
-          answersScore.find((answer) => answer.answerId === id)?.score || 0;
-
-        return currentAnswerScore <= 0
-          ? "incorrect-selected"
-          : "correct-selected";
-      } else if (
-        answersScore.some(
-          (answer) => answer.answerId === id && answer.score > 0
-        )
-      ) {
-        return "unselected-positive-score";
-      } else {
-        return "unanswered";
+      if (isSelected) {
+        // Si el usuario ha seleccionado la respuesta
+        if (score > 0) {
+          // Si el score es positivo, colorear de verde
+          return "green";
+        } else if (score <= 0) {
+          // Si el score es cero o negativo, colorear de rojo
+          return "red";
+        }
       }
-    } else {
-      // Mantén los estilos antiguos cuando el test no está completado
-      return isChecked ? "selected-radio" : "";
+
+      if (!isSelected) {
+        // Si el usuario ha seleccionado la respuesta
+        if (score > 0) {
+          // Si el score es positivo, colorear de verde
+          return "blue";
+        } else if (score <= 0) {
+          // Si el score es cero o negativo, colorear de rojo
+          return "";
+        }
+      }
     }
   };
 
   return (
     <div
-      className={`custom-radio ${getCustomRadioClass()}`}
-      onClick={handleClick}
+      className={`custom-radio-button-container ${
+        isSelected ? "selected" : ""
+      }`}
     >
-      <div className="radio-circle">
-        <span className="custom-radio-content">{letter}</span>
-      </div>
-      <div className="image-container-3">
-        {questionType === 3 ? (
-          <DiagramImage image={text} />
+      <button
+        className={`custom-radio-button ${
+          isSelected ? "selected" : ""
+        } ${getRadioButtonColor()}`}
+        onClick={toggleSelection}
+      >
+        <div
+          className={`custom-radio-button-letter ${
+            isSelected ? "selected" : ""
+          } ${getRadioButtonColor()}`}
+        >
+          {String.fromCharCode(65 + index)}
+        </div>
+        {answer.answer_text !== null ? (
+          <div className="custom-radio-button-answer">{answer.answer_text}</div>
         ) : (
-          <div className="custom-radio-text">{text}</div>
+          <DiagramImage image={answer.answer_image} />
         )}
-      </div>
+      </button>
     </div>
   );
 }
-
-export default CustomRadioButton;

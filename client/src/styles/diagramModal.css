@@ -1,0 +1,12 @@
+.diagram-modal-image-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+  max-width: 80%;
+  max-height: 80%;
+  overflow: auto;
+  box-shadow: 24px 24px 48px 0 rgba(0, 0, 0, 0.4);
+}

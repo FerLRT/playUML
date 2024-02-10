@@ -1,27 +1,52 @@
-import React from "react";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import "../styles/DiagramImage.css";
+import React, { useEffect } from "react";
+import {
+  TransformWrapper,
+  TransformComponent,
+  useControls,
+} from "react-zoom-pan-pinch";
 
-function DiagramImage({ image }) {
+import { DiagramModal } from "./DiagramModal";
+
+import "../styles/diagramImage.css";
+
+export function DiagramImage({ image }) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const imageData = image.startsWith("data:image/jpeg;base64,")
     ? image
     : `data:image/jpeg;base64,${image}`;
 
+  const Controls = () => {
+    const { zoomIn, zoomOut, resetTransform } = useControls();
+    return (
+      <>
+        <button onClick={() => zoomIn()}>Zoom In</button>
+        <button onClick={() => zoomOut()}>Zoom Out</button>
+        <button onClick={() => resetTransform()}>Reset</button>
+        <button onClick={handleOpen}>Open</button>
+      </>
+    );
+  };
+
   return (
-    <div className="image-container">
+    <div className="diagram-image">
       <TransformWrapper
-        defaultScale={1}
-        smooth="true"
         maxScale={3}
+        smooth="true"
         pinch={{ step: 10 }}
-        onDoubleClick={(e) => e.preventDefault()}
+        className="custom-transform-wrapper"
       >
-        <TransformComponent onDoubleClick={(e) => e.preventDefault()}>
-          <img src={imageData} alt="Diagrama UML" />
+        <div className="diagram-image-controls">
+          <Controls />
+        </div>
+        <TransformComponent>
+          <img src={imageData} alt="Diagrama UML" width="100%" />
         </TransformComponent>
       </TransformWrapper>
+
+      <DiagramModal open={open} handleClose={handleClose} image={imageData} />
     </div>
   );
 }
-
-export default DiagramImage;

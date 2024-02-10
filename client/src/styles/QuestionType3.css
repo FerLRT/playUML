@@ -1,0 +1,24 @@
+.question-type-3-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.question-type-3-diagram-image-container {
+  flex: 1;
+  border-right: 1px solid black;
+}
+
+.question-type-3-question-answers-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px;
+}
+
+.question-type-3-answers-container {
+  flex: 1;
+  overflow: auto;
+}

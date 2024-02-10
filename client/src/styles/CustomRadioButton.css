@@ -1,106 +1,75 @@
-.custom-radio {
+.custom-radio-button-container {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  cursor: pointer;
-  padding: 8px;
-  border: 2px solid transparent;
-  border-radius: 6px;
-  margin: 10px;
-  background-color: white;
+  width: 100%;
 }
 
-.radio-circle {
-  background-color: #eef5ff;
-  border: 1px solid transparent;
+.custom-radio-button {
+  display: flex;
+  width: 90%;
+  height: auto;
+
+  margin: 5px;
+  padding: 5px;
+
+  border-radius: 10px;
+}
+
+.custom-radio-button-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1/1;
+  width: auto;
+  height: 90%;
+  min-height: 25px;
+
+  margin: 5px;
+
+  border: 1px solid black;
   border-radius: 50%;
+}
+
+.custom-radio-button-answer {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
+  padding: 5px;
 }
 
-.image-container-3 {
-  width: 100%;
-  height: 100%;
-}
-
-.custom-radio-content {
-  font-weight: bold;
-  line-height: 1;
-}
-
-.image-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.react-transform-wrapper {
-  height: 100%;
-  width: 100%;
-}
-
-/* Estilos predeterminados */
-.selected-radio {
+/* Estilos para respuestas seleccionada - correcta - incorrecta - correcta no seleccionada */
+.custom-radio-button.selected {
   border: 2px solid #498bf9;
 }
 
-.selected-radio .radio-circle {
+.custom-radio-button-letter.selected {
   background-color: #498bf9;
+  color: white;
+}
+
+.custom-radio-button.green {
+  border: 2px solid #38d42a;
+}
+
+.custom-radio-button-letter.green {
+  background-color: #38d42a;
+  color: white;
+}
+
+.custom-radio-button.red {
+  border: 2px solid #ec1b1b;
+}
+
+.custom-radio-button-letter.red {
+  background-color: #ec1b1b;
+  color: white;
+}
+
+.custom-radio-button.blue {
   border: 2px solid #498bf9;
 }
 
-.selected-radio .custom-radio-content {
-  color: white;
-}
-
-/* Estilos adicionales para cuando el test está completado y la respuesta es correcta */
-.custom-radio.correct-selected {
-  border: 2px solid #4caf50; /* Verde */
-}
-
-.custom-radio.correct-selected .radio-circle {
-  background-color: #4caf50;
-  border: 2px solid #4caf50;
-}
-
-.custom-radio.correct-selected .custom-radio-content {
-  color: white;
-}
-
-/* Estilos adicionales para cuando el test está completado y la respuesta es incorrecta */
-.custom-radio.incorrect-selected {
-  border: 2px solid #f44336; /* Rojo */
-}
-
-.custom-radio.incorrect-selected .radio-circle {
-  background-color: #f44336;
-  border: 2px solid #f44336;
-}
-
-.custom-radio.incorrect-selected .custom-radio-content {
-  color: white;
-}
-
-/* Mantén el estilo de hover original cuando el test no está completado */
-.custom-radio:not(.correct-selected):not(.incorrect-selected):hover {
-  border: 2px solid #498bf9;
-}
-
-/* Estilos adicionales para respuestas no marcadas con score > 0 */
-.custom-radio.unselected-positive-score {
-  border: 2px solid #4d94ff;
-}
-
-.custom-radio.unselected-positive-score .radio-circle {
-  background-color: #4d94ff;
-  border: 2px solid #4d94ff;
-}
-
-.custom-radio.unselected-positive-score .custom-radio-content {
+.custom-radio-button-letter.blue {
+  background-color: #498bf9;
   color: white;
 }

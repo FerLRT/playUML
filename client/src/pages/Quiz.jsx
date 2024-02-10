@@ -1,188 +1,206 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+
 import {
-  fetchQuestions,
-  fetchAnswersByQuestionId,
+  getQuestions,
+  getAnswers,
+  getQuestionImages,
   submitAnswers,
-} from "../services/api";
-import Header from "../components/Header";
-import QuestionType1 from "../components/QuestionType1";
-import QuestionType2 from "../components/QuestionType2";
-import QuestionType3 from "../components/QuestionType3";
-import SummaryView from "../components/SummaryView";
-import Footer from "../components/Footer";
-import "../styles/Quiz.css";
+} from "../hooks/useQuiz";
 
-function Quiz() {
+import { QuestionType1 } from "../components/QuestionType1";
+import { QuestionType2 } from "../components/QuestionType2";
+import { QuestionType3 } from "../components/QuestionType3";
+import { SummaryView } from "../components/SummaryQuiz";
+import { QuizFooter } from "../components/QuizFooter";
+
+import "../styles/quiz.css";
+
+export function Quiz() {
   const { quizId } = useParams();
+
+  // Información de las preguntas
   const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState([]);
-  const [quizCompleted, setQuizCompleted] = useState(false);
   const [answersScore, setAnswersScore] = useState([]);
-  const [showSummary, setShowSummary] = useState(false);
-  const [totalScore, setTotalScore] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState([]);
 
-  const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+  // Estado del quiz y resumen
+  const [quizCompleted, setQuizCompleted] = useState(false); // False: podemos seguir modifcarndo las respuestas, True: no podemos modificar las respuestas
+  const [showSummaryView, setShowSummaryView] = useState(false); // False: no se muestra el resumen, True: se muestra el resumen
 
+  // Obtener los datos del quiz
   useEffect(() => {
-    fetchQuestions(quizId).then((response) => {
-      const questionsList = response.data;
-      const promises = questionsList.map((q) => {
-        return fetchAnswersByQuestionId(q.id);
-      });
-      Promise.all(promises).then((answersList) => {
-        const combinedQuestions = questionsList.map((question, index) => {
-          return {
-            ...question,
-            answers: answersList[index].data,
-          };
-        });
-        setQuestions(combinedQuestions);
+    const loadQuestions = async () => {
+      try {
+        // Obtener las preguntas
+        const questionsList = await getQuestions(quizId);
 
-        // Inicializa userAnswers con la misma longitud que questions
-        setUserAnswers(new Array(combinedQuestions.length).fill([]));
-      });
-    });
+        // Obtener las respuestas e imágenes para todas las preguntas en paralelo
+        const questionsWithAnswersAndImages = await Promise.all(
+          questionsList.map(async (question) => {
+            const [answers, images] = await Promise.all([
+              getAnswers(question.id),
+              getQuestionImages(question.id),
+            ]);
+
+            // Inicializa userAnswers con la misma longitud que questions
+            setUserAnswers(new Array(questionsList.length).fill([]));
+
+            return {
+              ...question,
+              answers: answers,
+              images: images,
+            };
+          })
+        );
+
+        // Actualizar el estado con las respuestas e imágenes
+        setQuestions(questionsWithAnswersAndImages);
+        // console.log("Test cargado correctamente.");
+      } catch (error) {
+        console.error(
+          "Error al cargar preguntas, respuestas e imágenes:",
+          error
+        );
+      }
+    };
+
+    loadQuestions();
   }, [quizId]);
 
-  /* Marca cuando un test esta completado */
-  useEffect(() => {
-    if (quizCompleted) console.log("Test completado");
-  }, [quizCompleted]);
-
-  const renderContent = () => {
-    if (showSummary) {
-      // Renderizar la vista de resumen
-      // Puedes crear un nuevo componente para la vista de resumen y pasarlo aquí
-      return (
-        <SummaryView
-          questions={questions}
-          userAnswers={userAnswers}
-          answersScore={answersScore}
-          totalScore={totalScore}
-        />
-      );
-    } else {
-      // Renderizar la pregunta actual
-      return renderQuestion();
-    }
+  // Navegar a una pregunta específica
+  const goToQuestion = (index) => {
+    setCurrentQuestionIndex(index);
   };
 
-  const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(currentIndex + 1); // Para que el footer cambie a "Finalizar"
-
-      // En este punto, el usuario ha completado el cuestionario y transformamos las respuestas a un JSON para enviar al server y obtener el resultado
-      const selectedAnswersIds = userAnswers.map((selectedAnswerIds, index) => {
-        return {
-          questionId: questions[index].id,
-          answerIds: selectedAnswerIds,
-        };
-      });
-
-      const selectedAnswers = { answers: selectedAnswersIds };
-
-      submitAnswers(selectedAnswers)
-        .then((response) => {
-          // Manejar la respuesta del servidor (puntuación, retroalimentación, etc.)
-          setQuizCompleted(true);
-          setTotalScore(response.score);
-          setAnswersScore(response.correctAnswers);
-          // alert(`Puntuación: ${score}/${questions.length}`);
-          setShowSummary(true);
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Error al enviar respuestas al servidor", err);
-        });
-    }
-  };
-
+  // Manejar la selección de respuestas
   const handleAnswerSelect = (selectedAnswerIds) => {
     const updatedUserAnswers = [...userAnswers];
-    updatedUserAnswers[currentIndex] = selectedAnswerIds;
+    updatedUserAnswers[currentQuestionIndex] = selectedAnswerIds;
     setUserAnswers(updatedUserAnswers);
   };
 
-  const currentQuestion = questions[currentIndex];
+  // Botones siguiente y anterior del quiz-footer
+  // Navegar a la siguiente pregunta
+  const nextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
 
-  const renderQuestion = () => {
-    if (!currentQuestion) return null;
+  // Navegar a la pregunta anterior
+  const prevQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
+  // Finalizar test
+  const handleFinishQuiz = () => {
+    setQuizCompleted(true);
+    setShowSummaryView(true);
+  };
+
+  useEffect(() => {
+    if (quizCompleted) {
+      console.log(
+        "Test completado. Vamos a enviar las respuestas al servidor."
+      );
+
+      // Preparar respuestas para enviar al servidor
+      const preparedAnswers = [];
+
+      questions.forEach((question, index) => {
+        const questionId = question.id;
+        const selectedAnswerIds = userAnswers[index];
+
+        preparedAnswers.push({ questionId, selectedAnswerIds });
+      });
+
+      submitAnswers(preparedAnswers)
+        .then((response) => {
+          // Response contiene scores y totalScore
+          setAnswersScore(response.scores);
+        })
+        .catch((error) => {
+          console.error("Error al enviar respuestas:", error);
+        });
+    }
+  }, [quizCompleted]);
+
+  // Renderizar la pregunta actual
+  const renderCurrentQuestion = () => {
+    const currentQuestion = questions[currentQuestionIndex];
+
+    if (!currentQuestion) {
+      return null;
+    }
+
+    if (quizCompleted && showSummaryView) {
+      return <SummaryView />;
+    }
 
     switch (currentQuestion.type) {
       case 1:
         return (
           <QuestionType1
             question={currentQuestion}
-            letters={letters}
+            selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
-            onNextButtonClick={handleNext}
-            currentIndex={currentIndex}
-            questions={questions}
-            selectedAnswers={userAnswers[currentIndex]}
             quizCompleted={quizCompleted}
-            answersScore={answersScore}
+            answersScore={answersScore.filter(
+              (score) => score.questionId === currentQuestion.id
+            )}
           />
         );
       case 2:
         return (
           <QuestionType2
             question={currentQuestion}
-            letters={letters}
+            selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
-            onNextButtonClick={handleNext}
-            currentIndex={currentIndex}
-            questions={questions}
-            selectedAnswers={userAnswers[currentIndex]}
             quizCompleted={quizCompleted}
-            answersScore={answersScore}
+            answersScore={answersScore.filter(
+              (score) => score.questionId === currentQuestion.id
+            )}
           />
         );
       case 3:
         return (
           <QuestionType3
             question={currentQuestion}
-            letters={letters}
+            selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
-            onNextButtonClick={handleNext}
-            currentIndex={currentIndex}
-            questions={questions}
-            selectedAnswers={userAnswers[currentIndex]}
             quizCompleted={quizCompleted}
-            answersScore={answersScore}
+            answersScore={answersScore.filter(
+              (score) => score.questionId === currentQuestion.id
+            )}
           />
         );
       default:
-        return <div>Error: Tipo de pregunta no reconocido</div>;
-    }
-  };
-
-  const handleCircleClick = (index) => {
-    if (index < questions.length) {
-      setCurrentIndex(index);
-      setShowSummary(false); // Ocultar resumen al volver a una pregunta
+        return <div>Error al cargar la pregunta</div>;
     }
   };
 
   return (
-    <div className="quiz-page">
-      <Header />
-      {renderContent()}
-      <Footer
-        questions={questions}
-        currentIndex={currentIndex}
-        userAnswers={userAnswers}
-        onCircleClick={handleCircleClick}
-        quizCompleted={quizCompleted}
-        answersScore={answersScore}
-        showSummary={showSummary}
-        onSummaryButtonClick={() => setShowSummary(!showSummary)}
-      />
+    <div className="quiz-container">
+      <div className="quiz-question">{renderCurrentQuestion()}</div>
+
+      <div className="quiz-footer">
+        <QuizFooter
+          questions={questions}
+          currentQuestionIndex={currentQuestionIndex}
+          goToQuestion={goToQuestion}
+          onNext={nextQuestion}
+          onPrev={prevQuestion}
+          onFinish={handleFinishQuiz}
+          quizCompleted={quizCompleted}
+          setShowSummaryView={setShowSummaryView}
+          userAnswers={userAnswers}
+          answersScore={answersScore}
+        />
+      </div>
     </div>
   );
 }
-
-export default Quiz;

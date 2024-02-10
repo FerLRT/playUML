@@ -1,22 +1,19 @@
-.app-header {
+.header {
   display: flex;
-  height: 10%;
-  min-height: 60px;
-  align-items: center;
-  padding: 0px 20px;
-  background-color: #333;
-  background: #e1ebee;
-  border-bottom: 1px solid #d3d3d3;
+  justify-content: space-between;
   width: 100%;
+  height: 60px;
+
+  padding: 5px;
+
+  overflow: hidden;
+
+  background-color: aliceblue;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.195);
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
-.app-logo {
-  height: 50px;
+.header img {
+  height: 100%;
   width: auto;
-  margin-right: 10px;
+  margin-left: 10px;
 }

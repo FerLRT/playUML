@@ -1,15 +1,13 @@
-import CustomRadioButton from "./CustomRadioButton";
-import DiagramImage from "./DiagramImage";
-import "../styles/QuestionType1.css";
+import React from "react";
+import { DiagramImage } from "./DiagramImage";
+import { CustomRadioButton } from "./CustomRadioButton";
 
-function QuestionType1({
+import "../styles/questionType1.css";
+
+export function QuestionType1({
   question,
-  letters,
-  onAnswerSelect,
-  onNextButtonClick,
-  currentIndex,
-  questions,
   selectedAnswers,
+  onAnswerSelect,
   quizCompleted,
   answersScore,
 }) {
@@ -31,31 +29,34 @@ function QuestionType1({
   };
 
   return (
-    <div className="question-type-container">
-      <DiagramImage image={question.images[0].image_data} />
-      <div className="text-container">
-        <div className="question-header">
-          <h2>{question.question_text}</h2>
-          <button className="next-btn" onClick={onNextButtonClick}>
-            {currentIndex < questions.length - 1 ? "Siguiente" : "Finalizar"}
-          </button>
+    <div className="question-type-1-container">
+      <div className="question-type-1-diagram-image-container">
+        <DiagramImage image={question.images[0].image_data} />
+      </div>
+
+      <div className="question-type-1-question-answers-container">
+        <h2>{question.question_text}</h2>
+        <div className="question-type-1-answers-container">
+          {question.answers.map((answer, index) => {
+            // Buscar el puntaje de esta respuesta específica
+            const answerScore = answersScore.find(
+              (score) => score.answerId === answer.id
+            )?.score;
+
+            return (
+              <CustomRadioButton
+                key={answer.id}
+                index={index}
+                answer={answer}
+                selectionState={selectedAnswers.includes(answer.id)}
+                onSelectionChange={handleAnswerChange}
+                quizCompleted={quizCompleted}
+                score={answerScore}
+              />
+            );
+          })}
         </div>
-        {question.answers.map((answer, index) => (
-          <CustomRadioButton
-            key={answer.id}
-            id={answer.id}
-            letter={letters[index]}
-            text={answer.answer_text}
-            selected={selectedAnswers.includes(answer.id)}
-            onChange={handleAnswerChange}
-            questionType={1}
-            quizCompleted={quizCompleted}
-            answersScore={answersScore}
-          />
-        ))}
       </div>
     </div>
   );
 }
-
-export default QuestionType1;

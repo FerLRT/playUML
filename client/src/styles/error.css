@@ -1,0 +1,55 @@
+#mainError {
+  display: table;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #888;
+  margin: 0;
+}
+
+.errorFont {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.errorFont h1 {
+  font-size: 50px;
+  display: inline-block;
+  padding-right: 12px;
+  animation: type 0.5s alternate infinite;
+}
+
+.errorFont h2 {
+  font-size: 30px;
+  display: block;
+  padding-top: 12px;
+  padding-right: 12px;
+  margin-top: 0;
+}
+
+.errorFont h2 {
+  font-size: 30px;
+  display: block;
+  padding-top: 12px;
+  padding-right: 12px;
+  margin-top: 0;
+}
+
+.errorFont h3 {
+  font-size: 20px;
+  display: block;
+  padding-top: 12px;
+  padding-right: 12px;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+@keyframes type {
+  from {
+    box-shadow: inset -3px 0px 0px #888;
+  }
+  to {
+    box-shadow: inset -3px 0px 0px transparent;
+  }
+}

@@ -1,13 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "../styles/QuizButton.css";
+import { React } from "react";
+import { useNavigate } from "react-router-dom";
 
-function QuizButton({ to, label }) {
+import "../styles/quizButton.css";
+
+export function QuizButton({ to, label }) {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate(`/quiz/${to}`);
+  };
+
   return (
-    <Link to={to} style={{ textDecoration: "none" }}>
-      <button className="custom-quiz-button">{label}</button>
-    </Link>
+    <button className="quiz-button" onClick={handleButtonClick}>
+      {label}
+    </button>
   );
 }
-
-export default QuizButton;
