@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "nodemon ./bin/www.js",
     "start": "node ./bin/www",
     "start:dev": "set DEBUG=* & set NODE_ENV=development & node ./bin/www"
   },

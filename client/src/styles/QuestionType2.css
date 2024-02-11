@@ -10,6 +10,8 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+
+  width: 50%;
   overflow: auto;
 
   border-right: 1px solid black;
@@ -25,6 +27,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  width: 50%;
   padding: 10px;
 }
 

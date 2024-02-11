@@ -9,6 +9,7 @@
 .question-type-1-diagram-image-container {
   flex: 1;
   border-right: 1px solid black;
+  width: 50%;
 }
 
 .question-type-1-question-answers-container {
@@ -16,6 +17,7 @@
   flex-direction: column;
   flex: 1;
   padding: 10px;
+  width: 50%;
 }
 
 .question-type-1-answers-container {

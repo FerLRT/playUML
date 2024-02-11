@@ -22,6 +22,10 @@ export const answerModel = sequelize.define("answers", {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  answer_code: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
   answer_image: {
     type: DataTypes.BLOB("long"),
     allowNull: false,
