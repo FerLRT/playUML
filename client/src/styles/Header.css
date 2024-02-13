@@ -12,8 +12,18 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.195);
 }
 
-.header img {
+.header-profile-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.header-avatar {
   height: 100%;
-  width: auto;
+  width: 100%;
+  scale: 1/1;
   margin-left: 10px;
+  border-radius: 25px;
+  border: 1px solid black;
 }
