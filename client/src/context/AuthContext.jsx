@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await login("pepe@test.com", "123123");
+        const user = await login("pepe@test.com", "pepe");
         setUser(user);
       } catch (error) {
         console.error("Error al obtener el usuario por defecto:", error);

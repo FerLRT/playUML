@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 import {
   getQuestions,
@@ -17,6 +18,7 @@ import { QuizFooter } from "../components/QuizFooter";
 import "../styles/quiz.css";
 
 export function Quiz() {
+  const { user } = useAuth();
   const { quizId } = useParams();
 
   // Información de las preguntas
@@ -118,10 +120,12 @@ export function Quiz() {
         preparedAnswers.push({ questionId, selectedAnswerIds });
       });
 
-      submitAnswers(preparedAnswers)
+      submitAnswers(user.email, quizId, preparedAnswers)
         .then((response) => {
           // Response contiene scores y totalScore
           setAnswersScore(response.scores);
+          user.experience_points = response.experience;
+          user.level = response.level;
         })
         .catch((error) => {
           console.error("Error al enviar respuestas:", error);

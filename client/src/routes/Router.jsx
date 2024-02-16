@@ -9,6 +9,7 @@ import { LoginPage } from "../pages/LoginPage.jsx";
 import { RegisterPage } from "../pages/RegisterPage.jsx";
 import { AccountPage } from "../pages/AccountPage.jsx";
 import { CodeViewer } from "../components/CodeViewer.jsx";
+import { LevelIndicator } from "../components/LevelIndicator.jsx";
 
 import { PrivateRoute } from "../utils/PrivateRoute.jsx";
 
@@ -18,7 +19,8 @@ export function Router() {
   const router = createBrowserRouter([
     {
       path: "/pruebas",
-      element: <CodeViewer code={codeExample} />,
+      // element: <CodeViewer code={codeExample} />,
+      element: <LevelIndicator />,
       errorElement: <ErrorPage />,
     },
     {

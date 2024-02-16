@@ -1,4 +1,6 @@
 import { answerModel } from "../models/answer-model.js";
+import { QuizController } from "./quiz-controller.js";
+import { AuthController } from "./auth-controller.js";
 
 export class AnswerController {
   static getAnswers(req, res) {
@@ -41,15 +43,50 @@ export class AnswerController {
       });
   }
 
-  static postSubmitAnswers(req, res) {
-    const answers = req.body.answers;
+  static async postSubmitAnswers(req, res) {
+    try {
+      const userEmail = req.body.userEmail;
+      const quizId = req.body.quizId;
+      const answers = req.body.answers;
 
-    // Array para almacenar los puntajes de cada respuesta
+      // Obtener los puntos de conocimiento asociados al quiz
+      const quizExperiencePoints =
+        await QuizController.getExperiencePointsForQuiz(quizId);
+
+      const user = await AuthController.getUser(userEmail);
+      const questionsScores = await AnswerController.getQuestionsScores(
+        answers
+      );
+
+      const newPoints = user.experience_points + quizExperiencePoints;
+
+      const newLevel =
+        (await AuthController.updateUserLevel(userEmail, newPoints)) ||
+        user.level;
+
+      // Calcular el puntaje total sumando los puntajes individuales
+      const scores = questionsScores.map((answer) => answer.score);
+      const totalScore = scores.reduce((total, current) => total + current, 0);
+
+      res
+        .status(200)
+        .json({
+          totalScore: totalScore,
+          scores: questionsScores,
+          level: newLevel,
+          experience: newPoints,
+        });
+    } catch (error) {
+      console.error("Error calculating total score:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+
+  static async getQuestionsScores(answers) {
     const scores = [];
 
-    // Promesa para buscar el puntaje de cada respuesta en la base de datos
-    const scorePromises = answers.map((answer) => {
-      return answerModel
+    answers.map(async (answer) => {
+      await answerModel
         .findAll({ where: { question_id: answer.questionId } })
         .then((results) => {
           results.forEach((result) => {
@@ -65,30 +102,6 @@ export class AnswerController {
         });
     });
 
-    // Esperar a que todas las promesas se resuelvan
-    Promise.all(scorePromises)
-      .then(() => {
-        // Calcular el puntaje total sumando los puntajes individuales
-        const totalScore = scores.reduce(
-          (total, current) => total + current.score,
-          0
-        );
-
-        // Crear el objeto de respuesta con las preguntas y sus puntajes
-        const response = {
-          totalScore: totalScore,
-          scores: scores,
-        };
-
-        // Devolver la respuesta al cliente
-        res.json(response);
-      })
-      .catch((error) => {
-        console.error(
-          "Error al obtener los puntajes de las respuestas:",
-          error
-        );
-        res.status(500).send("Internal Server Error");
-      });
+    return scores;
   }
 }

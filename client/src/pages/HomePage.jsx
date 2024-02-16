@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getQuizzes } from "../hooks/useQuiz";
 
+import { LevelIndicator } from "../components/LevelIndicator.jsx";
 import { QuizButton } from "../components/QuizButton.jsx";
 
 import "../styles/homePage.css";
@@ -24,6 +25,7 @@ export function HomePage() {
   return (
     <div className="home-container">
       <h1>Home Page - Lista de tests</h1>
+      <LevelIndicator />
 
       <input
         type="text"

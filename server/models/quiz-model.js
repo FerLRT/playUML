@@ -12,4 +12,8 @@ export const quizModel = sequelize.define("quizzes", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  experience_points: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
