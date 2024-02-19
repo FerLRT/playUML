@@ -13,6 +13,8 @@ import { questionRouter } from "./routes/question-router.js";
 import { answerRouter } from "./routes/answer-router.js";
 import { imageRouter } from "./routes/image-router.js";
 import { levelRouter } from "./routes/level-router.js";
+import { achievementRouter } from "./routes/achievement-router.js";
+import { userAchievementRouter } from "./routes/userAchievement-router.js";
 
 export const app = express();
 
@@ -44,5 +46,7 @@ app.use("/questions", questionRouter);
 app.use("/answers", answerRouter);
 app.use("/images", imageRouter);
 app.use("/levels", levelRouter);
+app.use("/achievements", achievementRouter);
+app.use("/user-achievements", userAchievementRouter);
 // app.use("/", indexRouter);
 // app.use("/users", usersRouter);

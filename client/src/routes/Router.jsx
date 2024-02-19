@@ -12,6 +12,7 @@ import { CodeViewer } from "../components/CodeViewer.jsx";
 import { LevelIndicator } from "../components/LevelIndicator.jsx";
 
 import { PrivateRoute } from "../utils/PrivateRoute.jsx";
+import { AchievementPage } from "../pages/AchievementPage.jsx";
 
 const codeExample = "for (let i = 0; i < 10; i++) {\\n  console.log(i);\\n}";
 
@@ -44,6 +45,7 @@ export function Router() {
       children: [
         { index: true, element: <HomePage /> },
         { path: "/quiz/:quizId", element: <Quiz />, children: [] },
+        { path: "/achievements", element: <AchievementPage />, children: [] },
       ],
       errorElement: <ErrorPage />,
     },
