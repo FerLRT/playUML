@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 import {
   getQuestions,
@@ -13,10 +14,12 @@ import { QuestionType2 } from "../components/QuestionType2";
 import { QuestionType3 } from "../components/QuestionType3";
 import { SummaryView } from "../components/SummaryQuiz";
 import { QuizFooter } from "../components/QuizFooter";
+import { NewAchievement } from "../components/NewAchievement";
 
 import "../styles/quiz.css";
 
 export function Quiz() {
+  const { user } = useAuth();
   const { quizId } = useParams();
 
   // Información de las preguntas
@@ -24,6 +27,7 @@ export function Quiz() {
   const [answersScore, setAnswersScore] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
+  const [newAchievements, setNewAchievements] = useState([]);
 
   // Estado del quiz y resumen
   const [quizCompleted, setQuizCompleted] = useState(false); // False: podemos seguir modifcarndo las respuestas, True: no podemos modificar las respuestas
@@ -118,16 +122,28 @@ export function Quiz() {
         preparedAnswers.push({ questionId, selectedAnswerIds });
       });
 
-      submitAnswers(preparedAnswers)
+      submitAnswers(user.email, quizId, preparedAnswers)
         .then((response) => {
           // Response contiene scores y totalScore
           setAnswersScore(response.scores);
+          user.experience_points = response.experience;
+          user.level = response.level;
+          setNewAchievements(response.unlockedAchievements);
         })
         .catch((error) => {
           console.error("Error al enviar respuestas:", error);
         });
     }
   }, [quizCompleted]);
+
+  const handleCloseAchievement = (achievementIndex) => {
+    setNewAchievements((prevAchievements) => {
+      // Eliminar el logro desbloqueado correspondiente del array
+      const updatedAchievements = [...prevAchievements];
+      updatedAchievements.splice(achievementIndex, 1);
+      return updatedAchievements;
+    });
+  };
 
   // Renderizar la pregunta actual
   const renderCurrentQuestion = () => {
@@ -201,6 +217,15 @@ export function Quiz() {
           answersScore={answersScore}
         />
       </div>
+
+      {newAchievements.map((achievement, index) => (
+        <NewAchievement
+          key={index}
+          open={true}
+          onClose={() => handleCloseAchievement(index)}
+          achievement={achievement}
+        />
+      ))}
     </div>
   );
 }

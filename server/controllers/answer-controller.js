@@ -1,4 +1,8 @@
 import { answerModel } from "../models/answer-model.js";
+import { QuizController } from "./quiz-controller.js";
+import { AuthController } from "./auth-controller.js";
+import { AchievementController } from "./achievement-controller.js";
+import { UserAchievementController } from "./userAchievement-controller.js";
 
 export class AnswerController {
   static getAnswers(req, res) {
@@ -41,15 +45,68 @@ export class AnswerController {
       });
   }
 
-  static postSubmitAnswers(req, res) {
-    const answers = req.body.answers;
+  static async postSubmitAnswers(req, res) {
+    try {
+      const userEmail = req.body.userEmail;
+      const quizId = req.body.quizId;
+      const answers = req.body.answers;
 
-    // Array para almacenar los puntajes de cada respuesta
+      // Obtener los puntos de conocimiento asociados al quiz
+      const quizExperiencePoints =
+        await QuizController.getExperiencePointsForQuiz(quizId);
+
+      // Obtener el usuario
+      const user = await AuthController.getUser(userEmail);
+
+      // Calcular los nuevos puntos de experiencia y nivel del usuario
+      const newPoints = user.experience_points + quizExperiencePoints;
+      const newLevel =
+        (await AuthController.updateUserLevel(userEmail, newPoints)) ||
+        user.level;
+
+      // Calcular el puntaje total sumando los puntajes individuales
+      const questionsScores = await AnswerController.getQuestionsScores(
+        answers
+      );
+      const scores = questionsScores.map((answer) => answer.score);
+      const totalScore = scores.reduce((total, current) => total + current, 0);
+
+      // Determinar los logros desbloqueados y guardarlos para el usuario
+      const unlockedAchievements =
+        await AchievementController.calculateUnlockedAchievements(newPoints);
+      const newAchievements =
+        await UserAchievementController.determineNewAchievements(
+          user.id,
+          unlockedAchievements
+        );
+
+      if (newAchievements.length > 0) {
+        await UserAchievementController.saveUserAchievements(
+          user.id,
+          newAchievements
+        );
+      }
+
+      res.status(200).json({
+        totalScore: totalScore,
+        scores: questionsScores,
+        level: newLevel,
+        experience: newPoints,
+        unlockedAchievements: newAchievements.map(
+          (achievement) => achievement.name
+        ),
+      });
+    } catch (error) {
+      console.error("Error calculating total score:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+
+  static async getQuestionsScores(answers) {
     const scores = [];
 
-    // Promesa para buscar el puntaje de cada respuesta en la base de datos
-    const scorePromises = answers.map((answer) => {
-      return answerModel
+    answers.map(async (answer) => {
+      await answerModel
         .findAll({ where: { question_id: answer.questionId } })
         .then((results) => {
           results.forEach((result) => {
@@ -65,30 +122,6 @@ export class AnswerController {
         });
     });
 
-    // Esperar a que todas las promesas se resuelvan
-    Promise.all(scorePromises)
-      .then(() => {
-        // Calcular el puntaje total sumando los puntajes individuales
-        const totalScore = scores.reduce(
-          (total, current) => total + current.score,
-          0
-        );
-
-        // Crear el objeto de respuesta con las preguntas y sus puntajes
-        const response = {
-          totalScore: totalScore,
-          scores: scores,
-        };
-
-        // Devolver la respuesta al cliente
-        res.json(response);
-      })
-      .catch((error) => {
-        console.error(
-          "Error al obtener los puntajes de las respuestas:",
-          error
-        );
-        res.status(500).send("Internal Server Error");
-      });
+    return scores;
   }
 }

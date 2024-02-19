@@ -1,19 +1,27 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/dbConfig.js";
 
-export const quizModel = sequelize.define("quizzes", {
+export const authModel = sequelize.define("users", {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
   },
-  name: {
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   experience_points: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    defaultValue: 0,
+  },
+  level: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1,
   },
 });

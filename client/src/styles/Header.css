@@ -12,8 +12,39 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.195);
 }
 
-.header img {
+.header-options-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
-  width: auto;
+  margin-right: 10px;
+}
+
+.header-options-buttons > button {
+  margin: 0 5px;
+  padding: 10px;
+
+  font-weight: bold;
+
+  background-color: transparent;
+  border: none;
+  text-decoration: underline;
+
+  position: relative;
+}
+
+.header-profile-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.header-avatar {
+  height: 100%;
+  width: 100%;
+  scale: 1/1;
   margin-left: 10px;
+  border-radius: 25px;
+  border: 1px solid black;
 }

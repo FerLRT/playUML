@@ -4,25 +4,48 @@ import { App } from "../pages/App.jsx";
 import { HomePage } from "../pages/HomePage.jsx";
 import { ErrorPage } from "../pages/ErrorPage.jsx";
 
-import { DiagramImage } from "../components/DiagramImage.jsx";
-import { CustomRadioButton } from "../components/CustomRadioButton.jsx";
-import { QuestionType1 } from "../components/QuestionType1.jsx";
-import { QuestionType2 } from "../components/QuestionType2.jsx";
 import { Quiz } from "../pages/Quiz.jsx";
+import { LoginPage } from "../pages/LoginPage.jsx";
+import { RegisterPage } from "../pages/RegisterPage.jsx";
+import { AccountPage } from "../pages/AccountPage.jsx";
+import { CodeViewer } from "../components/CodeViewer.jsx";
+import { LevelIndicator } from "../components/LevelIndicator.jsx";
+
+import { PrivateRoute } from "../utils/PrivateRoute.jsx";
+import { AchievementPage } from "../pages/AchievementPage.jsx";
+
+const codeExample = "for (let i = 0; i < 10; i++) {\\n  console.log(i);\\n}";
 
 export function Router() {
   const router = createBrowserRouter([
     {
       path: "/pruebas",
-      element: <QuestionType1 />,
+      // element: <CodeViewer code={codeExample} />,
+      element: <LevelIndicator />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/register",
+      element: <RegisterPage />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/account",
+      element: <AccountPage />,
       errorElement: <ErrorPage />,
     },
     {
       path: "/", // path: "/student" --- path: "/quizzes",
-      element: <App />,
+      element: <PrivateRoute />,
       children: [
         { index: true, element: <HomePage /> },
         { path: "/quiz/:quizId", element: <Quiz />, children: [] },
+        { path: "/achievements", element: <AchievementPage />, children: [] },
       ],
       errorElement: <ErrorPage />,
     },

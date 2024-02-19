@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/dbConfig.js";
 
-export const quizModel = sequelize.define("quizzes", {
+export const Achievement = sequelize.define("achievements", {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -12,8 +12,8 @@ export const quizModel = sequelize.define("quizzes", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  experience_points: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
 });

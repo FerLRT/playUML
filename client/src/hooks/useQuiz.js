@@ -22,8 +22,8 @@ export function getQuestionImages(questionId) {
 
 // Enviar las respuestas del usuario
 // Recibir la puntuación de cada respuesta
-export function submitAnswers(answers) {
+export function submitAnswers(userEmail, quizId, answers) {
   return instance
-    .post("/answers/user", { answers })
+    .post("/answers/user", { userEmail, quizId, answers })
     .then((response) => response.data);
 }
