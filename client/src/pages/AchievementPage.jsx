@@ -33,17 +33,23 @@ export function AchievementPage() {
   return (
     <div className="achievement-page">
       <button onClick={handleButtonClick}>Página de inicio</button>
-      {achievements.map((achievement) => (
-        <div
-          key={achievement.id}
-          className={`achievement ${
-            achievement.unlocked ? "unlocked" : "locked"
-          }`}
-        >
-          <h3>{achievement.name}</h3>
-          <p>{achievement.description}</p>
-        </div>
-      ))}
+
+      <div className="achievement-list">
+        {achievements.map((achievement) => (
+          <div
+            key={achievement.id}
+            className={`achievement ${
+              achievement.unlocked ? "unlocked" : "locked"
+            }`}
+          >
+            <img src="/src/assets/insignia.png" alt={achievement.name} />
+            <div className="achievement-text">
+              <h3>{achievement.name}</h3>
+              <p>{achievement.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
