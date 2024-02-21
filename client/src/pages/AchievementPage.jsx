@@ -20,7 +20,11 @@ export function AchievementPage() {
       if (user) {
         try {
           const userAchievements = await getUserAchievements(user.email);
-          setAchievements(userAchievements);
+          const mappedAchievements = userAchievements.map((achievement) => ({
+            ...achievement.dataValues,
+            unlocked: achievement.unlocked,
+          }));
+          setAchievements(mappedAchievements);
         } catch (error) {
           console.error("Error loading achievements:", error);
         }
