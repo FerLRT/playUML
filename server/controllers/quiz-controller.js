@@ -1,44 +1,44 @@
 import { quizModel } from "../models/quiz-model.js";
 
 export class QuizController {
-  static getQuizzes(req, res) {
-    quizModel
-      .findAll()
-      .then((quizzes) => {
-        res.json(quizzes);
-      })
-      .catch((err) => {
-        res.status(500).send("Internal Server Error: " + err);
-      });
+  static async getQuizzes(req, res) {
+    try {
+      const quizzes = await quizModel.findAll();
+
+      res.json(quizzes);
+    } catch (error) {
+      console.error("Error getting quizzes:", error);
+      res.status(500).send("Internal Server Error: " + error.message);
+    }
   }
 
-  static getQuiz(req, res) {
-    const quizId = req.params.id;
+  static async getQuiz(req, res) {
+    try {
+      const quizId = req.params.id;
+      const quiz = await quizModel.findByPk(quizId);
 
-    quizModel
-      .findByPk(quizId)
-      .then((quiz) => {
-        if (quiz) {
-          res.json(quiz);
-        } else {
-          res.status(404).send("Quiz not found");
-        }
-      })
-      .catch((err) => {
-        res.status(500).send("Internal Server Error: " + err);
-      });
+      if (quiz) {
+        res.json(quiz);
+      } else {
+        res.status(404).send("Quiz not found");
+      }
+    } catch (error) {
+      console.error("Error getting quiz:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }
 
   static async getExperiencePointsForQuiz(quizId) {
     try {
       const quiz = await quizModel.findByPk(quizId);
       if (!quiz) {
-        throw new Error("Quiz not found");
+        throw new Error("Quiz not found with the provided ID");
       }
+
       return quiz.experience_points;
     } catch (error) {
       console.error("Error getting experience points for quiz:", error);
-      throw new Error("Error getting experience points for quiz");
+      throw new Error("Failed to retrieve experience points for the quiz");
     }
   }
 }

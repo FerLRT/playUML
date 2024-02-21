@@ -1,48 +1,47 @@
 import { answerModel } from "../models/answer-model.js";
+
 import { QuizController } from "./quiz-controller.js";
 import { AuthController } from "./auth-controller.js";
 import { AchievementController } from "./achievement-controller.js";
 import { UserAchievementController } from "./userAchievement-controller.js";
 
 export class AnswerController {
-  static getAnswers(req, res) {
-    answerModel
-      .findAll()
-      .then((answers) => {
-        res.json(answers);
-      })
-      .catch((err) => {
-        res.status(500).send("Internal Server Error: " + err);
-      });
+  static async getAnswers(req, res) {
+    try {
+      const answers = await answerModel.findAll();
+      res.json(answers);
+    } catch (error) {
+      console.error("Error getting answers:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }
 
-  static getQuestionAnswers(req, res) {
-    const questionId = req.params.id;
+  static async getQuestionAnswers(req, res) {
+    try {
+      const questionId = req.params.id;
 
-    answerModel
-      .findAll({
+      const answers = await answerModel.findAll({
         where: { question_id: questionId },
         attributes: { exclude: ["score"] },
-      })
-      .then(async (answers) => {
-        const answersWithBase64Data = await Promise.all(
-          answers.map(async (answer) => {
-            if (answer.answer_image !== null) {
-              // Convertir answer_image a base64
-              answer.answer_image = Buffer.from(answer.answer_image).toString(
-                "base64"
-              );
-            }
-
-            return answer;
-          })
-        );
-
-        res.json(answersWithBase64Data);
-      })
-      .catch((err) => {
-        res.status(500).send("Internal Server Error: " + err);
       });
+
+      const answersWithBase64Data = await Promise.all(
+        answers.map(async (answer) => {
+          if (answer.answer_image !== null) {
+            // Convertir answer_image a base64
+            answer.answer_image = Buffer.from(answer.answer_image).toString(
+              "base64"
+            );
+          }
+          return answer;
+        })
+      );
+
+      res.json(answersWithBase64Data);
+    } catch (error) {
+      console.error("Error getting question answers:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }
 
   static async postSubmitAnswers(req, res) {
@@ -60,15 +59,13 @@ export class AnswerController {
 
       // Calcular los nuevos puntos de experiencia y nivel del usuario
       const newPoints = user.experience_points + quizExperiencePoints;
-      const newLevel =
-        (await AuthController.updateUserLevel(userEmail, newPoints)) ||
-        user.level;
+      const newLevel = await AuthController.updateUserLevel(
+        userEmail,
+        newPoints
+      );
 
       // Calcular el puntaje total sumando los puntajes individuales
-      const questionsScores = await AnswerController.getQuestionsScores(
-        answers
-      );
-      const scores = questionsScores.map((answer) => answer.score);
+      const scores = await AnswerController.getQuestionsScores(answers);
       const totalScore = scores.reduce((total, current) => total + current, 0);
 
       // Determinar los logros desbloqueados y guardarlos para el usuario
@@ -79,7 +76,6 @@ export class AnswerController {
           user.id,
           unlockedAchievements
         );
-
       if (newAchievements.length > 0) {
         await UserAchievementController.saveUserAchievements(
           user.id,
@@ -89,7 +85,7 @@ export class AnswerController {
 
       res.status(200).json({
         totalScore: totalScore,
-        scores: questionsScores,
+        scores: scores,
         level: newLevel,
         experience: newPoints,
         unlockedAchievements: newAchievements.map(
@@ -97,7 +93,7 @@ export class AnswerController {
         ),
       });
     } catch (error) {
-      console.error("Error calculating total score:", error);
+      console.error("Error submitting answers:", error);
       res.status(500).send("Internal Server Error");
     }
   }
@@ -105,10 +101,12 @@ export class AnswerController {
   static async getQuestionsScores(answers) {
     const scores = [];
 
-    answers.map(async (answer) => {
-      await answerModel
-        .findAll({ where: { question_id: answer.questionId } })
-        .then((results) => {
+    await Promise.all(
+      answers.map(async (answer) => {
+        try {
+          const results = await answerModel.findAll({
+            where: { question_id: answer.questionId },
+          });
           results.forEach((result) => {
             scores.push({
               questionId: answer.questionId,
@@ -116,11 +114,11 @@ export class AnswerController {
               score: result.score,
             });
           });
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("Error al obtener el puntaje de la respuesta:", error);
-        });
-    });
+        }
+      })
+    );
 
     return scores;
   }

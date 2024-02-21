@@ -11,7 +11,8 @@ export class AuthController {
       const user = await authModel.create({ email, password: hashedPassword });
       res.status(201).json(user);
     } catch (error) {
-      res.status(500).send("Internal Server Error: " + error.message);
+      console.error("Error creating user:", error);
+      res.status(500).send("Internal Server Error: " + error);
     }
   }
 
@@ -20,17 +21,21 @@ export class AuthController {
 
     try {
       const user = await authModel.findOne({ where: { email } });
+
       if (!user) {
         return res.status(401).send("Unauthorized");
       }
+
       const isMatch = await comparePassword(password, user.password);
-      if (isMatch) {
-        return res.status(200).json(user);
-      } else {
+
+      if (!isMatch) {
         return res.status(401).send("Unauthorized");
       }
+
+      res.status(200).json(user);
     } catch (error) {
-      res.status(500).send("Internal Server Error: " + error.message);
+      console.error("Error during login:", error);
+      return res.status(500).send("Internal Server Error");
     }
   }
 
@@ -41,13 +46,15 @@ export class AuthController {
   static async getUser(email) {
     try {
       const user = await authModel.findOne({ where: { email } });
+
       if (!user) {
         throw new Error("User not found");
       }
+
       return user;
     } catch (error) {
       console.error("Error getting user:", error);
-      throw new Error("Error getting user");
+      throw new Error("Failed to retrieve user information");
     }
   }
 
@@ -66,18 +73,20 @@ export class AuthController {
         }
       }
 
+      if (!newUserLevel) {
+        throw new Error("Could not determine user's new level");
+      }
+
       // Actualizar los puntos de experiencia y el nivel del usuario
       await authModel.update(
         { experience_points: newPoints, level: newUserLevel },
         { where: { email: userEmail } }
       );
 
-      console.log("User points and level updated successfully");
-
       return newUserLevel;
     } catch (error) {
       console.error("Error updating user points and level:", error);
-      throw new Error("Error updating user points and level");
+      throw new Error("Failed to update user points and level");
     }
   }
 }

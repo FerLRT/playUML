@@ -3,42 +3,34 @@ import { Achievement } from "../models/achievement-model.js";
 import { UserAchievementController } from "./userAchievement-controller.js";
 
 export class AchievementController {
-  static getAchievements(req, res) {
-    Achievement.findAll()
-      .then((achievements) => {
-        res.json(achievements);
-      })
-      .catch((err) => {
-        res.status(500).send("Internal Server Error: " + err);
-      });
+  static async getAchievements(req, res) {
+    try {
+      const achievements = await Achievement.findAll();
+      res.json(achievements);
+    } catch (error) {
+      console.error("Error getting achievements:", error);
+      res.status(500).send("Internal Server Error: " + error);
+    }
   }
 
   static async getUserAchievements(req, res) {
-    const userEmail = req.params.userEmail;
-
     try {
-      // Obtener todos los logros disponibles
+      const userEmail = req.params.userEmail;
+
+      // Obtener todos los logros
       const allAchievements = await Achievement.findAll();
 
-      // Obtener los logros desbloqueados por el usuario
+      // Obtener los logros desbloqueados del usuario
       const userAchievements =
         await UserAchievementController.getAllUserAchievements(
           userEmail,
           allAchievements
         );
 
-      // Marcar cada logro como desbloqueado o no desbloqueado
-      // const achievementsWithStatus = allAchievements.map((achievement) => {
-      //   const isUnlocked = userAchievements.some(
-      //     (userAchievement) => userAchievement.achievement_id === achievement.id
-      //   );
-      //   return { ...achievement.dataValues, unlocked: isUnlocked };
-      // });
-
       res.json(userAchievements);
     } catch (error) {
-      console.error("Error getting achievements with user status:", error);
-      throw new Error("Error getting achievements with user status");
+      console.error("Error getting user achievements:", error);
+      res.status(500).send("Internal Server Error: " + error);
     }
   }
 
