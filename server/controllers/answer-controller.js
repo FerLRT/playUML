@@ -66,7 +66,10 @@ export class AnswerController {
 
       // Calcular el puntaje total sumando los puntajes individuales
       const scores = await AnswerController.getQuestionsScores(answers);
-      const totalScore = scores.reduce((total, current) => total + current, 0);
+      const totalScore = await AnswerController.calculateUserScore(
+        answers,
+        scores
+      );
 
       // Determinar los logros desbloqueados y guardarlos para el usuario
       const unlockedAchievements =
@@ -121,5 +124,23 @@ export class AnswerController {
     );
 
     return scores;
+  }
+
+  static async calculateUserScore(answers, scores) {
+    let totalScore = 0;
+
+    answers.forEach((answer) => {
+      const questionScores = scores.filter(
+        (score) => score.questionId === answer.questionId
+      );
+
+      questionScores.forEach((questionScore) => {
+        if (answer.selectedAnswerIds.includes(questionScore.answerId)) {
+          totalScore += questionScore.score;
+        }
+      });
+    });
+
+    return totalScore;
   }
 }
