@@ -27,3 +27,9 @@ export function submitAnswers(userEmail, quizId, answers) {
     .post("/answers/user", { userEmail, quizId, answers })
     .then((response) => response.data);
 }
+
+export function hasUserCompletedQuiz(userEmail, quizId) {
+  return instance
+    .post("/user-quizzes/completed", { userEmail, quizId })
+    .then((response) => response.data);
+}

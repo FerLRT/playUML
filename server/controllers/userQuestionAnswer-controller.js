@@ -34,4 +34,26 @@ export class UserQuestionAnswerController {
       );
     }
   }
+
+  static async getUserQuestionAnswers(userId, quizId) {
+    try {
+      let userAnswers = await userQuestionAnswerModel.findAll({
+        where: { user_id: userId, quiz_id: quizId },
+        attributes: ["question_id", "answer_ids"],
+      });
+
+      // Mapear los resultados para enviar solo los datos necesarios
+      userAnswers = userAnswers.map((answer) => ({
+        questionId: answer.question_id,
+        selectedAnswerIds: answer.answer_ids,
+      }));
+
+      return userAnswers;
+    } catch (error) {
+      console.error(`Error getting user question answers: ${error.message}`);
+      res.status(500).json({
+        error: `Error getting user question answers: ${error.message}`,
+      });
+    }
+  }
 }

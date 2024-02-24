@@ -7,6 +7,7 @@ import {
   getAnswers,
   getQuestionImages,
   submitAnswers,
+  hasUserCompletedQuiz,
 } from "../hooks/useQuiz";
 
 import { QuestionType1 } from "../components/QuestionType1";
@@ -35,7 +36,7 @@ export function Quiz() {
 
   // Obtener los datos del quiz
   useEffect(() => {
-    const loadQuestions = async () => {
+    const loadData = async () => {
       try {
         // Obtener las preguntas
         const questionsList = await getQuestions(quizId);
@@ -59,9 +60,17 @@ export function Quiz() {
           })
         );
 
+        const { hasCompletedQuiz, userAnswersForQuiz, userAnswersScores } =
+          await hasUserCompletedQuiz(user.email, quizId);
+
+        if (hasCompletedQuiz) {
+          setQuizCompleted(hasCompletedQuiz);
+          setUserAnswers(userAnswersForQuiz);
+          setAnswersScore(userAnswersScores);
+        }
+
         // Actualizar el estado con las respuestas e imágenes
         setQuestions(questionsWithAnswersAndImages);
-        // console.log("Test cargado correctamente.");
       } catch (error) {
         console.error(
           "Error al cargar preguntas, respuestas e imágenes:",
@@ -70,7 +79,7 @@ export function Quiz() {
       }
     };
 
-    loadQuestions();
+    loadData();
   }, [quizId]);
 
   // Navegar a una pregunta específica
