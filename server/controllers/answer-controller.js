@@ -4,6 +4,7 @@ import { QuizController } from "./quiz-controller.js";
 import { AuthController } from "./auth-controller.js";
 import { AchievementController } from "./achievement-controller.js";
 import { UserAchievementController } from "./userAchievement-controller.js";
+import { UserQuizController } from "./userQuiz-controller.js";
 
 export class AnswerController {
   static async getAnswers(req, res) {
@@ -69,6 +70,14 @@ export class AnswerController {
       const totalScore = await AnswerController.calculateUserScore(
         answers,
         scores
+      );
+
+      // Guardar el resultado del quiz y las respuestas del usuario
+      await UserQuizController.createUserQuiz(
+        user.id,
+        quizId,
+        totalScore,
+        answers
       );
 
       // Determinar los logros desbloqueados y guardarlos para el usuario
