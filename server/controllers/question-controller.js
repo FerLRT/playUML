@@ -1,27 +1,29 @@
 import { questionModel } from "../models/question-model.js";
 
 export class QuestionController {
-  static getQuestions(req, res) {
-    questionModel
-      .findAll()
-      .then((questions) => {
-        res.json(questions);
-      })
-      .catch((err) => {
-        res.status(500).send("Internal Server Error: " + err);
-      });
+  static async getQuestions(req, res) {
+    try {
+      const questions = await questionModel.findAll();
+
+      res.json(questions);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }
 
-  static getQuizQuestions(req, res) {
-    const quizId = req.params.id;
+  static async getQuizQuestions(req, res) {
+    try {
+      const quizId = req.params.id;
 
-    questionModel
-      .findAll({ where: { quiz_id: quizId } })
-      .then((questions) => {
-        res.json(questions);
-      })
-      .catch((err) => {
-        res.status(500).send("Internal Server Error: " + err);
+      const questions = await questionModel.findAll({
+        where: { quiz_id: quizId },
       });
+
+      res.json(questions);
+    } catch (error) {
+      console.error("Error fetching quiz questions:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }
 }

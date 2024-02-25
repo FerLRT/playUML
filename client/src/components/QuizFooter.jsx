@@ -70,7 +70,9 @@ export function QuizFooter({
                   : ""
               }`}
               style={{ backgroundColor: circleColor }}
-            ></div>
+            >
+              {index + 1}
+            </div>
           );
         })}
 

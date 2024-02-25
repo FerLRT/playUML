@@ -41,6 +41,12 @@
 }
 
 .quiz-footer-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
+
   aspect-ratio: 1/1;
   border-radius: 50%;
 
