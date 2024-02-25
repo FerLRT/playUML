@@ -33,6 +33,7 @@ export function Quiz() {
   // Estado del quiz y resumen
   const [quizCompleted, setQuizCompleted] = useState(false); // False: podemos seguir modifcarndo las respuestas, True: no podemos modificar las respuestas
   const [showSummaryView, setShowSummaryView] = useState(false); // False: no se muestra el resumen, True: se muestra el resumen
+  const [sendAnswers, setSendAnswers] = useState(true); // False: no se han enviado las respuestas, True: se han enviado las respuestas
 
   // Obtener los datos del quiz
   useEffect(() => {
@@ -64,6 +65,7 @@ export function Quiz() {
           await hasUserCompletedQuiz(user.email, quizId);
 
         if (hasCompletedQuiz) {
+          setSendAnswers(false);
           setQuizCompleted(hasCompletedQuiz);
           setUserAnswers(userAnswersForQuiz);
           setAnswersScore(userAnswersScores);
@@ -79,6 +81,7 @@ export function Quiz() {
       }
     };
 
+    setSendAnswers(true);
     loadData();
   }, [quizId]);
 
@@ -116,32 +119,34 @@ export function Quiz() {
   };
 
   useEffect(() => {
-    if (quizCompleted) {
-      console.log(
-        "Test completado. Vamos a enviar las respuestas al servidor."
-      );
+    if (sendAnswers) {
+      if (quizCompleted) {
+        console.log(
+          "Test completado. Vamos a enviar las respuestas al servidor."
+        );
 
-      // Preparar respuestas para enviar al servidor
-      const preparedAnswers = [];
+        // Preparar respuestas para enviar al servidor
+        const preparedAnswers = [];
 
-      questions.forEach((question, index) => {
-        const questionId = question.id;
-        const selectedAnswerIds = userAnswers[index];
+        questions.forEach((question, index) => {
+          const questionId = question.id;
+          const selectedAnswerIds = userAnswers[index];
 
-        preparedAnswers.push({ questionId, selectedAnswerIds });
-      });
-
-      submitAnswers(user.email, quizId, preparedAnswers)
-        .then((response) => {
-          // Response contiene scores y totalScore
-          setAnswersScore(response.scores);
-          user.experience_points = response.experience;
-          user.level = response.level;
-          setNewAchievements(response.unlockedAchievements);
-        })
-        .catch((error) => {
-          console.error("Error al enviar respuestas:", error);
+          preparedAnswers.push({ questionId, selectedAnswerIds });
         });
+
+        submitAnswers(user.email, quizId, preparedAnswers)
+          .then((response) => {
+            // Response contiene scores y totalScore
+            setAnswersScore(response.scores);
+            user.experience_points = response.experience;
+            user.level = response.level;
+            setNewAchievements(response.unlockedAchievements);
+          })
+          .catch((error) => {
+            console.error("Error al enviar respuestas:", error);
+          });
+      }
     }
   }, [quizCompleted]);
 
