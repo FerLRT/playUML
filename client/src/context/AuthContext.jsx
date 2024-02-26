@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const user = await login("pepe@test.com", "pepe");
+        // user.role = "profesor";
         setUser(user);
       } catch (error) {
         console.error("Error al obtener el usuario por defecto:", error);

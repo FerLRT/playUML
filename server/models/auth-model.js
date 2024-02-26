@@ -24,4 +24,9 @@ export const authModel = sequelize.define("users", {
     type: DataTypes.INTEGER,
     defaultValue: 1,
   },
+  role: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    defaultValue: "estudiante",
+  },
 });
