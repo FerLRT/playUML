@@ -1,6 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { TeacherApp } from "../pages/TeacherApp";
 import { TeacherPage } from "../pages/TeacherPage";
 import { ErrorPage } from "../pages/ErrorPage";
 
@@ -10,7 +11,8 @@ import { RegisterPage } from "../pages/RegisterPage";
 const teacherRouter = createBrowserRouter([
   {
     path: "/",
-    element: <TeacherPage />,
+    element: <TeacherApp />,
+    children: [{ index: true, element: <TeacherPage /> }],
     errorElement: <ErrorPage />,
   },
   {

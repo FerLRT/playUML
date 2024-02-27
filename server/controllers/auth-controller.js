@@ -43,6 +43,25 @@ export class AuthController {
     res.status(200).send("OK");
   }
 
+  static async importFile(req, res) {
+    const fileContent = req.body;
+
+    try {
+      // Verificar si los datos son válidos (en este caso, un array de estudiantes)
+      if (!Array.isArray(fileContent) || fileContent.length === 0) {
+        throw new Error("Los datos no son válidos");
+      }
+
+      // Realizar cualquier procesamiento adicional necesario en los datos
+      console.log("El contenido del archivo es:", fileContent);
+
+      res.status(200).send("OK");
+    } catch (error) {
+      console.error("Error al procesar el archivo:", error);
+      res.status(400).send("Bad Request");
+    }
+  }
+
   static async getUser(email) {
     try {
       const user = await authModel.findOne({ where: { email } });
