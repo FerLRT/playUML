@@ -17,6 +17,7 @@ import { achievementRouter } from "./routes/achievement-router.js";
 import { userAchievementRouter } from "./routes/userAchievement-router.js";
 import { userQuizRouter } from "./routes/userQuiz-router.js";
 import { userQuestionAnswerRouter } from "./routes/userQuestionAnswer-router.js";
+import { classRouter } from "./routes/class-router.js";
 
 export const app = express();
 
@@ -52,5 +53,6 @@ app.use("/achievements", achievementRouter);
 app.use("/user-achievements", userAchievementRouter);
 app.use("/user-quizzes", userQuizRouter);
 app.use("/user-question-answers", userQuestionAnswerRouter);
+app.use("/classes", classRouter);
 // app.use("/", indexRouter);
 // app.use("/users", usersRouter);

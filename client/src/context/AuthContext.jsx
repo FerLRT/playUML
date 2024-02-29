@@ -10,7 +10,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await login("pepe@test.com", "pepe");
+        const user = await login("profesor@test.com", "profesor");
+        // const user = await login("estudiante1@test.com", "estudiante1");
         // user.role = "profesor";
         setUser(user);
       } catch (error) {
