@@ -21,4 +21,28 @@ export class ClassController {
       res.status(500).send("Internal Server Error: " + error);
     }
   }
+
+  static async createClass(req, res) {
+    try {
+      const { name, teacherEmail, fileData } = req.body;
+
+      // Obtener el usuario
+      const teacher = await AuthController.getUser(teacherEmail);
+
+      // Crear la clase
+      const newClass = await classModel.create({
+        name,
+        teacher_id: teacher.id,
+      });
+
+      if (newClass) {
+        console.log("Clase creada");
+      }
+
+      res.json(newClass);
+    } catch (error) {
+      console.error("Error creating class:", error);
+      res.status(500).send("Internal Server Error: " + error);
+    }
+  }
 }

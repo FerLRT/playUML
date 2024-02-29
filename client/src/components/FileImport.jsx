@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { sendFileData } from "../hooks/useUser";
 
-export function FileImport() {
-  const [fileData, setFileData] = useState(null);
-
-  useEffect(() => {
-    if (fileData) {
-      console.log("El contenido es correcto");
-      sendFileData(fileData);
-    }
-    setFileData(null);
-  }, [fileData]);
-
+export function FileImport({ onFileUpload }) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -24,7 +14,7 @@ export function FileImport() {
       }
 
       const jsonData = JSON.parse(contents);
-      setFileData(jsonData);
+      onFileUpload(jsonData);
     };
 
     reader.readAsText(file);
