@@ -28,9 +28,25 @@ export function TeacherPage() {
 
   const handleCreateClass = async () => {
     try {
-      const newClass = await createClass(newClassName, user.email, fileData);
+      const { newClass, usersCredentials, fileName } = await createClass(
+        newClassName,
+        user.email,
+        fileData
+      );
       setTeacherClasses([...teacherClasses, newClass]); // Agregar la nueva clase al estado local
       closeModal();
+
+      const jsonBlob = new Blob([JSON.stringify(usersCredentials)], {
+        type: "application/json",
+      });
+
+      // Crear un enlace de descarga para el Blob
+      const downloadLink = document.createElement("a");
+      downloadLink.href = URL.createObjectURL(jsonBlob);
+      downloadLink.download = fileName;
+
+      // Simular un clic en el enlace de descarga para iniciar la descarga del archivo
+      downloadLink.click();
     } catch (error) {
       console.error("Error al crear la clase:", error);
     }
@@ -47,7 +63,6 @@ export function TeacherPage() {
   const closeModal = () => {
     setIsModalVisible(false);
     setNewClassName("");
-    setFileData(null);
   };
 
   return (

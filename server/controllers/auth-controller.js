@@ -67,7 +67,7 @@ export class AuthController {
       const user = await authModel.findOne({ where: { email } });
 
       if (!user) {
-        throw new Error("User not found");
+        return null;
       }
 
       return user;
@@ -106,6 +106,31 @@ export class AuthController {
     } catch (error) {
       console.error("Error updating user points and level:", error);
       throw new Error("Failed to update user points and level");
+    }
+  }
+
+  static async createUser(email, password) {
+    try {
+      const hashedPassword = await hashPassword(password);
+      const user = await authModel.create({ email, password: hashedPassword });
+
+      return user;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw new Error("Failed to create user");
+    }
+  }
+
+  static async updateUserPassword(email, newPassword) {
+    try {
+      const hashedPassword = await hashPassword(newPassword);
+      await authModel.update(
+        { password: hashedPassword },
+        { where: { email } }
+      );
+    } catch (error) {
+      console.error("Error updating user password:", error);
+      throw new Error("Failed to update user password");
     }
   }
 }
