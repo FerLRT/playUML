@@ -28,6 +28,12 @@ export function TeacherPage() {
 
   const handleCreateClass = async () => {
     try {
+      // Comprobar que los parámetros no sean nulos o cadenas vacías
+      if (!newClassName || !user || !user.email || !fileData) {
+        console.error("Alguno de los parámetros es nulo o una cadena vacía");
+        return;
+      }
+
       const { newClass, usersCredentials, fileName } = await createClass(
         newClassName,
         user.email,
