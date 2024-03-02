@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import { FileImport } from "../components/FileImport";
 import { ClassButton } from "../components/ClassButton";
 
+import { validateJSONStructure } from "../utils/jsonValidator";
+
 import "../styles/teacherPage.css";
 
 export function TeacherPage() {
@@ -31,6 +33,12 @@ export function TeacherPage() {
       // Comprobar que los parámetros no sean nulos o cadenas vacías
       if (!newClassName || !user || !user.email || !fileData) {
         console.error("Alguno de los parámetros es nulo o una cadena vacía");
+        return;
+      }
+
+      // Llamar a la función de validación de JSON
+      if (!validateJSONStructure(fileData)) {
+        console.error("El JSON no tiene la estructura deseada");
         return;
       }
 
