@@ -30,4 +30,11 @@ export const authModel = sequelize.define("users", {
     allowNull: false,
     defaultValue: "estudiante",
   },
+  current_class_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "classes",
+      key: "id",
+    },
+  },
 });

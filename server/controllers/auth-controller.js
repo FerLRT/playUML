@@ -133,4 +133,16 @@ export class AuthController {
       throw new Error("Failed to update user password");
     }
   }
+
+  static async updateCurrentClass(email, classId) {
+    try {
+      await authModel.update(
+        { current_class_id: classId },
+        { where: { email } }
+      );
+    } catch (error) {
+      console.error("Error updating user's current class:", error);
+      throw new Error("Failed to update user's current class");
+    }
+  }
 }

@@ -79,6 +79,7 @@ export class ClassController {
 
       // Asociar el usuario a la clase
       if (user) {
+        await AuthController.updateCurrentClass(user.email, newClass.id);
         await UserClassController.addUserToClass(user.id, newClass.id);
 
         // Almacenar las credenciales del usuario creado
