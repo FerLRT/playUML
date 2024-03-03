@@ -13,3 +13,12 @@ export async function createClass(name, teacherEmail, fileData) {
     .then((response) => response.data)
     .catch((error) => console.error("Error al crear clase:", error));
 }
+
+export async function getClassStudents(classId) {
+  return await instance
+    .get(`/classes/${classId}/students`)
+    .then((response) => response.data)
+    .catch((error) =>
+      console.error("Error al obtener estudiantes de la clase:", error)
+    );
+}

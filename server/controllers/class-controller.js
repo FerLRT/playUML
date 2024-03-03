@@ -58,6 +58,20 @@ export class ClassController {
     }
   }
 
+  static async getClassStudents(req, res) {
+    try {
+      const classId = req.params.id;
+
+      // Obtener los estudiantes de la clase
+      const students = await UserClassController.getClassStudents(classId);
+
+      res.json(students);
+    } catch (error) {
+      console.error("Error getting students:", error);
+      res.status(500).send("Internal Server Error: " + error);
+    }
+  }
+
   static async createUsersAndAssignToClass(userDataArray, newClass) {
     const usersCredentials = [];
 

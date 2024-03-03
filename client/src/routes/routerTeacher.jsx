@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { TeacherApp } from "../pages/TeacherApp";
 import { TeacherPage } from "../pages/TeacherPage";
+import { ClassPage } from "../pages/ClassPage";
 import { ErrorPage } from "../pages/ErrorPage";
 
 import { LoginPage } from "../pages/LoginPage";
@@ -12,7 +13,10 @@ const teacherRouter = createBrowserRouter([
   {
     path: "/",
     element: <TeacherApp />,
-    children: [{ index: true, element: <TeacherPage /> }],
+    children: [
+      { index: true, element: <TeacherPage /> },
+      { path: "/class/:classId", element: <ClassPage />, children: [] },
+    ],
     errorElement: <ErrorPage />,
   },
   {

@@ -1,6 +1,18 @@
 import { userClassModel } from "../models/userClass-model.js";
 
 export class UserClassController {
+  static async getClassStudents(classId) {
+    try {
+      const students = await userClassModel.findAll({
+        where: { class_id: classId },
+      });
+      return students;
+    } catch (error) {
+      console.error("Error getting students:", error);
+      throw new Error("Failed to get students");
+    }
+  }
+
   static async addUserToClass(userId, classId) {
     try {
       const userClass = await userClassModel.create({
