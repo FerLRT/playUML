@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 import { FileImport } from "../components/FileImport";
 import { ClassButton } from "../components/ClassButton";
+import { ModalSide } from "../components/ModalSide";
 
 import { validateJSONStructure } from "../utils/jsonValidator";
 
@@ -100,30 +101,18 @@ export function TeacherPage() {
         />
       ))}
 
-      <div className={`modal ${isModalVisible ? "modal-visible" : ""}`}>
-        <div className="modal-content">
-          <span className="close" onClick={closeModal}>
-            &times;
-          </span>
-          <h2>Crear una nueva clase</h2>
-          <h3>Nombre de la clase</h3>
-          <input
-            type="text"
-            placeholder="Insertar nombre de la clase"
-            value={newClassName}
-            onChange={(e) => setNewClassName(e.target.value)}
-          />
-          <FileImport onFileUpload={handleFileUpload} />
-          <button onClick={handleCreateClass}>Crear Clase</button>
-        </div>
-      </div>
-
-      <div
-        className={`modal-background ${
-          isModalVisible ? "background-visible" : ""
-        }`}
-        onClick={closeModal}
-      />
+      <ModalSide isModalVisible={isModalVisible} closeModal={closeModal}>
+        <h2>Crear una nueva clase</h2>
+        <h3>Nombre de la clase</h3>
+        <input
+          type="text"
+          placeholder="Insertar nombre de la clase"
+          value={newClassName}
+          onChange={(e) => setNewClassName(e.target.value)}
+        />
+        <FileImport onFileUpload={handleFileUpload} />
+        <button onClick={handleCreateClass}>Crear Clase</button>
+      </ModalSide>
     </div>
   );
 }

@@ -65,7 +65,13 @@ export class ClassController {
       // Obtener los estudiantes de la clase
       const students = await UserClassController.getClassStudents(classId);
 
-      res.json(students);
+      // Extraer los IDs de usuario de los objetos user_classes
+      const userIds = students.map((userClass) => userClass.dataValues.user_id);
+
+      // Luego, pasa userIds a tu método getStudentsInfo
+      const studentsWithInfo = await AuthController.getStudentsInfo(userIds);
+
+      res.json(studentsWithInfo);
     } catch (error) {
       console.error("Error getting students:", error);
       res.status(500).send("Internal Server Error: " + error);

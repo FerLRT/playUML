@@ -145,4 +145,18 @@ export class AuthController {
       throw new Error("Failed to update user's current class");
     }
   }
+
+  static async getStudentsInfo(studentsIds) {
+    try {
+      const studentsInfo = await authModel.findAll({
+        where: { id: studentsIds },
+        attributes: ["id", "email", "level"],
+      });
+
+      return studentsInfo;
+    } catch (error) {
+      console.error("Error getting students info:", error);
+      throw new Error("Failed to retrieve students information");
+    }
+  }
 }
