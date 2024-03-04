@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { ModalSide } from "../components/ModalSide";
 
-import { getClassStudents } from "../hooks/useClass";
+import { getClassStudents, getClassAverageScore } from "../hooks/useClass";
 
 import "../styles/classPage.css";
 
@@ -11,6 +11,7 @@ export function ClassPage() {
   const { classId } = useParams();
 
   const [students, setStudents] = useState([]);
+  const [averageScore, setAverageScore] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
@@ -24,7 +25,17 @@ export function ClassPage() {
       }
     };
 
+    const loadAverageScore = async () => {
+      try {
+        const averageScore = await getClassAverageScore(classId);
+        setAverageScore(averageScore);
+      } catch (error) {
+        console.error("Error loading average score", error);
+      }
+    };
+
     loadStudents();
+    loadAverageScore();
   }, [classId]);
 
   const openModal = () => {
@@ -39,6 +50,34 @@ export function ClassPage() {
     <div className="class-page">
       <h1>Estadísticas</h1>
       <div className="class-page-button-container">
+        <button className="class-page-button-students" onClick={openModal}>
+          <div className="class-page-button-avatar-container">
+            <img
+              className="class-page-button-avatar"
+              src="/src/assets/grupo.png"
+              alt="Grupo de estudiantes"
+            />
+          </div>
+          <div className="class-page-button-text">
+            <h1>{students.length}</h1>
+            <p>Estudiantes</p>
+          </div>
+        </button>
+
+        <button className="class-page-button-students">
+          <div className="class-page-button-avatar-container">
+            <img
+              className="class-page-button-avatar"
+              src="/src/assets/medalla.png"
+              alt="Grupo de estudiantes"
+            />
+          </div>
+          <div className="class-page-button-text">
+            <h1>{averageScore}/10</h1>
+            <p>Nota media</p>
+          </div>
+        </button>
+
         <button className="class-page-button-students" onClick={openModal}>
           <div className="class-page-button-avatar-container">
             <img

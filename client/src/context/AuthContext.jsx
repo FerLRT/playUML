@@ -11,7 +11,8 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const user = await login("profesor@test.com", "profesor");
-        // const user = await login("estudiante1@test.com", "estudiante1");
+        // const user = await login("correo_ejemplo_1", "noult");
+        // const user = await login("correo_ejemplo_2", "cyd444");
         // user.role = "profesor";
         setUser(user);
       } catch (error) {

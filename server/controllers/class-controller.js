@@ -3,6 +3,8 @@ import { classModel } from "../models/class-model.js";
 import { AuthController } from "./auth-controller.js";
 import { UserClassController } from "./userClass-controller.js";
 
+import { sequelize } from "../config/dbConfig.js";
+
 export class ClassController {
   static async getTeacherClasses(req, res) {
     try {
@@ -75,6 +77,82 @@ export class ClassController {
     } catch (error) {
       console.error("Error getting students:", error);
       res.status(500).send("Internal Server Error: " + error);
+    }
+  }
+
+  static async getClassAverageScore(req, res) {
+    try {
+      const classId = req.params.id;
+
+      // Consulta para obtener la puntuación máxima de cada quiz
+      const maxScores = await sequelize.query(`
+        SELECT uq.quiz_id, SUM(qa.score) AS max_score
+        FROM user_quizzes uq
+        JOIN user_question_answers uqa ON uq.user_id = uqa.user_id AND uq.quiz_id = uqa.quiz_id
+        JOIN answers qa ON uqa.question_id = qa.question_id
+        JOIN questions q ON qa.question_id = q.id
+        WHERE uq.quiz_id IN (
+          SELECT quiz_id
+          FROM user_quizzes
+          WHERE user_id IN (
+            SELECT user_id
+            FROM user_classes
+            WHERE class_id = ${classId}
+          )
+        )
+        AND qa.score > 0
+        GROUP BY uq.quiz_id
+      `);
+
+      // Consulta para calcular la suma de puntuaciones de cada quiz
+      const sumScores = await sequelize.query(`
+        SELECT uq.quiz_id, SUM(uq.score) AS total_score
+        FROM user_quizzes uq
+        WHERE uq.quiz_id IN (
+          SELECT quiz_id
+          FROM user_quizzes
+          WHERE user_id IN (
+            SELECT user_id
+            FROM user_classes
+            WHERE class_id = ${classId}
+          )
+        )
+        GROUP BY uq.quiz_id
+      `);
+
+      // Reducir los resultados a un solo array con quiz_id y average_score
+      const averageScores = maxScores[0].map((maxScore) => {
+        const quizId = maxScore.quiz_id;
+        const max = maxScore.max_score;
+        const sum =
+          sumScores[0].find((sum) => sum.quiz_id === quizId)?.total_score || 0;
+        const averageScore = (sum * 10) / max || 0;
+        return { quiz_id: quizId, average_score: averageScore };
+      });
+
+      // Obtener la suma de los average_score
+      const sumAverageScore = averageScores.reduce(
+        (accumulator, currentValue) => {
+          return accumulator + currentValue.average_score;
+        },
+        0
+      );
+
+      // Calcular el número de quizzes
+      const numeroQuizzes = averageScores.length;
+
+      // Calcular el promedio
+      const average = sumAverageScore / numeroQuizzes;
+
+      // console.log("Suma de average_score:", sumAverageScore);
+      // console.log("Número de quizzes:", numeroQuizzes);
+      // console.log("Promedio:", average);
+
+      // Devolver el promedio de los puntajes promedio de todos los quizzes
+      res.json(average);
+    } catch (error) {
+      console.error("Error al calcular la nota media de la clase:", error);
+      res.status(500).send("Error interno del servidor");
     }
   }
 
