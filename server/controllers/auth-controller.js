@@ -43,12 +43,31 @@ export class AuthController {
     res.status(200).send("OK");
   }
 
+  static async importFile(req, res) {
+    const fileContent = req.body;
+
+    try {
+      // Verificar si los datos son válidos (en este caso, un array de estudiantes)
+      if (!Array.isArray(fileContent) || fileContent.length === 0) {
+        throw new Error("Los datos no son válidos");
+      }
+
+      // Realizar cualquier procesamiento adicional necesario en los datos
+      console.log("El contenido del archivo es:", fileContent);
+
+      res.status(200).send("OK");
+    } catch (error) {
+      console.error("Error al procesar el archivo:", error);
+      res.status(400).send("Bad Request");
+    }
+  }
+
   static async getUser(email) {
     try {
       const user = await authModel.findOne({ where: { email } });
 
       if (!user) {
-        throw new Error("User not found");
+        return null;
       }
 
       return user;
@@ -87,6 +106,43 @@ export class AuthController {
     } catch (error) {
       console.error("Error updating user points and level:", error);
       throw new Error("Failed to update user points and level");
+    }
+  }
+
+  static async createUser(email, password) {
+    try {
+      const hashedPassword = await hashPassword(password);
+      const user = await authModel.create({ email, password: hashedPassword });
+
+      return user;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw new Error("Failed to create user");
+    }
+  }
+
+  static async updateUserPassword(email, newPassword) {
+    try {
+      const hashedPassword = await hashPassword(newPassword);
+      await authModel.update(
+        { password: hashedPassword },
+        { where: { email } }
+      );
+    } catch (error) {
+      console.error("Error updating user password:", error);
+      throw new Error("Failed to update user password");
+    }
+  }
+
+  static async updateCurrentClass(email, classId) {
+    try {
+      await authModel.update(
+        { current_class_id: classId },
+        { where: { email } }
+      );
+    } catch (error) {
+      console.error("Error updating user's current class:", error);
+      throw new Error("Failed to update user's current class");
     }
   }
 }

@@ -11,6 +11,7 @@ export const authModel = sequelize.define("users", {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
@@ -23,5 +24,17 @@ export const authModel = sequelize.define("users", {
   level: {
     type: DataTypes.INTEGER,
     defaultValue: 1,
+  },
+  role: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    defaultValue: "estudiante",
+  },
+  current_class_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "classes",
+      key: "id",
+    },
   },
 });
