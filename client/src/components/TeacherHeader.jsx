@@ -4,15 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import logo from "../assets/logo.png";
-import "../styles/Header.css";
+import "../styles/header.css";
 
-export function Header() {
+export function TeacherHeader() {
   const { user } = useAuth();
 
   const navigate = useNavigate();
 
-  const handleButtonClick = () => {
-    navigate("/achievements");
+  const handleClassButtonClick = () => {
+    navigate("/");
+  };
+
+  const handleQuizButtonClick = () => {
+    navigate("/");
   };
 
   return (
@@ -20,7 +24,8 @@ export function Header() {
       <img src={logo} alt="PlayUML Logo" />
       <div className="header-profile-container">
         <div className="header-options-buttons">
-          <button onClick={handleButtonClick}>Logros</button>
+          <button onClick={handleClassButtonClick}>Mis clases</button>
+          <button onClick={handleQuizButtonClick}>Ver tests</button>
         </div>
         <div className="header-user-container">
           <p className="header-user">{user ? `${user.email}` : ""}</p>
