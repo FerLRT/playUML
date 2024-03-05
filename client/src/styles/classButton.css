@@ -1,0 +1,52 @@
+.class-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+
+  margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  overflow: hidden;
+}
+
+.class-button-name {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.class-button-number {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.class-button > div {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.class-button > div > img {
+  max-height: 50px;
+  overflow: hidden;
+}
+
+.class-button__content-class {
+  height: 100%;
+  width: auto;
+}
+
+.class-button__content-student {
+  height: 70%;
+  width: auto;
+}

@@ -19,6 +19,14 @@ export class ClassController {
         where: { teacher_id: teacher.id },
       });
 
+      // Iterar sobre cada clase para obtener el número de estudiantes y agregarlo como una propiedad
+      for (let i = 0; i < classes.length; i++) {
+        const classId = classes[i].id;
+        const students = await UserClassController.getClassStudents(classId);
+        const numberOfStudents = students.length;
+        classes[i].dataValues.numberOfStudents = numberOfStudents;
+      }
+
       res.json(classes);
     } catch (error) {
       console.error("Error getting classes:", error);

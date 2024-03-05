@@ -82,24 +82,29 @@ export function TeacherPage() {
 
   return (
     <div className="teacher-page-container">
-      <h1>Teacher Page - Lista de clases</h1>
-
-      <button onClick={openModal}>Crear Nueva Clase</button>
+      <div className="teacher-page-header">
+        <h1>Mis clases</h1>
+        <button onClick={openModal}>Nueva Clase</button>
+      </div>
 
       <input
         type="text"
         placeholder="Buscar..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        className="teacher-page-search-bar"
       />
 
-      {filteredClasses.map((classItem) => (
-        <ClassButton
-          key={classItem.id}
-          to={classItem.id}
-          label={classItem.name}
-        />
-      ))}
+      <div className="teacher-page-classes">
+        {filteredClasses.map((classItem) => (
+          <ClassButton
+            key={classItem.id}
+            to={classItem.id}
+            className={classItem.name}
+            numStudents={classItem.numberOfStudents}
+          />
+        ))}
+      </div>
 
       <ModalSide isModalVisible={isModalVisible} closeModal={closeModal}>
         <h2>Crear una nueva clase</h2>

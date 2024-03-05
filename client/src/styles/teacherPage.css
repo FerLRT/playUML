@@ -1,7 +1,40 @@
 .teacher-page-container {
-  display: flex;
   flex: 1;
   flex-direction: column;
   height: 85%;
   position: relative;
+
+  padding-left: 5%;
+  padding-right: 5%;
+
+  overflow-y: auto;
+}
+
+.teacher-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.teacher-page-header > button {
+  padding: 10px 10px;
+}
+
+.teacher-page-search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.teacher-page-classes {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow-x: hidden;
+
+  margin-top: 5px;
 }
