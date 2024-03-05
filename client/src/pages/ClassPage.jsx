@@ -3,7 +3,11 @@ import { useParams } from "react-router-dom";
 
 import { ModalSide } from "../components/ModalSide";
 
-import { getClassStudents, getClassAverageScore } from "../hooks/useClass";
+import {
+  getClassStudents,
+  getClassAverageScore,
+  getClassPercentage,
+} from "../hooks/useClass";
 
 import "../styles/classPage.css";
 
@@ -12,6 +16,8 @@ export function ClassPage() {
 
   const [students, setStudents] = useState([]);
   const [averageScore, setAverageScore] = useState(0);
+  const [classPercentage, setClassPercentage] = useState(0);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
@@ -34,8 +40,18 @@ export function ClassPage() {
       }
     };
 
+    const loadClassPercentage = async () => {
+      try {
+        const classPercentage = await getClassPercentage(classId);
+        setClassPercentage(classPercentage);
+      } catch (error) {
+        console.error("Error loading class percentage", error);
+      }
+    };
+
     loadStudents();
     loadAverageScore();
+    loadClassPercentage();
   }, [classId]);
 
   const openModal = () => {
@@ -82,13 +98,13 @@ export function ClassPage() {
           <div className="class-page-button-avatar-container">
             <img
               className="class-page-button-avatar"
-              src="/src/assets/grupo.png"
+              src="/src/assets/aceptar.png"
               alt="Grupo de estudiantes"
             />
           </div>
           <div className="class-page-button-text">
-            <h1>{students.length}</h1>
-            <p>Estudiantes</p>
+            <h1>{classPercentage}%</h1>
+            <p>Completado</p>
           </div>
         </button>
       </div>

@@ -41,4 +41,15 @@ export class QuizController {
       throw new Error("Failed to retrieve experience points for the quiz");
     }
   }
+
+  static async getTotalQuizzes() {
+    try {
+      const totalQuizzes = await quizModel.count();
+
+      return totalQuizzes || 0;
+    } catch (error) {
+      console.error("Error getting total quizzes:", error);
+      res.status(500).send("Internal Server Error: " + error.message);
+    }
+  }
 }

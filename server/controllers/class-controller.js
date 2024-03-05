@@ -2,6 +2,7 @@ import { classModel } from "../models/class-model.js";
 
 import { AuthController } from "./auth-controller.js";
 import { UserClassController } from "./userClass-controller.js";
+import { QuizController } from "./quiz-controller.js";
 
 import { sequelize } from "../config/dbConfig.js";
 
@@ -144,14 +145,44 @@ export class ClassController {
       // Calcular el promedio
       const average = sumAverageScore / numeroQuizzes;
 
-      // console.log("Suma de average_score:", sumAverageScore);
-      // console.log("Número de quizzes:", numeroQuizzes);
-      // console.log("Promedio:", average);
-
       // Devolver el promedio de los puntajes promedio de todos los quizzes
-      res.json(average);
+      res.json(average.toFixed(2));
     } catch (error) {
       console.error("Error al calcular la nota media de la clase:", error);
+      res.status(500).send("Error interno del servidor");
+    }
+  }
+
+  static async getClassPercentage(req, res) {
+    try {
+      const classId = req.params.id;
+
+      // Consulta para obtener el número total de quizzes
+      const totalQuizzes = await QuizController.getTotalQuizzes();
+      const numStudents = await UserClassController.getClassStudents(classId);
+
+      // Consulta para obtener el número de quizzes completados
+      const completedQuizzes = await sequelize.query(`
+        SELECT COUNT(quiz_id) AS completed_quizzes
+        FROM user_quizzes
+        WHERE user_id IN (
+          SELECT user_id
+          FROM user_classes
+          WHERE class_id = ${classId}
+        )
+        AND score IS NOT NULL
+      `);
+
+      // Calcular el porcentaje
+      const percentage =
+        (completedQuizzes[0][0].completed_quizzes /
+          (totalQuizzes * numStudents.length)) *
+          100 || 0;
+
+      // Devolver el porcentaje de quizzes completados
+      res.json(percentage.toFixed(2));
+    } catch (error) {
+      console.error("Error al calcular el porcentaje de la clase:", error);
       res.status(500).send("Error interno del servidor");
     }
   }
