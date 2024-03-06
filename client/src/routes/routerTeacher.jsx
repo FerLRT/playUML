@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { TeacherApp } from "../pages/TeacherApp";
 import { TeacherPage } from "../pages/TeacherPage";
 import { ClassPage } from "../pages/ClassPage";
+import { QuizReviewPage } from "../pages/QuizReviewPage";
 import { ErrorPage } from "../pages/ErrorPage";
 
 import { LoginPage } from "../pages/LoginPage";
@@ -16,6 +17,11 @@ const teacherRouter = createBrowserRouter([
     children: [
       { index: true, element: <TeacherPage /> },
       { path: "/class/:classId", element: <ClassPage />, children: [] },
+      {
+        path: "/class/:classId/quiz/:quizId",
+        element: <QuizReviewPage />,
+        children: [],
+      },
     ],
     errorElement: <ErrorPage />,
   },

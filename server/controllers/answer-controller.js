@@ -45,6 +45,33 @@ export class AnswerController {
     }
   }
 
+  static async getQuestionAnswersWithScores(req, res) {
+    try {
+      const questionId = req.params.id;
+
+      const answers = await answerModel.findAll({
+        where: { question_id: questionId },
+      });
+
+      const answersWithBase64Data = await Promise.all(
+        answers.map(async (answer) => {
+          if (answer.answer_image !== null) {
+            // Convertir answer_image a base64
+            answer.answer_image = Buffer.from(answer.answer_image).toString(
+              "base64"
+            );
+          }
+          return answer;
+        })
+      );
+
+      res.json(answersWithBase64Data);
+    } catch (error) {
+      console.error("Error getting question answers:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+
   static async postSubmitAnswers(req, res) {
     try {
       const userEmail = req.body.userEmail;

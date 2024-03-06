@@ -158,6 +158,7 @@ export function ClassPage() {
         <QuizButtonReview
           key={quiz.id}
           to={quiz.id}
+          classId={classId}
           className={quiz.name}
           numResolveStudents={classStatsObject[quiz.id] || 0} // Usar la información de classStatsObject
           numStudents={students.length}

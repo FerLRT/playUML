@@ -5,6 +5,7 @@ import "../styles/quizButtonReview.css";
 
 export function QuizButtonReview({
   to,
+  classId,
   className,
   numResolveStudents,
   numStudents,
@@ -12,7 +13,7 @@ export function QuizButtonReview({
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate(`/class/${to}`);
+    navigate(`/class/${classId}/quiz/${to}`);
   };
 
   return (

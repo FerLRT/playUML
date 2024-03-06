@@ -14,6 +14,12 @@ export function getAnswers(questionId) {
     .then((response) => response.data);
 }
 
+export function getAnswersWithScores(questionId) {
+  return instance
+    .get(`/answers/scores/${questionId}`)
+    .then((response) => response.data);
+}
+
 export function getQuestionImages(questionId) {
   return instance
     .get(`/images/${questionId}`)
