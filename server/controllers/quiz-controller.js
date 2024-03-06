@@ -1,5 +1,10 @@
 import { quizModel } from "../models/quiz-model.js";
 
+import { userClassModel } from "../models/userClass-model.js";
+import { userQuizModel } from "../models/userQuiz-model.js";
+
+import { sequelize } from "../config/dbConfig.js";
+
 export class QuizController {
   static async getQuizzes(req, res) {
     try {
@@ -25,6 +30,28 @@ export class QuizController {
     } catch (error) {
       console.error("Error getting quiz:", error);
       res.status(500).send("Internal Server Error");
+    }
+  }
+
+  static async getClassStats(req, res) {
+    try {
+      const classId = req.params.id;
+
+      // Obtener los quizzes asociados a la clase y el número de estudiantes que han completado cada quiz
+      const quizStats = await sequelize.query(
+        `
+        SELECT uq.quiz_id, COUNT(uq.user_id) AS numStudents
+        FROM user_quizzes uq
+        INNER JOIN user_classes uc ON uq.user_id = uc.user_id
+        WHERE uc.class_id = ${classId}
+        GROUP BY uq.quiz_id;
+      `
+      );
+
+      res.json(quizStats[0]);
+    } catch (error) {
+      console.error("Error fetching quiz stats by class:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 

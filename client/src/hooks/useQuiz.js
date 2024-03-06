@@ -33,3 +33,9 @@ export function hasUserCompletedQuiz(userEmail, quizId) {
     .post("/user-quizzes/completed", { userEmail, quizId })
     .then((response) => response.data);
 }
+
+export function getClassStats(classId) {
+  return instance
+    .get(`/quizzes/stats/${classId}`)
+    .then((response) => response.data);
+}

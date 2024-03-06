@@ -25,7 +25,7 @@ export function TeacherHeader() {
       <div className="header-profile-container">
         <div className="header-options-buttons">
           <button onClick={handleClassButtonClick}>Mis clases</button>
-          <button onClick={handleQuizButtonClick}>Ver tests</button>
+          {/* <button onClick={handleQuizButtonClick}>Ver tests</button> */}
         </div>
         <div className="header-user-container">
           <p className="header-user">{user ? `${user.email}` : ""}</p>
