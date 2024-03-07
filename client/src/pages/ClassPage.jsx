@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { QuizButtonReview } from "../components/QuizButtonReview";
 import { ModalSide } from "../components/ModalSide";
 import { StudentButton } from "../components/StudentButton";
+import { Ranking } from "../components/Ranking";
 
 import {
   getClassStudents,
@@ -146,6 +147,9 @@ export function ClassPage() {
         </button>
       </div>
 
+      <Ranking classId={classId} />
+
+      <h1>Tests</h1>
       <input
         type="text"
         placeholder="Buscar..."

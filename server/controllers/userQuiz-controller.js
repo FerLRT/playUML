@@ -131,4 +131,18 @@ export class UserQuizController {
       throw new Error(`Error creating user quiz: ${error.message}`);
     }
   }
+
+  static async getUserQuizzes(userId) {
+    try {
+      // Consulta para obtener los quizzes completados por el usuario con sus puntuaciones
+      const userQuizzes = await userQuizModel.findAll({
+        where: { user_id: userId },
+      });
+
+      return userQuizzes;
+    } catch (error) {
+      console.error("Error fetching user quizzes:", error);
+      throw error;
+    }
+  }
 }

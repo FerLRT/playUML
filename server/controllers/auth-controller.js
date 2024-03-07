@@ -1,6 +1,9 @@
 import { authModel } from "../models/auth-model.js";
 import { hashPassword, comparePassword } from "../utils/user-utils.js";
 import { LevelController } from "./level-controller.js";
+import { UserQuizController } from "./userQuiz-controller.js";
+
+import { sequelize } from "../config/dbConfig.js";
 
 export class AuthController {
   static async signup(req, res) {
@@ -73,6 +76,21 @@ export class AuthController {
       return user;
     } catch (error) {
       console.error("Error getting user:", error);
+      throw new Error("Failed to retrieve user information");
+    }
+  }
+
+  static async getUserById(userId) {
+    try {
+      const user = await authModel.findByPk(userId);
+
+      if (!user) {
+        return null;
+      }
+
+      return user;
+    } catch (error) {
+      console.error("Error getting user by ID:", error);
       throw new Error("Failed to retrieve user information");
     }
   }
@@ -157,6 +175,44 @@ export class AuthController {
     } catch (error) {
       console.error("Error getting students info:", error);
       throw new Error("Failed to retrieve students information");
+    }
+  }
+
+  static async getUserStats(userId) {
+    try {
+      // Obtener los quizzes completados por el usuario con sus puntuaciones
+      const userQuizzes = await UserQuizController.getUserQuizzes(userId);
+
+      let totalScore = 0;
+
+      // Para cada quiz completado por el usuario
+      for (const quiz of userQuizzes) {
+        // Obtener el puntaje máximo para este quiz
+        const maxScoreResult = await sequelize.query(`
+          SELECT quizzes.id AS quiz_id, SUM(answers.score) AS max_score
+          FROM quizzes
+          JOIN questions ON quizzes.id = questions.quiz_id
+          JOIN answers ON questions.id = answers.question_id
+          WHERE quizzes.id = ${quiz.quiz_id}
+          AND answers.score > 0
+          GROUP BY quizzes.id
+        `);
+
+        const maxScore = maxScoreResult[0]?.[0]?.max_score || 0;
+
+        // Agregar el puntaje actual del usuario, ajustado al puntaje máximo
+        totalScore += (quiz.score / maxScore) * 10;
+      }
+
+      const numQuizzes = userQuizzes.length;
+
+      // Calcular la puntuación media sobre 10
+      const averageScore = numQuizzes > 0 ? totalScore / numQuizzes : 0;
+
+      return { averageScore, numQuizzes };
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      throw error;
     }
   }
 }

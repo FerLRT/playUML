@@ -5,6 +5,7 @@ import { UserClassController } from "./userClass-controller.js";
 import { QuizController } from "./quiz-controller.js";
 
 import { sequelize } from "../config/dbConfig.js";
+import { UserQuizController } from "./userQuiz-controller.js";
 
 export class ClassController {
   static async getTeacherClasses(req, res) {
@@ -191,6 +192,52 @@ export class ClassController {
       res.json(percentage.toFixed(2));
     } catch (error) {
       console.error("Error al calcular el porcentaje de la clase:", error);
+      res.status(500).send("Error interno del servidor");
+    }
+  }
+
+  static async getClassRanking(req, res) {
+    try {
+      const classId = req.params.id;
+
+      // Obtener estudiantes de la clase
+      const students = await UserClassController.getClassStudents(classId);
+
+      // Obtener el número total de quizzes
+      const totalQuizzes = await QuizController.getTotalQuizzes();
+
+      // Array para almacenar las estadísticas de cada estudiante
+      const studentStatsPromises = students.map(async (student) => {
+        const userId = student.user_id;
+        const user = await AuthController.getUserById(userId);
+
+        // Obtener la puntuación promedio del usuario
+        const { averageScore, numQuizzes } = await AuthController.getUserStats(
+          userId
+        );
+
+        // Calcular el porcentaje de quizzes completados
+        const completionPercentage = (numQuizzes / totalQuizzes) * 100;
+
+        // Calcular un valor ponderado que tenga en cuenta tanto la nota media como el porcentaje de quizzes completados
+        const weightedValue =
+          (averageScore * totalQuizzes + completionPercentage) /
+          (totalQuizzes + 1);
+
+        return {
+          userId: user.email,
+          averageScore: averageScore,
+          completionPercentage: completionPercentage,
+          weightedValue: weightedValue,
+        };
+      });
+
+      // Esperar a que todas las promesas se resuelvan
+      const studentStats = await Promise.all(studentStatsPromises);
+
+      res.json(studentStats);
+    } catch (error) {
+      console.error("Error al obtener el ranking de la clase:", error);
       res.status(500).send("Error interno del servidor");
     }
   }
