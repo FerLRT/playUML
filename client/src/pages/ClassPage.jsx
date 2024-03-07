@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { QuizButtonReview } from "../components/QuizButtonReview";
 import { ModalSide } from "../components/ModalSide";
+import { StudentButton } from "../components/StudentButton";
 
 import {
   getClassStudents,
@@ -101,7 +102,6 @@ export function ClassPage() {
 
   return (
     <div className="class-page">
-      <h1>Estadísticas</h1>
       <div className="class-page-button-container">
         <button className="class-page-button-students" onClick={openModal}>
           <div className="class-page-button-avatar-container">
@@ -169,9 +169,12 @@ export function ClassPage() {
         <h2>Lista de estudiantes</h2>
         <ul>
           {students.map((student) => (
-            <ul key={student.id}>
-              {student.email} Nivel:{student.level}
-            </ul>
+            <StudentButton
+              key={student.id}
+              to={student.id}
+              email={student.email}
+              level={student.level}
+            />
           ))}
         </ul>
       </ModalSide>

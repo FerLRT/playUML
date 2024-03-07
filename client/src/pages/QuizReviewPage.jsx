@@ -17,7 +17,6 @@ export function QuizReviewPage() {
 
   // Información de las preguntas
   const [questions, setQuestions] = useState([]);
-  const [answersScore, setAnswersScore] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 

@@ -1,0 +1,66 @@
+.student-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+
+  margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  overflow: hidden;
+
+  background-color: transparent;
+  border: transparent;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.student-button-email {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 5px;
+  margin-right: 10px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-button-level {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
+
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.student-button > div {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.student-button > div > img {
+  max-height: 50px;
+  overflow: hidden;
+}
+
+.student-button__content {
+  height: 100%;
+  width: auto;
+}
+
+.student-button__content-student {
+  height: 70%;
+  width: auto;
+}
