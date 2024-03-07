@@ -12,8 +12,6 @@ import {
   getQuestionImages,
 } from "../hooks/useQuiz";
 
-import "../styles/quizReviewPage.css";
-
 export function QuizReviewPage() {
   const { quizId } = useParams();
 
