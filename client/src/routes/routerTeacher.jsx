@@ -24,7 +24,7 @@ const teacherRouter = createBrowserRouter([
         children: [],
       },
       {
-        path: "/student/:studentId",
+        path: "/class/:classId/student/:studentId",
         element: <StudentStatsPage />,
         children: [],
       },

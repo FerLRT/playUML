@@ -15,6 +15,7 @@ import { getClassStats } from "../hooks/useQuiz";
 import { getQuizzes } from "../hooks/useQuiz";
 
 import "../styles/classPage.css";
+import { StatButton } from "../components/StatButton";
 
 export function ClassPage() {
   const { classId } = useParams();
@@ -104,47 +105,26 @@ export function ClassPage() {
   return (
     <div className="class-page">
       <div className="class-page-button-container">
-        <button className="class-page-button-students" onClick={openModal}>
-          <div className="class-page-button-avatar-container">
-            <img
-              className="class-page-button-avatar"
-              src="/src/assets/grupo.png"
-              alt="Grupo de estudiantes"
-            />
-          </div>
-          <div className="class-page-button-text">
-            <h1>{students.length}</h1>
-            <p>Estudiantes</p>
-          </div>
-        </button>
+        <StatButton
+          image_src="/src/assets/grupo.png"
+          stat="Estudiantes"
+          value={students.length}
+          openModal={openModal}
+        />
 
-        <button className="class-page-button-students">
-          <div className="class-page-button-avatar-container">
-            <img
-              className="class-page-button-avatar"
-              src="/src/assets/medalla.png"
-              alt="Grupo de estudiantes"
-            />
-          </div>
-          <div className="class-page-button-text">
-            <h1>{averageScore}/10</h1>
-            <p>Nota media</p>
-          </div>
-        </button>
+        <StatButton
+          image_src="/src/assets/medalla.png"
+          stat="Nota media"
+          value={`${averageScore}/10`}
+          openModal={null}
+        />
 
-        <button className="class-page-button-students" onClick={openModal}>
-          <div className="class-page-button-avatar-container">
-            <img
-              className="class-page-button-avatar"
-              src="/src/assets/aceptar.png"
-              alt="Grupo de estudiantes"
-            />
-          </div>
-          <div className="class-page-button-text">
-            <h1>{classPercentage}%</h1>
-            <p>Completado</p>
-          </div>
-        </button>
+        <StatButton
+          image_src="/src/assets/aceptar.png"
+          stat="Completado"
+          value={`${classPercentage}%`}
+          openModal={null}
+        />
       </div>
 
       <Ranking classId={classId} />

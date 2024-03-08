@@ -41,7 +41,7 @@ export function Ranking({ classId }) {
       dataIndex: "completionPercentage",
       key: "completionPercentage",
       sorter: (a, b) => a.completionPercentage - b.completionPercentage,
-      render: (completionPercentage) => completionPercentage.toFixed(2),
+      render: (completionPercentage) => completionPercentage.toFixed(2) + "%",
     },
     {
       title: "Puntuación Ranking",

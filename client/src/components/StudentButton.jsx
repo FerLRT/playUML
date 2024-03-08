@@ -1,13 +1,14 @@
 import { React } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import "../styles/studentButton.css";
 
 export function StudentButton({ to, email, level }) {
+  const { classId } = useParams();
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate(`/student/${to}`);
+    navigate(`/class/${classId}/student/${to}`);
   };
 
   return (

@@ -1,0 +1,38 @@
+.stat-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 10px;
+  width: 50%;
+  max-width: 250px;
+  margin: 10px 5px;
+}
+
+.stat-button-avatar-container {
+  flex: 0 0 50%;
+  margin-right: 10px;
+}
+
+.stat-button-avatar {
+  width: 100%;
+  height: auto;
+}
+
+.stat-button-text {
+  flex: 1;
+  overflow: hidden;
+}
+
+.stat-button-text h1 {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-button-text p {
+  margin: 5px 0;
+}

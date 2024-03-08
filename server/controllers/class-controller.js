@@ -200,6 +200,19 @@ export class ClassController {
     try {
       const classId = req.params.id;
 
+      // Obtener las estadísticas de todos los estudiantes
+      const studentStats = await ClassController.getClassRankingById(classId);
+
+      // Devolver el array completo de estadísticas de los estudiantes
+      res.json(studentStats);
+    } catch (error) {
+      console.error("Error al obtener el ranking de la clase:", error);
+      res.status(500).send("Error interno del servidor");
+    }
+  }
+
+  static async getClassRankingById(classId) {
+    try {
       // Obtener estudiantes de la clase
       const students = await UserClassController.getClassStudents(classId);
 
@@ -235,7 +248,7 @@ export class ClassController {
       // Esperar a que todas las promesas se resuelvan
       const studentStats = await Promise.all(studentStatsPromises);
 
-      res.json(studentStats);
+      return studentStats;
     } catch (error) {
       console.error("Error al obtener el ranking de la clase:", error);
       res.status(500).send("Error interno del servidor");
