@@ -56,7 +56,9 @@ export function QuizFooter({
             ? calculateScoreColor(totalScore)
             : index === currentQuestionIndex
             ? "#498bf9" // blue
-            : "#808080"; // gray
+            : userAnswerIds.length > 0
+            ? "#808080" // purple
+            : "#ffffff"; // white
           return (
             <div
               key={index}

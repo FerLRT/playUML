@@ -56,7 +56,7 @@ export function QuizFooterReview({
           const circleColor =
             index === currentQuestionIndex
               ? "#498bf9" // blue
-              : "#808080"; // gray
+              : "#ffffff"; // white
           return (
             <div
               key={index}
