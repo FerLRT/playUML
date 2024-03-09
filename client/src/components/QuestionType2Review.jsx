@@ -8,22 +8,25 @@ export function QuestionType2Review({
   question,
   selectedAnswers,
   onAnswerSelect,
+  studentId,
 }) {
   const handleAnswerChange = (selectedValue) => {
-    const updatedSelectedAnswers = Array.isArray(selectedAnswers)
-      ? [...selectedAnswers]
-      : [];
+    if (studentId === undefined || studentId === null) {
+      const updatedSelectedAnswers = Array.isArray(selectedAnswers)
+        ? [...selectedAnswers]
+        : [];
 
-    if (updatedSelectedAnswers.includes(selectedValue)) {
-      updatedSelectedAnswers.splice(
-        updatedSelectedAnswers.indexOf(selectedValue),
-        1
-      );
-    } else {
-      updatedSelectedAnswers.push(selectedValue);
+      if (updatedSelectedAnswers.includes(selectedValue)) {
+        updatedSelectedAnswers.splice(
+          updatedSelectedAnswers.indexOf(selectedValue),
+          1
+        );
+      } else {
+        updatedSelectedAnswers.push(selectedValue);
+      }
+
+      onAnswerSelect(updatedSelectedAnswers);
     }
-
-    onAnswerSelect(updatedSelectedAnswers);
   };
 
   return (
@@ -55,6 +58,7 @@ export function QuestionType2Review({
                 answer={answer}
                 selectionState={selectedAnswers.includes(answer.id)}
                 onSelectionChange={handleAnswerChange}
+                studentId={studentId}
               />
             );
           })}

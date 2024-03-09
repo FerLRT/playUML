@@ -45,3 +45,15 @@ export function getClassStats(classId) {
     .get(`/quizzes/stats/${classId}`)
     .then((response) => response.data);
 }
+
+export function getStudentQuizScore(userId, quizId) {
+  return instance
+    .get(`/user-quizzes/score/${userId}/${quizId}`)
+    .then((response) => response.data);
+}
+
+export function getStudentAnswers(userId, quizId) {
+  return instance
+    .get(`/quizzes/${quizId}/user/${userId}`)
+    .then((response) => response.data);
+}

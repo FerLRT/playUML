@@ -56,6 +56,31 @@ export class UserQuizController {
     }
   }
 
+  static async getUserQuizScore(req, res) {
+    try {
+      // Obtener el email del usuario y el quizId de la solicitud
+      const userId = req.params.userId;
+      const quizId = req.params.quizId;
+
+      // Consultar si hay un registro para el usuario y el quiz específico
+      const existingUserQuiz = await userQuizModel.findOne({
+        where: { user_id: userId, quiz_id: quizId },
+      });
+
+      // Si se encuentra un registro, devolver la puntuación del usuario
+      if (existingUserQuiz) {
+        res.status(200).json({ score: existingUserQuiz.score });
+      } else {
+        res.status(200).json({ score: null });
+      }
+    } catch (error) {
+      console.error(`Error getting user quiz score: ${error.message}`);
+      res
+        .status(500)
+        .json({ error: `Error getting user quiz score: ${error.message}` });
+    }
+  }
+
   static async createUserQuiz(userId, quizId, score, answers) {
     try {
       // Consultar si ya hay resultados almacenados para este usuario y este quiz

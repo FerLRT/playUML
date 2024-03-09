@@ -28,6 +28,11 @@ const teacherRouter = createBrowserRouter([
         element: <StudentStatsPage />,
         children: [],
       },
+      {
+        path: "/class/:classId/student/:studentId/quiz/:quizId",
+        element: <QuizReviewPage />,
+        children: [],
+      },
     ],
     errorElement: <ErrorPage />,
   },

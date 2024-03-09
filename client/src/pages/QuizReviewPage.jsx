@@ -10,10 +10,11 @@ import {
   getQuestions,
   getAnswersWithScores,
   getQuestionImages,
+  getStudentAnswers,
 } from "../hooks/useQuiz";
 
 export function QuizReviewPage() {
-  const { quizId } = useParams();
+  const { quizId, studentId, classId } = useParams();
 
   // Información de las preguntas
   const [questions, setQuestions] = useState([]);
@@ -46,6 +47,27 @@ export function QuizReviewPage() {
         );
 
         setQuestions(questionsWithAnswersAndImages);
+
+        if (studentId) {
+          // Obtener las respuestas del estudiante para todas las preguntas
+          const studentAnswers = await getStudentAnswers(studentId, quizId);
+
+          // Crear un array de userAnswers con la misma longitud que questionsList
+          const userAnswersArray = new Array(questionsList.length).fill([]);
+
+          // Llenar userAnswersArray con las respuestas del estudiante
+          studentAnswers.forEach((answer) => {
+            const index = questionsWithAnswersAndImages.findIndex(
+              (question) => question.id === answer.questionId
+            );
+            if (index !== -1) {
+              userAnswersArray[index] = answer.selectedAnswerIds;
+            }
+          });
+
+          // Establecer userAnswers con userAnswersArray
+          setUserAnswers(userAnswersArray);
+        }
       } catch (error) {
         console.error("Error loading quiz", error);
       }
@@ -96,6 +118,7 @@ export function QuizReviewPage() {
             question={currentQuestion}
             selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
+            studentId={studentId}
           />
         );
       case 2:
@@ -104,6 +127,7 @@ export function QuizReviewPage() {
             question={currentQuestion}
             selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
+            studentId={studentId}
           />
         );
       case 3:
@@ -112,6 +136,7 @@ export function QuizReviewPage() {
             question={currentQuestion}
             selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
+            studentId={studentId}
           />
         );
       default:
@@ -130,6 +155,8 @@ export function QuizReviewPage() {
           goToQuestion={goToQuestion}
           onNext={nextQuestion}
           onPrev={prevQuestion}
+          studentId={studentId}
+          userAnswers={userAnswers}
         />
       </div>
     </div>

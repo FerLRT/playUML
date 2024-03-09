@@ -4,6 +4,7 @@ import { userClassModel } from "../models/userClass-model.js";
 import { userQuizModel } from "../models/userQuiz-model.js";
 
 import { sequelize } from "../config/dbConfig.js";
+import { UserQuestionAnswerController } from "./userQuestionAnswer-controller.js";
 
 export class QuizController {
   static async getQuizzes(req, res) {
@@ -52,6 +53,28 @@ export class QuizController {
     } catch (error) {
       console.error("Error fetching quiz stats by class:", error);
       res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  static async getStudentAnswers(req, res) {
+    try {
+      const userId = req.params.userId;
+      const quizId = req.params.id;
+
+      const userAnswers =
+        await UserQuestionAnswerController.getUserQuestionAnswers(
+          userId,
+          quizId
+        );
+
+      if (userAnswers) {
+        res.json(userAnswers);
+      } else {
+        res.status(404).send("User answers not found");
+      }
+    } catch (error) {
+      console.error("Error getting student answers:", error);
+      res.status(500).send("Internal Server Error");
     }
   }
 

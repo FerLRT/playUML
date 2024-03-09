@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DiagramImage } from "./DiagramImage";
 import { CodeViewer } from "./CodeViewer";
 
@@ -9,12 +9,19 @@ export function CustomRadioButtonReview({
   answer,
   onSelectionChange,
   selectionState,
+  studentId,
 }) {
   const [isSelected, setIsSelected] = useState(selectionState);
 
+  useEffect(() => {
+    setIsSelected(selectionState);
+  }, [selectionState]);
+
   const toggleSelection = () => {
-    setIsSelected(!isSelected);
-    onSelectionChange(answer.id, !isSelected);
+    if (studentId === undefined || studentId === null) {
+      setIsSelected(!isSelected);
+      onSelectionChange(answer.id, !isSelected);
+    }
   };
 
   // Determinar el color del radio button según el score

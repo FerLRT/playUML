@@ -9,14 +9,34 @@ export function QuizFooterReview({
   goToQuestion,
   onNext,
   onPrev,
+  studentId,
+  userAnswers,
 }) {
   const totalQuestions = questions.length;
 
   const { classId } = useParams();
   const navigate = useNavigate();
 
+  const getCircleColor = (index) => {
+    const score = questions[index].answers
+      .filter((answer) => userAnswers[index].includes(answer.id))
+      .reduce((acc, curr) => acc + curr.score, 0);
+
+    if (score === 1) {
+      return "#38d42a"; // green
+    } else if (score >= 0 && score < 1) {
+      return "#fdfd0f"; // yellow
+    } else {
+      return "#ec1b1b"; // red
+    }
+  };
+
   const handleButtonClick = () => {
-    navigate(`/class/${classId}`);
+    if (studentId) {
+      navigate(`/class/${classId}/student/${studentId}`);
+    } else {
+      navigate(`/class/${classId}`);
+    }
   };
 
   return (
@@ -26,7 +46,6 @@ export function QuizFooterReview({
           className="quiz-footer-button-previous"
           onClick={() => {
             onPrev();
-            // setShowSummaryView(false);
           }}
           disabled={currentQuestionIndex === 0}
         >
@@ -43,10 +62,17 @@ export function QuizFooterReview({
               key={index}
               onClick={() => {
                 goToQuestion(index);
-                // setShowSummaryView(false);
               }}
               className={`quiz-footer-circle ${""}`}
-              style={{ backgroundColor: circleColor }}
+              style={{
+                backgroundColor: studentId
+                  ? getCircleColor(index)
+                  : circleColor,
+                border:
+                  index === currentQuestionIndex && studentId
+                    ? "3px solid #498bf9"
+                    : "",
+              }}
             >
               {index + 1}
             </div>
@@ -57,7 +83,6 @@ export function QuizFooterReview({
           className="quiz-footer-button-next"
           onClick={() => {
             onNext();
-            setShowSummaryView(false);
           }}
           disabled={currentQuestionIndex === totalQuestions - 1}
         >
@@ -70,7 +95,7 @@ export function QuizFooterReview({
           className="quiz-footer-button-finish"
           onClick={handleButtonClick}
         >
-          Volver a la clase
+          {studentId ? "Volver al estudiante" : "Volver a la clase"}
         </button>
       </div>
     </div>

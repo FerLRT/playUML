@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { StatButton } from "../components/StatButton";
+import { StudentQuizButtonReview } from "../components/StudentQuizButtonReview";
 
 import { getStudentStats } from "../hooks/useUser";
+import { getQuizzes } from "../hooks/useQuiz";
 
 import "../styles/studentStatsPage.css";
 
 export function StudentStatsPage() {
   const { classId, studentId } = useParams();
   const navigate = useNavigate();
+
+  const [quizzes, setQuizzes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [studentStats, setStudentStats] = useState({});
 
@@ -27,8 +32,23 @@ export function StudentStatsPage() {
       }
     };
 
+    const loadQuizzes = async () => {
+      try {
+        const quizzes = await getQuizzes();
+        setQuizzes(quizzes);
+      } catch (error) {
+        console.error("Error loading quizzes", error);
+      }
+    };
+
     loadStudentStats();
+    loadQuizzes();
   }, [studentId]);
+
+  // Lógica para filtrar la lista de tests
+  const filteredQuizzes = quizzes.filter((quiz) =>
+    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="student-stats-page">
@@ -58,6 +78,24 @@ export function StudentStatsPage() {
           openModal={null}
         />
       </div>
+
+      <h1>Tests</h1>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="class-page-search-bar"
+      />
+
+      {filteredQuizzes.map((quiz) => (
+        <StudentQuizButtonReview
+          key={quiz.id}
+          to={quiz.id}
+          quizId={quiz.id}
+          quizName={quiz.name}
+        />
+      ))}
     </div>
   );
 }
