@@ -28,6 +28,13 @@ export function StudentQuizButtonReview({ to, quizId, quizName }) {
     navigate(`/class/${classId}/student/${studentId}/quiz/${to}`);
   };
 
+  const scoreClass =
+    quizScore === null
+      ? "quiz-button-review-number-na"
+      : quizScore < 5
+      ? "quiz-button-review-number-low"
+      : "quiz-button-review-number-high";
+
   return (
     <button className="quiz-button-review" onClick={handleButtonClick}>
       <div className="quiz-button-review__content">
@@ -39,7 +46,7 @@ export function StudentQuizButtonReview({ to, quizId, quizName }) {
         <h2 className="quiz-button-review-name">{quizName}</h2>
       </div>
       <div className="quiz-button-review__content">
-        <h1 className="quiz-button-review-number">
+        <h1 className={`quiz-button-review-number ${scoreClass}`}>
           {quizScore === null ? "N/A" : `${quizScore}/10`}
         </h1>
         <h2>&rang;</h2>

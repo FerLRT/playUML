@@ -30,7 +30,6 @@
 
 .quiz-button-review > div {
   display: flex;
-  /* align-items: center; */
   height: 100%;
   margin-left: 10px;
   margin-right: 10px;
@@ -54,4 +53,16 @@
 .quiz-button-review__content-student {
   height: 70%;
   width: auto;
+}
+
+.quiz-button-review-number-na {
+  color: black;
+}
+
+.quiz-button-review-number-low {
+  color: red;
+}
+
+.quiz-button-review-number-high {
+  color: green;
 }
