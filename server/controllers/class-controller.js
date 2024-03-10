@@ -110,31 +110,11 @@ export class ClassController {
     try {
       const classId = req.params.id;
 
-      // Consulta para obtener la puntuación máxima de cada quiz
-      const maxScores = await sequelize.query(`
-        SELECT uq.quiz_id, SUM(qa.score) AS max_score
-        FROM user_quizzes uq
-        JOIN user_question_answers uqa ON uq.user_id = uqa.user_id AND uq.quiz_id = uqa.quiz_id
-        JOIN answers qa ON uqa.question_id = qa.question_id
-        JOIN questions q ON qa.question_id = q.id
-        WHERE uq.quiz_id IN (
-          SELECT quiz_id
-          FROM user_quizzes
-          WHERE user_id IN (
-            SELECT user_id
-            FROM user_classes
-            WHERE class_id = ${classId}
-          )
-        )
-        AND qa.score > 0
-        GROUP BY uq.quiz_id
-      `);
-
-      // Consulta para calcular la suma de puntuaciones de cada quiz
+      // Consulta para obtener la suma de puntuaciones de cada quiz
       const sumScores = await sequelize.query(`
-        SELECT uq.quiz_id, SUM(uq.score) AS total_score
-        FROM user_quizzes uq
-        WHERE uq.quiz_id IN (
+        SELECT quiz_id, SUM(score) AS total_score
+        FROM user_quizzes
+        WHERE quiz_id IN (
           SELECT quiz_id
           FROM user_quizzes
           WHERE user_id IN (
@@ -143,35 +123,34 @@ export class ClassController {
             WHERE class_id = ${classId}
           )
         )
-        GROUP BY uq.quiz_id
+        GROUP BY quiz_id
       `);
 
-      // Reducir los resultados a un solo array con quiz_id y average_score
-      const averageScores = maxScores[0].map((maxScore) => {
-        const quizId = maxScore.quiz_id;
-        const max = maxScore.max_score;
-        const sum =
-          sumScores[0].find((sum) => sum.quiz_id === quizId)?.total_score || 0;
-        const averageScore = (sum * 10) / max || 0;
-        return { quiz_id: quizId, average_score: averageScore };
-      });
+      // Consulta para obtener el número total de quizzes respondidos por los usuarios en la clase
+      const totalQuizzes = await sequelize.query(`
+        SELECT COUNT(quiz_id) AS total_quizzes
+        FROM user_quizzes
+        WHERE user_id IN (
+          SELECT user_id
+          FROM user_classes
+          WHERE class_id = ${classId}
+        )
+      `);
 
-      // Obtener la suma de los average_score
-      const sumAverageScore = averageScores.reduce(
-        (accumulator, currentValue) => {
-          return accumulator + currentValue.average_score;
-        },
+      // Calcular la suma total de las puntuaciones de los quizzes
+      const sumTotalScore = sumScores[0].reduce(
+        (total, score) => total + score.total_score,
         0
       );
 
-      // Calcular el número de quizzes
-      const numeroQuizzes = averageScores.length;
+      // Calcular el número total de quizzes
+      const totalQuizzesCount = totalQuizzes[0][0].total_quizzes;
 
-      // Calcular el promedio
-      const average = sumAverageScore / numeroQuizzes;
+      // Calcular la puntuación promedio de la clase
+      const classAverageScore = sumTotalScore / totalQuizzesCount;
 
-      // Devolver el promedio de los puntajes promedio de todos los quizzes
-      res.json(average.toFixed(2));
+      // Devolver la puntuación promedio de la clase
+      res.json(classAverageScore.toFixed(2));
     } catch (error) {
       console.error("Error al calcular la nota media de la clase:", error);
       res.status(500).send("Error interno del servidor");

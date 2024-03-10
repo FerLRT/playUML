@@ -164,19 +164,35 @@ export class AnswerController {
 
   static async calculateUserScore(answers, scores) {
     let totalScore = 0;
+    let totalPossibleScore = 0;
 
     answers.forEach((answer) => {
       const questionScores = scores.filter(
         (score) => score.questionId === answer.questionId
       );
 
-      questionScores.forEach((questionScore) => {
-        if (answer.selectedAnswerIds.includes(questionScore.answerId)) {
-          totalScore += questionScore.score;
+      answer.selectedAnswerIds.forEach((selectedAnswerId) => {
+        const selectedAnswerScore = questionScores.find(
+          (score) => score.answerId === selectedAnswerId
+        );
+
+        if (selectedAnswerScore) {
+          totalScore += selectedAnswerScore.score;
         }
       });
+
+      // Sumar solo los puntajes que son mayores que cero para el totalPossibleScore
+      totalPossibleScore += questionScores.reduce((total, current) => {
+        if (current.score > 0) {
+          return total + current.score;
+        }
+        return total;
+      }, 0);
     });
 
-    return totalScore;
+    // Normalizar la puntuación para obtener un valor entre 0 y 10
+    const userScoreOutOfTen = (totalScore / totalPossibleScore) * 10;
+
+    return userScoreOutOfTen.toFixed(2);
   }
 }

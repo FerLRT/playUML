@@ -255,21 +255,7 @@ export class AuthController {
 
       // Para cada quiz completado por el usuario
       for (const quiz of userQuizzes) {
-        // Obtener el puntaje máximo para este quiz
-        const maxScoreResult = await sequelize.query(`
-          SELECT quizzes.id AS quiz_id, SUM(answers.score) AS max_score
-          FROM quizzes
-          JOIN questions ON quizzes.id = questions.quiz_id
-          JOIN answers ON questions.id = answers.question_id
-          WHERE quizzes.id = ${quiz.quiz_id}
-          AND answers.score > 0
-          GROUP BY quizzes.id
-        `);
-
-        const maxScore = maxScoreResult[0]?.[0]?.max_score || 0;
-
-        // Agregar el puntaje actual del usuario, ajustado al puntaje máximo
-        totalScore += (quiz.score / maxScore) * 10;
+        totalScore += quiz.score;
       }
 
       const numQuizzes = userQuizzes.length;
