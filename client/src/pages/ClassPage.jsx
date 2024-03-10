@@ -129,7 +129,11 @@ export function ClassPage() {
         <StatButton
           image_src="/src/assets/medalla.png"
           stat="Nota media"
-          value={`${averageScore}/10`}
+          value={
+            isNaN(averageScore) || averageScore === null
+              ? "--"
+              : `${averageScore}/10`
+          }
           openModal={null}
         />
 

@@ -203,6 +203,10 @@ export class AuthController {
 
       const studentEmail = student.email;
 
+      if (numQuizzes == 0) {
+        averageScore = NaN;
+      }
+
       res.json({
         studentEmail,
         positionRanking,

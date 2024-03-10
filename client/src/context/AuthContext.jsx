@@ -11,9 +11,12 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const user = await login("profesor@test.com", "profesor");
-        // const user = await login("correo_ejemplo_1", "noult");
-        // const user = await login("correo_ejemplo_2", "cyd444");
-        // user.role = "profesor";
+        // const user = await login("estudiante1@alu.uclm.es", "vp7kn");
+        // const user = await login("estudiante2@alu.uclm.es", "evkll");
+        // const user = await login("estudiante3@alu.uclm.es", "4eljng");
+
+        // const user = await login("estudiante1nuevo@alu.uclm.es", "a0gk4u");
+
         setUser(user);
       } catch (error) {
         console.error("Error al obtener el usuario por defecto:", error);

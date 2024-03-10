@@ -112,18 +112,11 @@ export class ClassController {
 
       // Consulta para obtener la suma de puntuaciones de cada quiz
       const sumScores = await sequelize.query(`
-        SELECT quiz_id, SUM(score) AS total_score
-        FROM user_quizzes
-        WHERE quiz_id IN (
-          SELECT quiz_id
-          FROM user_quizzes
-          WHERE user_id IN (
-            SELECT user_id
-            FROM user_classes
-            WHERE class_id = ${classId}
-          )
-        )
-        GROUP BY quiz_id
+        SELECT uq.quiz_id, SUM(uq.score) AS total_score
+        FROM user_quizzes uq
+        JOIN user_classes uc ON uq.user_id = uc.user_id
+        WHERE uc.class_id = ${classId}
+        GROUP BY uq.quiz_id;
       `);
 
       // Consulta para obtener el número total de quizzes respondidos por los usuarios en la clase
