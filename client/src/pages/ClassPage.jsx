@@ -5,6 +5,7 @@ import { QuizButtonReview } from "../components/QuizButtonReview";
 import { ModalSide } from "../components/ModalSide";
 import { StudentButton } from "../components/StudentButton";
 import { Ranking } from "../components/Ranking";
+import { StatButton } from "../components/StatButton";
 
 import {
   getClassStudents,
@@ -16,7 +17,6 @@ import { getClassStats } from "../hooks/useQuiz";
 import { getQuizzes } from "../hooks/useQuiz";
 
 import "../styles/classPage.css";
-import { StatButton } from "../components/StatButton";
 
 export function ClassPage() {
   const { classId } = useParams();

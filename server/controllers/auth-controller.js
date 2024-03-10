@@ -201,7 +201,14 @@ export class AuthController {
         student.email
       );
 
-      res.json({ positionRanking, averageScore, completionPercentage });
+      const studentEmail = student.email;
+
+      res.json({
+        studentEmail,
+        positionRanking,
+        averageScore,
+        completionPercentage,
+      });
     } catch (error) {
       console.error("Error getting student stats:", error);
       throw new Error("Failed to retrieve student stats");

@@ -52,6 +52,8 @@ export function StudentStatsPage() {
 
   return (
     <div className="student-stats-page">
+      <h1>Estadísticas del estudiante: {studentStats.studentEmail}</h1>
+
       <button className="back-button" onClick={handleButtonClick}>
         Volver
       </button>
