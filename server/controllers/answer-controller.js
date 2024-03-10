@@ -45,6 +45,33 @@ export class AnswerController {
     }
   }
 
+  static async getQuestionAnswersWithScores(req, res) {
+    try {
+      const questionId = req.params.id;
+
+      const answers = await answerModel.findAll({
+        where: { question_id: questionId },
+      });
+
+      const answersWithBase64Data = await Promise.all(
+        answers.map(async (answer) => {
+          if (answer.answer_image !== null) {
+            // Convertir answer_image a base64
+            answer.answer_image = Buffer.from(answer.answer_image).toString(
+              "base64"
+            );
+          }
+          return answer;
+        })
+      );
+
+      res.json(answersWithBase64Data);
+    } catch (error) {
+      console.error("Error getting question answers:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+
   static async postSubmitAnswers(req, res) {
     try {
       const userEmail = req.body.userEmail;
@@ -137,19 +164,35 @@ export class AnswerController {
 
   static async calculateUserScore(answers, scores) {
     let totalScore = 0;
+    let totalPossibleScore = 0;
 
     answers.forEach((answer) => {
       const questionScores = scores.filter(
         (score) => score.questionId === answer.questionId
       );
 
-      questionScores.forEach((questionScore) => {
-        if (answer.selectedAnswerIds.includes(questionScore.answerId)) {
-          totalScore += questionScore.score;
+      answer.selectedAnswerIds.forEach((selectedAnswerId) => {
+        const selectedAnswerScore = questionScores.find(
+          (score) => score.answerId === selectedAnswerId
+        );
+
+        if (selectedAnswerScore) {
+          totalScore += selectedAnswerScore.score;
         }
       });
+
+      // Sumar solo los puntajes que son mayores que cero para el totalPossibleScore
+      totalPossibleScore += questionScores.reduce((total, current) => {
+        if (current.score > 0) {
+          return total + current.score;
+        }
+        return total;
+      }, 0);
     });
 
-    return totalScore;
+    // Normalizar la puntuación para obtener un valor entre 0 y 10
+    const userScoreOutOfTen = (totalScore / totalPossibleScore) * 10;
+
+    return userScoreOutOfTen.toFixed(2);
   }
 }

@@ -1,4 +1,4 @@
-.class-page {
+.student-stats-page {
   flex: 1;
   flex-direction: column;
   height: 85%;
@@ -10,22 +10,11 @@
   overflow-y: auto;
 }
 
-.class-page p {
-  margin-bottom: 10px;
-}
-
-.class-page-button-container {
+.student-stats-button-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   margin: 20px;
   padding: 0 10px;
-}
-
-.class-page-search-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
 }

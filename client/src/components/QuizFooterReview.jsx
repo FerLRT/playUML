@@ -1,28 +1,41 @@
 import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 import "../styles/quizFooter.css";
 
-export function QuizFooter({
+export function QuizFooterReview({
   questions,
   currentQuestionIndex,
   goToQuestion,
   onNext,
   onPrev,
-  onFinish,
-  quizCompleted,
-  setShowSummaryView,
+  studentId,
   userAnswers,
-  answersScore,
 }) {
   const totalQuestions = questions.length;
-  const finishButtonText = quizCompleted ? "Resumen" : "Finalizar";
 
-  const calculateScoreColor = (score) => {
+  const { classId } = useParams();
+  const navigate = useNavigate();
+
+  const getCircleColor = (index) => {
+    const score = questions[index].answers
+      .filter((answer) => userAnswers[index].includes(answer.id))
+      .reduce((acc, curr) => acc + curr.score, 0);
+
     if (score === 1) {
       return "#38d42a"; // green
     } else if (score >= 0 && score < 1) {
       return "#fdfd0f"; // yellow
     } else {
       return "#ec1b1b"; // red
+    }
+  };
+
+  const handleButtonClick = () => {
+    if (studentId) {
+      navigate(`/class/${classId}/student/${studentId}`);
+    } else {
+      navigate(`/class/${classId}`);
     }
   };
 
@@ -33,7 +46,6 @@ export function QuizFooter({
           className="quiz-footer-button-previous"
           onClick={() => {
             onPrev();
-            setShowSummaryView(false);
           }}
           disabled={currentQuestionIndex === 0}
         >
@@ -41,37 +53,26 @@ export function QuizFooter({
         </button>
 
         {questions.map((_, index) => {
-          const questionId = questions[index].id;
-          const userAnswerIds = userAnswers[index];
-          const scores = answersScore.filter(
-            (score) =>
-              score.questionId === questionId &&
-              userAnswerIds.includes(score.answerId)
-          );
-          const totalScore = scores.reduce(
-            (total, current) => total + current.score,
-            0
-          );
-          const circleColor = quizCompleted
-            ? calculateScoreColor(totalScore)
-            : index === currentQuestionIndex
-            ? "#498bf9" // blue
-            : userAnswerIds.length > 0
-            ? "#808080" // purple
-            : "#ffffff"; // white
+          const circleColor =
+            index === currentQuestionIndex
+              ? "#498bf9" // blue
+              : "#ffffff"; // white
           return (
             <div
               key={index}
               onClick={() => {
                 goToQuestion(index);
-                setShowSummaryView(false);
               }}
-              className={`quiz-footer-circle ${
-                quizCompleted && currentQuestionIndex === index
-                  ? "completed"
-                  : ""
-              }`}
-              style={{ backgroundColor: circleColor }}
+              className={`quiz-footer-circle ${""}`}
+              style={{
+                backgroundColor: studentId
+                  ? getCircleColor(index)
+                  : circleColor,
+                border:
+                  index === currentQuestionIndex && studentId
+                    ? "3px solid #498bf9"
+                    : "",
+              }}
             >
               {index + 1}
             </div>
@@ -82,7 +83,6 @@ export function QuizFooter({
           className="quiz-footer-button-next"
           onClick={() => {
             onNext();
-            setShowSummaryView(false);
           }}
           disabled={currentQuestionIndex === totalQuestions - 1}
         >
@@ -91,8 +91,11 @@ export function QuizFooter({
       </div>
 
       <div className="quiz-footer-button-finish-container">
-        <button className="quiz-footer-button-finish" onClick={onFinish}>
-          {finishButtonText}
+        <button
+          className="quiz-footer-button-finish"
+          onClick={handleButtonClick}
+        >
+          {studentId ? "Volver al estudiante" : "Volver a la clase"}
         </button>
       </div>
     </div>

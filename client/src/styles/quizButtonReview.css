@@ -1,4 +1,4 @@
-.class-button {
+.quiz-button-review {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-.class-button-name {
+.quiz-button-review-name {
   display: flex;
   align-items: center;
   height: 100%;
@@ -20,7 +20,7 @@
   margin-right: 10px;
 }
 
-.class-button-number {
+.quiz-button-review-number {
   display: flex;
   align-items: center;
   height: 100%;
@@ -28,25 +28,41 @@
   margin-right: 5px;
 }
 
-.class-button > div {
+.quiz-button-review > div {
   display: flex;
-  align-items: center;
   height: 100%;
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.class-button > div > img {
+.quiz-button-review > div > h2 {
+  display: flex;
+  align-items: center;
+}
+
+.quiz-button-review > div > img {
   max-height: 50px;
   overflow: hidden;
 }
 
-.class-button__content-class {
+.quiz-button-review__content-class {
   height: 100%;
   width: auto;
 }
 
-.class-button__content-student {
+.quiz-button-review__content-student {
   height: 70%;
   width: auto;
+}
+
+.quiz-button-review-number-na {
+  color: black;
+}
+
+.quiz-button-review-number-low {
+  color: red;
+}
+
+.quiz-button-review-number-high {
+  color: green;
 }

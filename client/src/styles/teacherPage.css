@@ -1,54 +1,74 @@
 .teacher-page-container {
-  display: flex;
   flex: 1;
   flex-direction: column;
   height: 85%;
   position: relative;
-}
 
-.modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 50%;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  padding-left: 5%;
+  padding-right: 5%;
+
   overflow-y: auto;
-  transition: transform 0.3s ease-out;
-  transform: translateX(100%);
 }
 
-.modal-content {
+.teacher-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.teacher-page-header > button {
+  padding: 10px 10px;
+}
+
+.teacher-page-search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.teacher-page-classes {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow-x: hidden;
+
+  margin-top: 5px;
+}
+
+.teacher-page-modalside {
+  background-color: #ffffff;
   padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
 }
 
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
+.teacher-page-modalside-title {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-.modal-background {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-  pointer-events: none;
+.teacher-page-modalside-option {
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
-.modal-visible {
-  transform: translateX(0);
+.teacher-page-modalside-input {
+  width: calc(100% - 40px);
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
 }
 
-.background-visible {
-  opacity: 1;
-  pointer-events: auto;
+.teacher-page-modalside-button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  margin: 10px 0;
 }

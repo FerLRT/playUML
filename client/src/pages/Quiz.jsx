@@ -61,8 +61,13 @@ export function Quiz() {
           })
         );
 
-        const { hasCompletedQuiz, userAnswersForQuiz, userAnswersScores } =
-          await hasUserCompletedQuiz(user.email, quizId);
+        // En caso de querer que solo se pueda realizar el test una vez
+        // const { hasCompletedQuiz, userAnswersForQuiz, userAnswersScores } =
+        //   await hasUserCompletedQuiz(user.email, quizId);
+
+        const hasCompletedQuiz = false;
+        const userAnswersForQuiz = [];
+        const userAnswersScores = [];
 
         if (hasCompletedQuiz) {
           setSendAnswers(false);

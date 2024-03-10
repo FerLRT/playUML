@@ -5,3 +5,4 @@ export const answerRouter = Router();
 
 answerRouter.get("/:id", AnswerController.getQuestionAnswers);
 answerRouter.post("/user", AnswerController.postSubmitAnswers);
+answerRouter.get("/scores/:id", AnswerController.getQuestionAnswersWithScores);
