@@ -10,6 +10,7 @@ import {
   getClassStudents,
   getClassAverageScore,
   getClassPercentage,
+  getClassName,
 } from "../hooks/useClass";
 import { getClassStats } from "../hooks/useQuiz";
 import { getQuizzes } from "../hooks/useQuiz";
@@ -20,6 +21,7 @@ import { StatButton } from "../components/StatButton";
 export function ClassPage() {
   const { classId } = useParams();
 
+  const [className, setClassName] = useState("");
   const [students, setStudents] = useState([]);
   const [averageScore, setAverageScore] = useState(0);
   const [classPercentage, setClassPercentage] = useState(0);
@@ -31,6 +33,15 @@ export function ClassPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
+    const loadClassName = async () => {
+      try {
+        const classData = await getClassName(classId);
+        setClassName(classData.name);
+      } catch (error) {
+        console.error("Error loading class name", error);
+      }
+    };
+
     // Obtener estudiantes de la clase
     const loadStudents = async () => {
       try {
@@ -77,6 +88,7 @@ export function ClassPage() {
       }
     };
 
+    loadClassName();
     loadStudents();
     loadAverageScore();
     loadClassPercentage();
@@ -104,6 +116,8 @@ export function ClassPage() {
 
   return (
     <div className="class-page">
+      <h1>{className}</h1>
+
       <div className="class-page-button-container">
         <StatButton
           image_src="/src/assets/grupo.png"

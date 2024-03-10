@@ -5,9 +5,25 @@ import { UserClassController } from "./userClass-controller.js";
 import { QuizController } from "./quiz-controller.js";
 
 import { sequelize } from "../config/dbConfig.js";
-import { UserQuizController } from "./userQuiz-controller.js";
 
 export class ClassController {
+  static async getClassName(req, res) {
+    try {
+      const classId = req.params.id;
+
+      // Obtener el nombre de la clase
+      const className = await classModel.findOne({
+        where: { id: classId },
+        attributes: ["name"],
+      });
+
+      res.json(className);
+    } catch (error) {
+      console.error("Error getting class name:", error);
+      res.status(500).send("Internal Server Error: " + error);
+    }
+  }
+
   static async getTeacherClasses(req, res) {
     try {
       const teacherEmail = req.params.id;
