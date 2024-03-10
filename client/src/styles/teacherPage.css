@@ -38,3 +38,37 @@
 
   margin-top: 5px;
 }
+
+.teacher-page-modalside {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+.teacher-page-modalside-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.teacher-page-modalside-option {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.teacher-page-modalside-input {
+  width: calc(100% - 40px);
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.teacher-page-modalside-button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  margin: 10px 0;
+}

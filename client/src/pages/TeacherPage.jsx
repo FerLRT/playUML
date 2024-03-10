@@ -107,16 +107,24 @@ export function TeacherPage() {
       </div>
 
       <ModalSide isModalVisible={isModalVisible} closeModal={closeModal}>
-        <h2>Crear una nueva clase</h2>
-        <h3>Nombre de la clase</h3>
+        <h2 className="teacher-page-modalside-title">Crear una nueva clase</h2>
+        <h3 className="teacher-page-modalside-option">Nombre de la clase</h3>
         <input
+          className="teacher-page-modalside-input"
           type="text"
           placeholder="Insertar nombre de la clase"
           value={newClassName}
           onChange={(e) => setNewClassName(e.target.value)}
         />
+
         <FileImport onFileUpload={handleFileUpload} />
-        <button onClick={handleCreateClass}>Crear Clase</button>
+
+        <button
+          className="teacher-page-modalside-button"
+          onClick={handleCreateClass}
+        >
+          Crear Clase
+        </button>
       </ModalSide>
     </div>
   );
