@@ -4,6 +4,8 @@ import { AuthController } from "./auth-controller.js";
 import { UserClassController } from "./userClass-controller.js";
 import { QuizController } from "./quiz-controller.js";
 
+import { sendCredentialsEmail } from "../utils/mail-utils.js";
+
 import { sequelize } from "../config/dbConfig.js";
 
 export class ClassController {
@@ -269,6 +271,9 @@ export class ClassController {
 
         // Almacenar las credenciales del usuario creado
         usersCredentials.push({ email: direccindecorreo, password });
+
+        // Enviar correo electrónico al usuario con sus credenciales
+        await sendCredentialsEmail(direccindecorreo, password);
       }
     }
     return usersCredentials;

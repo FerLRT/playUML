@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
         // const user = await login("estudiante3@alu.uclm.es", "4eljng");
 
         // const user = await login("estudiante1nuevo@alu.uclm.es", "a0gk4u");
-
+        // const user = await login("estudiante2nuevo@alu.uclm.es", "cmdxhi");
         setUser(user);
       } catch (error) {
         console.error("Error al obtener el usuario por defecto:", error);
