@@ -18,9 +18,14 @@ export function HomePage() {
   }, []);
 
   // Lógica para filtrar la lista de tests
-  const filteredQuizzes = quizzes.filter((quiz) =>
-    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const quizzesByCategory = quizzes.reduce((acc, quiz) => {
+    const { category } = quiz;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(quiz);
+    return acc;
+  }, {});
 
   return (
     <div className="home-container">
@@ -34,8 +39,21 @@ export function HomePage() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      {filteredQuizzes.map((quiz) => (
-        <QuizButton key={quiz.id} to={quiz.id} label={quiz.name} />
+      {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
+        <details key={category} open>
+          <summary>
+            <h2>{category}</h2>
+          </summary>
+          <div className="category-quizzes">
+            {categoryQuizzes
+              .filter((quiz) =>
+                quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((quiz) => (
+                <QuizButton key={quiz.id} to={quiz.id} label={quiz.name} />
+              ))}
+          </div>
+        </details>
       ))}
     </div>
   );

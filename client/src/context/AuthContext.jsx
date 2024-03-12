@@ -10,8 +10,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await login("profesor@test.com", "profesor");
-        // const user = await login("estudiante1@alu.uclm.es", "vp7kn");
+        // const user = await login("profesor@test.com", "profesor");
+        const user = await login("estudiante1@alu.uclm.es", "vp7kn");
         // const user = await login("estudiante2@alu.uclm.es", "evkll");
         // const user = await login("estudiante3@alu.uclm.es", "4eljng");
 
