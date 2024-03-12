@@ -29,12 +29,10 @@ export function StudentButton({ to, email, level, last_connection }) {
     if (diffInMinutes < 1) {
       return "Justo ahora";
     } else if (diffInMinutes < 60) {
-      // return `Hace ${Math.round(diffInMinutes)} minutos`;
       return `Hace ${Math.round(diffInMinutes)} minuto${
         Math.round(diffInMinutes).toFixed(0) != 1 ? "s" : ""
       }`;
     } else if (diffInMinutes < 1440) {
-      // return `Hace ${Math.floor(diffInMinutes / 60)} horas`;
       return `Hace ${Math.floor(diffInMinutes / 60).toFixed(0)} hora${
         Math.floor(diffInMinutes / 60).toFixed(0) != 1 ? "s" : ""
       }`;
