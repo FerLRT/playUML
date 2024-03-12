@@ -10,10 +10,6 @@
   overflow-y: auto;
 }
 
-.class-page p {
-  margin-bottom: 10px;
-}
-
 .class-page-button-container {
   display: flex;
   justify-content: center;

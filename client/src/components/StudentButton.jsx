@@ -67,7 +67,7 @@ export function StudentButton({ to, email, level, last_connection }) {
           alt="Estudiante"
           className="student-button__content-student"
         />
-        <h2 className="student-button-email">{email}</h2>
+        <p className="student-button-email">{email}</p>
       </div>
 
       <div className="student-button__content-info">
