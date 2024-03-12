@@ -97,9 +97,14 @@ export function ClassPage() {
   }, [classId]);
 
   // Lógica para filtrar la lista de tests
-  const filteredQuizzes = quizzes.filter((quiz) =>
-    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const quizzesByCategory = quizzes.reduce((acc, quiz) => {
+    const { category } = quiz;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(quiz);
+    return acc;
+  }, {});
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -156,15 +161,28 @@ export function ClassPage() {
         className="class-page-search-bar"
       />
 
-      {filteredQuizzes.map((quiz) => (
-        <QuizButtonReview
-          key={quiz.id}
-          to={quiz.id}
-          classId={classId}
-          className={quiz.name}
-          numResolveStudents={classStatsObject[quiz.id] || 0} // Usar la información de classStatsObject
-          numStudents={students.length}
-        />
+      {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
+        <details key={category} open>
+          <summary>
+            <h2>{category}</h2>
+          </summary>
+          <div className="category-quizzes">
+            {categoryQuizzes
+              .filter((quiz) =>
+                quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((quiz) => (
+                <QuizButtonReview
+                  key={quiz.id}
+                  to={quiz.id}
+                  classId={classId}
+                  className={quiz.name}
+                  numResolveStudents={classStatsObject[quiz.id] || 0}
+                  numStudents={students.length}
+                />
+              ))}
+          </div>
+        </details>
       ))}
 
       <ModalSide isModalVisible={isModalVisible} closeModal={closeModal}>

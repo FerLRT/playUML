@@ -1,17 +1,20 @@
 import { quizModel } from "../models/quiz-model.js";
 
-import { userClassModel } from "../models/userClass-model.js";
-import { userQuizModel } from "../models/userQuiz-model.js";
-
 import { sequelize } from "../config/dbConfig.js";
 import { UserQuestionAnswerController } from "./userQuestionAnswer-controller.js";
 
 export class QuizController {
   static async getQuizzes(req, res) {
     try {
-      const quizzes = await quizModel.findAll();
+      // Realiza una consulta SQL para obtener los quizzes con información sobre sus categorías
+      const quizzes = await sequelize.query(`
+          SELECT q.*, c.name AS category
+          FROM quizzes q
+          INNER JOIN quiz_category qc ON q.id = qc.quiz_id
+          INNER JOIN categories c ON qc.category_id = c.id
+      `);
 
-      res.json(quizzes);
+      res.json(quizzes[0]);
     } catch (error) {
       console.error("Error getting quizzes:", error);
       res.status(500).send("Internal Server Error: " + error.message);

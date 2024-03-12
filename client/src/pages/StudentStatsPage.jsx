@@ -46,9 +46,14 @@ export function StudentStatsPage() {
   }, [studentId]);
 
   // Lógica para filtrar la lista de tests
-  const filteredQuizzes = quizzes.filter((quiz) =>
-    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const quizzesByCategory = quizzes.reduce((acc, quiz) => {
+    const { category } = quiz;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(quiz);
+    return acc;
+  }, {});
 
   return (
     <div className="student-stats-page">
@@ -95,13 +100,26 @@ export function StudentStatsPage() {
         className="class-page-search-bar"
       />
 
-      {filteredQuizzes.map((quiz) => (
-        <StudentQuizButtonReview
-          key={quiz.id}
-          to={quiz.id}
-          quizId={quiz.id}
-          quizName={quiz.name}
-        />
+      {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
+        <details key={category} open>
+          <summary>
+            <h2>{category}</h2>
+          </summary>
+          <div className="category-quizzes">
+            {categoryQuizzes
+              .filter((quiz) =>
+                quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((quiz) => (
+                <StudentQuizButtonReview
+                  key={quiz.id}
+                  to={quiz.id}
+                  quizId={quiz.id}
+                  quizName={quiz.name}
+                />
+              ))}
+          </div>
+        </details>
       ))}
     </div>
   );

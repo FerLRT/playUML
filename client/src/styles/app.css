@@ -16,3 +16,11 @@
 button {
   cursor: pointer;
 }
+
+summary {
+  cursor: pointer;
+}
+summary h2 {
+  display: inline-block;
+  margin-right: 10px;
+}
