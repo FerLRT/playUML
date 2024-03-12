@@ -176,6 +176,7 @@ export function ClassPage() {
               to={student.id}
               email={student.email}
               level={student.level}
+              last_connection={student.last_connection}
             />
           ))}
         </ul>
