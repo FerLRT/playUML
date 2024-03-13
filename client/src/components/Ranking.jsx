@@ -49,11 +49,17 @@ export function Ranking({ classId }) {
       key: "weightedValue",
       sorter: (a, b) => a.weightedValue - b.weightedValue,
       render: (weightedValue) => weightedValue.toFixed(2),
+      defaultSortOrder: "descend", // Orden descendente por defecto
     },
   ];
 
+  // Ordenar el ranking por la columna "Puntuación Ranking"
+  const sortedRanking = ranking
+    .slice()
+    .sort((a, b) => b.weightedValue - a.weightedValue);
+
   // Agregar posición al ranking
-  const rankedData = ranking.map((student, index) => ({
+  const rankedData = sortedRanking.map((student, index) => ({
     ...student,
     position: index + 1,
   }));
