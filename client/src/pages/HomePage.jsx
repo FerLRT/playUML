@@ -50,7 +50,12 @@ export function HomePage() {
                 quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
               )
               .map((quiz) => (
-                <QuizButton key={quiz.id} to={quiz.id} label={quiz.name} />
+                <QuizButton
+                  key={quiz.id}
+                  to={quiz.id}
+                  quizId={quiz.id}
+                  quizName={quiz.name}
+                />
               ))}
           </div>
         </details>
