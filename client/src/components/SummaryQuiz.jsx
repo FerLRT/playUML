@@ -46,14 +46,14 @@ export function SummaryView({ quizScore, startTime, endTime }) {
 
   return (
     <div className="summary-view-container">
-      <h1>RESUMEN DEL TEST</h1>
+      <h1>Resumen del test</h1>
       <LevelIndicator />
-      <h2>Puntuación: {quizScore}/10</h2>
-      <h2>Tiempo transcurrido: {elapsedTime}</h2>
+      <h2>Nota: {quizScore}/10</h2>
+      <h2>Has completado el test en {elapsedTime}</h2>
 
       <ScoreDistributionChart userScore={quizScore} />
 
-      <button onClick={handleButtonClick}>Página de inicio</button>
+      <button onClick={handleButtonClick}>Volver al inicio</button>
 
       <Confetti width={width} height={height} numberOfPieces={numberOfPieces} />
     </div>

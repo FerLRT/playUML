@@ -4,5 +4,26 @@
   flex: 1;
   height: 100%;
   width: 100%;
+
+  padding: 0 15%;
   overflow: auto;
+}
+
+.summary-view-container h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.summary-view-container h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.summary-view-container .score-distribution-chart {
+  width: 100%;
+  height: 400px;
+  margin-top: 20px;
 }
