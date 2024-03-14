@@ -57,3 +57,9 @@ export function getStudentAnswers(userId, quizId) {
     .get(`/quizzes/${quizId}/user/${userId}`)
     .then((response) => response.data);
 }
+
+export function getChartStats(userId, quizId) {
+  return instance
+    .get(`/quizzes/stats/${userId}/${quizId}`)
+    .then((response) => response.data);
+}

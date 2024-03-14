@@ -14,14 +14,17 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.7",
     "@ramonak/react-progress-bar": "^5.2.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "antd": "^5.15.1",
     "axios": "^1.6.7",
     "moment": "^2.30.1",
     "react": "^18.2.0",
+    "react-confetti": "^6.1.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.0",
     "react-syntax-highlighter": "^15.5.0",
-    "react-zoom-pan-pinch": "^3.4.0"
+    "react-zoom-pan-pinch": "^3.4.0",
+    "recharts": "^2.12.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

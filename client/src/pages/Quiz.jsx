@@ -29,11 +29,15 @@ export function Quiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
   const [newAchievements, setNewAchievements] = useState([]);
+  const [studentQuizScore, setStudentQuizScore] = useState(0);
 
   // Estado del quiz y resumen
   const [quizCompleted, setQuizCompleted] = useState(false); // False: podemos seguir modifcarndo las respuestas, True: no podemos modificar las respuestas
   const [showSummaryView, setShowSummaryView] = useState(false); // False: no se muestra el resumen, True: se muestra el resumen
   const [sendAnswers, setSendAnswers] = useState(true); // False: no se han enviado las respuestas, True: se han enviado las respuestas
+
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
 
   // Obtener los datos del quiz
   useEffect(() => {
@@ -88,6 +92,9 @@ export function Quiz() {
 
     setSendAnswers(true);
     loadData();
+
+    // Guardar la hora de inicio
+    setStartTime(new Date());
   }, [quizId]);
 
   // Navegar a una pregunta específica
@@ -126,6 +133,9 @@ export function Quiz() {
   useEffect(() => {
     if (sendAnswers) {
       if (quizCompleted) {
+        // Guardar la hora de finalización
+        setEndTime(new Date());
+
         console.log(
           "Test completado. Vamos a enviar las respuestas al servidor."
         );
@@ -147,6 +157,7 @@ export function Quiz() {
             user.experience_points = response.experience;
             user.level = response.level;
             setNewAchievements(response.unlockedAchievements);
+            setStudentQuizScore(response.totalScore);
           })
           .catch((error) => {
             console.error("Error al enviar respuestas:", error);
@@ -173,7 +184,13 @@ export function Quiz() {
     }
 
     if (quizCompleted && showSummaryView) {
-      return <SummaryView />;
+      return (
+        <SummaryView
+          quizScore={studentQuizScore}
+          startTime={startTime}
+          endTime={endTime}
+        />
+      );
     }
 
     switch (currentQuestion.type) {
