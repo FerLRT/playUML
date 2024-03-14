@@ -3,7 +3,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import { useAuth } from "../context/AuthContext";
 import { getRequiredPointsForNextLevel } from "../hooks/useLevel";
 
-import "../styles/LevelIndicator.css";
+import "../styles/levelIndicator.css";
 
 export function LevelIndicator() {
   const { user } = useAuth();

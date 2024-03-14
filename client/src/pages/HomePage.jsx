@@ -29,37 +29,40 @@ export function HomePage() {
 
   return (
     <div className="home-container">
-      <h1>Home Page - Lista de tests</h1>
       <LevelIndicator />
 
-      <input
-        type="text"
-        placeholder="Buscar..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <div className="home-test-list-container">
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
-      {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
-        <details key={category} open>
-          <summary>
-            <h2>{category}</h2>
-          </summary>
-          <div className="category-quizzes">
-            {categoryQuizzes
-              .filter((quiz) =>
-                quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((quiz) => (
-                <QuizButton
-                  key={quiz.id}
-                  to={quiz.id}
-                  quizId={quiz.id}
-                  quizName={quiz.name}
-                />
-              ))}
-          </div>
-        </details>
-      ))}
+        {Object.entries(quizzesByCategory).map(
+          ([category, categoryQuizzes]) => (
+            <details className="category-quizzes-group" key={category} open>
+              <summary>
+                <h2>{category}</h2>
+              </summary>
+              <div className="category-quizzes">
+                {categoryQuizzes
+                  .filter((quiz) =>
+                    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((quiz) => (
+                    <QuizButton
+                      key={quiz.id}
+                      to={quiz.id}
+                      quizId={quiz.id}
+                      quizName={quiz.name}
+                    />
+                  ))}
+              </div>
+            </details>
+          )
+        )}
+      </div>
     </div>
   );
 }

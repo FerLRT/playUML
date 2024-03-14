@@ -1,9 +1,10 @@
 .achievement-page {
   display: flex;
-  flex: 1;
   flex-direction: column;
+  flex: 1;
   height: 85%;
 
+  padding: 20px 15%;
   overflow: auto;
 }
 
@@ -53,4 +54,12 @@
   .achievement {
     flex-basis: calc(100% - 40px);
   }
+}
+
+.achievement-page-button {
+  display: flex;
+  flex: 1;
+  justify-content: right;
+  align-items: end;
+  margin-top: 20px;
 }

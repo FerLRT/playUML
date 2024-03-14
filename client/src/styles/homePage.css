@@ -1,6 +1,17 @@
 .home-container {
   display: flex;
-  flex: 1;
   flex-direction: column;
+  flex: 1;
   height: 85%;
+
+  padding: 20px 15%;
+  overflow: auto;
+}
+
+.home-test-list-container {
+  margin-top: 20px;
+}
+
+.category-quizzes-group {
+  padding: 10px 0;
 }

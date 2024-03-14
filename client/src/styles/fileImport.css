@@ -1,0 +1,30 @@
+.file-import-container {
+  margin-top: 10px;
+}
+
+.file-import-input {
+  display: none;
+}
+
+.file-import-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  border: 2px solid #6edb9e;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.file-import-label:hover {
+  border-color: #57c79e;
+  color: #57c79e;
+}
+
+.file-import-icon {
+  margin-right: 10px;
+}

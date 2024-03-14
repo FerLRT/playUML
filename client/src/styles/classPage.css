@@ -1,13 +1,11 @@
 .class-page {
-  flex: 1;
+  display: flex;
   flex-direction: column;
+  flex: 1;
   height: 85%;
-  position: relative;
 
-  padding-left: 5%;
-  padding-right: 5%;
-
-  overflow-y: auto;
+  padding: 20px 15%;
+  overflow: auto;
 }
 
 .class-page-button-container {

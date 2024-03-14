@@ -24,3 +24,44 @@ summary h2 {
   display: inline-block;
   margin-right: 10px;
 }
+
+input[type="text"] {
+  width: 100%;
+  max-width: 350px;
+  padding: 7px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.button-basic {
+  display: inline-block;
+  height: auto;
+  width: auto;
+  max-width: 150px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: 2px solid #6edb9e;
+  border-radius: 5px;
+  background-color: #6edb9e;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.button-basic:hover,
+.button-basic:focus {
+  background-color: #57c79e;
+  border-color: #57c79e;
+  color: #fff;
+}

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { sendFileData } from "../hooks/useUser";
+import React from "react";
+
+import "../styles/fileImport.css";
 
 export function FileImport({ onFileUpload }) {
   const handleFileChange = (event) => {
@@ -30,8 +31,18 @@ export function FileImport({ onFileUpload }) {
   };
 
   return (
-    <div>
-      <input type="file" accept=".json" onChange={handleFileChange} />
+    <div className="file-import-container">
+      <h3 className="file-import-title">Importar datos desde JSON</h3>
+      <label htmlFor="file" className="file-import-label">
+        Seleccionar Archivo
+      </label>
+      <input
+        id="file"
+        className="file-import-input"
+        type="file"
+        accept=".json"
+        onChange={handleFileChange}
+      />
     </div>
   );
 }

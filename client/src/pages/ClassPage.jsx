@@ -162,7 +162,7 @@ export function ClassPage() {
       />
 
       {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
-        <details key={category} open>
+        <details className="category-quizzes-group" key={category} open>
           <summary>
             <h2>{category}</h2>
           </summary>

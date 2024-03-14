@@ -36,8 +36,6 @@ export function AchievementPage() {
 
   return (
     <div className="achievement-page">
-      <button onClick={handleButtonClick}>Página de inicio</button>
-
       <div className="achievement-list">
         {achievements.map((achievement) => (
           <div
@@ -53,6 +51,12 @@ export function AchievementPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="achievement-page-button">
+        <button className="button-basic" onClick={handleButtonClick}>
+          Volver a inicio
+        </button>
       </div>
     </div>
   );
