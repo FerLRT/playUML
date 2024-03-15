@@ -57,11 +57,7 @@ export function StudentStatsPage() {
 
   return (
     <div className="student-stats-page">
-      <h1>Estadísticas del estudiante: {studentStats.studentEmail}</h1>
-
-      <button className="back-button" onClick={handleButtonClick}>
-        Volver
-      </button>
+      <h1>Estadísticas de: {studentStats.studentEmail}</h1>
 
       <div className="student-stats-button-container">
         <StatButton
@@ -101,7 +97,7 @@ export function StudentStatsPage() {
       />
 
       {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
-        <details key={category} open>
+        <details className="category-quizzes-group" key={category} open>
           <summary>
             <h2>{category}</h2>
           </summary>
@@ -121,6 +117,11 @@ export function StudentStatsPage() {
           </div>
         </details>
       ))}
+      <div className="student-stats-back-button-container">
+        <button className="button-basic" onClick={handleButtonClick}>
+          Volver
+        </button>
+      </div>
     </div>
   );
 }

@@ -23,3 +23,14 @@
   align-items: center;
   width: 100%;
 }
+
+.class-page-modalside {
+  display: flex;
+  flex-direction: column;
+
+  padding: 5% 10%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

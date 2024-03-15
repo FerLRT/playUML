@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { getClassRanking } from "../hooks/useRanking";
 
+import "../styles/ranking.css";
+
 export function Ranking({ classId }) {
   const [ranking, setRanking] = useState([]);
 
@@ -20,19 +22,22 @@ export function Ranking({ classId }) {
 
   const columns = [
     {
-      title: "Posición",
+      title: "Pos.",
       dataIndex: "position",
       key: "position",
+      width: 10,
     },
     {
       title: "Estudiante",
       dataIndex: "userId",
       key: "userId",
+      width: 100,
     },
     {
       title: "Puntuación Media",
       dataIndex: "averageScore",
       key: "averageScore",
+      width: 100,
       sorter: (a, b) => a.averageScore - b.averageScore,
       render: (averageScore) => averageScore.toFixed(2),
     },
@@ -40,6 +45,7 @@ export function Ranking({ classId }) {
       title: "Porcentaje Completado",
       dataIndex: "completionPercentage",
       key: "completionPercentage",
+      width: 100,
       sorter: (a, b) => a.completionPercentage - b.completionPercentage,
       render: (completionPercentage) => completionPercentage.toFixed(2) + "%",
     },
@@ -47,6 +53,7 @@ export function Ranking({ classId }) {
       title: "Puntuación Ranking",
       dataIndex: "weightedValue",
       key: "weightedValue",
+      width: 100,
       sorter: (a, b) => a.weightedValue - b.weightedValue,
       render: (weightedValue) => weightedValue.toFixed(2),
       defaultSortOrder: "descend", // Orden descendente por defecto
@@ -65,14 +72,16 @@ export function Ranking({ classId }) {
   }));
 
   return (
-    <div>
+    <div className="ranking-table-container">
       <h1>Ranking</h1>
-      <Table
-        dataSource={rankedData}
-        columns={columns}
-        pagination={{ pageSize: 5 }}
-        rowKey={(record) => record.userId}
-      />
+      <div className="ranking-table-scrollable">
+        <Table
+          dataSource={rankedData}
+          columns={columns}
+          pagination={{ pageSize: 5 }}
+          rowKey={(record) => record.userId}
+        />
+      </div>
     </div>
   );
 }

@@ -186,18 +186,20 @@ export function ClassPage() {
       ))}
 
       <ModalSide isModalVisible={isModalVisible} closeModal={closeModal}>
-        <h2>Lista de estudiantes</h2>
-        <ul>
-          {students.map((student) => (
-            <StudentButton
-              key={student.id}
-              to={student.id}
-              email={student.email}
-              level={student.level}
-              last_connection={student.last_connection}
-            />
-          ))}
-        </ul>
+        <div className="class-page-modalside">
+          <h2>Lista de estudiantes</h2>
+          <ul>
+            {students.map((student) => (
+              <StudentButton
+                key={student.id}
+                to={student.id}
+                email={student.email}
+                level={student.level}
+                last_connection={student.last_connection}
+              />
+            ))}
+          </ul>
+        </div>
       </ModalSide>
     </div>
   );

@@ -31,6 +31,7 @@ export function HomePage() {
     <div className="home-container">
       <LevelIndicator />
 
+      <h1>Tests disponibles</h1>
       <div className="home-test-list-container">
         <input
           type="text"

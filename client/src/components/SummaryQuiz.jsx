@@ -52,9 +52,11 @@ export function SummaryView({ quizScore, startTime, endTime }) {
       <h2>Has completado el test en {elapsedTime}</h2>
 
       <ScoreDistributionChart userScore={quizScore} />
-
-      <button onClick={handleButtonClick}>Volver al inicio</button>
-
+      <div className="summary-quiz-back-button-container">
+        <button className="button-basic" onClick={handleButtonClick}>
+          Volver
+        </button>
+      </div>
       <Confetti width={width} height={height} numberOfPieces={numberOfPieces} />
     </div>
   );

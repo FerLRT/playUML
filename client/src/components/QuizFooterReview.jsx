@@ -95,7 +95,7 @@ export function QuizFooterReview({
           className="quiz-footer-button-finish"
           onClick={handleButtonClick}
         >
-          {studentId ? "Volver al estudiante" : "Volver a la clase"}
+          Volver
         </button>
       </div>
     </div>

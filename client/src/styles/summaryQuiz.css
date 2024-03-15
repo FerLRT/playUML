@@ -1,11 +1,11 @@
 .summary-view-container {
   display: flex;
-  flex-direction: column;
   flex: 1;
+  flex-direction: column;
   height: 100%;
   width: 100%;
 
-  padding: 20 15%;
+  padding: 20px 15%;
   overflow: auto;
 }
 
@@ -26,4 +26,12 @@
   width: 100%;
   height: 400px;
   margin-top: 20px;
+}
+
+.summary-quiz-back-button-container {
+  display: flex;
+  flex: 1;
+  justify-content: right;
+  align-items: end;
+  padding: 10px 0px;
 }

@@ -15,7 +15,6 @@
 .modal-content {
   display: flex;
   height: 100%;
-  padding: 20px 10px;
 }
 
 .close {
