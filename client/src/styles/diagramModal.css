@@ -23,3 +23,25 @@
   display: flex;
   flex-direction: row;
 }
+
+.diagram-modal-image-controls-zoom {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.diagram-modal-image-controls-zoom-out {
+  margin-left: 10px;
+}
+
+.diagram-modal-image-controls-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+}
+
+.react-transform-wrapper {
+  background-color: white !important;
+}

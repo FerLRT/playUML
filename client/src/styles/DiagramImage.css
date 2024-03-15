@@ -5,7 +5,44 @@
 
 .diagram-image-controls {
   display: flex;
-  border-bottom: 1px solid black;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 1);
+  width: 100%;
+  min-width: 170px;
+  max-height: 50px;
+
+  overflow: hidden;
+
+  border-bottom: 1px solid #ccc;
+}
+
+.diagram-image-controls-zoom {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+}
+
+.diagram-image-controls button {
+  background-color: transparent;
+  color: #333;
+  border: none;
+  transition: color 0.3s;
+}
+
+.diagram-image-controls button:hover {
+  color: #555;
+}
+
+.diagram-image-controls button img {
+  width: 35px;
+  height: 35px;
+}
+
+.diagram-image-controls-zoom-out {
+  margin-left: 10px;
 }
 
 .react-transform-wrapper {

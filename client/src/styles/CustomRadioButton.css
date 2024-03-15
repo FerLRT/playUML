@@ -9,12 +9,13 @@
 .custom-radio-button {
   display: flex;
   width: 90%;
+  min-width: 250px;
   height: auto;
 
   margin: 5px;
   padding: 5px;
 
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .custom-radio-button-letter {
@@ -37,6 +38,7 @@
   width: 100%;
   justify-content: left;
   align-items: center;
+  overflow: hidden;
 }
 
 .custom-radio-button-answer-text,
@@ -46,8 +48,9 @@
   justify-content: left;
   align-items: center;
   width: 100%;
-  padding: 5px;
-  overflow: hidden;
+  min-height: 35px;
+
+  font-size: 16px;
 }
 
 /* Estilos para respuestas seleccionada - correcta - incorrecta - correcta no seleccionada */

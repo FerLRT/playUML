@@ -19,13 +19,23 @@ export function DiagramImage({ image }) {
     : `data:image/jpeg;base64,${image}`;
 
   const Controls = () => {
-    const { zoomIn, zoomOut, resetTransform } = useControls();
+    const { zoomIn, zoomOut } = useControls();
     return (
       <>
-        <button onClick={() => zoomIn()}>Zoom In</button>
-        <button onClick={() => zoomOut()}>Zoom Out</button>
-        <button onClick={() => resetTransform()}>Reset</button>
-        <button onClick={handleOpen}>Open</button>
+        <div className="diagram-image-controls-zoom">
+          <button onClick={() => zoomIn()}>
+            <img src="/src/assets/ZoomIn.png" alt="Ampliar" />
+          </button>
+          <button
+            className="diagram-image-controls-zoom-out"
+            onClick={() => zoomOut()}
+          >
+            <img src="/src/assets/ZoomOut.png" alt="Reducir" />
+          </button>
+        </div>
+        <button onClick={handleOpen}>
+          <img src="/src/assets/OpenImage.png" alt="Abrir" />
+        </button>
       </>
     );
   };
@@ -34,6 +44,7 @@ export function DiagramImage({ image }) {
     <div className="diagram-image">
       <TransformWrapper
         maxScale={3}
+        minScale={0.3}
         smooth="true"
         pinch={{ step: 10 }}
         className="custom-transform-wrapper"
