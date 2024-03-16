@@ -9,22 +9,23 @@
 .file-import-label {
   display: inline-flex;
   align-items: center;
-  padding: 10px 20px;
   margin: 5px 0;
+  padding: 5px;
   font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  border: 2px solid #6edb9e;
-  border-radius: 5px;
+  background-color: #fff;
   cursor: pointer;
-  transition: border-color 0.3s, color 0.3s;
+  transition: color 0.3s;
+
+  border: 1px solid #333;
+  border-radius: 5px;
 }
 
 .file-import-label:hover {
-  border-color: #57c79e;
-  color: #57c79e;
+  background-color: #e0e0e0;
 }
 
-.file-import-icon {
-  margin-right: 10px;
+.file-name {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #333;
 }

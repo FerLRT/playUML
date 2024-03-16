@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "../styles/fileImport.css";
 
 export function FileImport({ onFileUpload }) {
+  const [fileName, setFileName] = useState("");
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -16,6 +18,7 @@ export function FileImport({ onFileUpload }) {
 
       const jsonData = JSON.parse(contents);
       onFileUpload(jsonData);
+      setFileName(file.name); // Actualizar el nombre del archivo seleccionado
     };
 
     reader.readAsText(file);
@@ -34,15 +37,16 @@ export function FileImport({ onFileUpload }) {
     <div className="file-import-container">
       <h3 className="file-import-title">Importar datos desde JSON</h3>
       <label htmlFor="file" className="file-import-label">
+        <input
+          id="file"
+          className="file-import-input"
+          type="file"
+          accept=".json"
+          onChange={handleFileChange}
+        />
         Seleccionar Archivo
       </label>
-      <input
-        id="file"
-        className="file-import-input"
-        type="file"
-        accept=".json"
-        onChange={handleFileChange}
-      />
+      {fileName && <span className="file-name">{fileName}</span>}
     </div>
   );
 }
