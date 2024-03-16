@@ -25,20 +25,22 @@
   width: 100%;
 }
 
-.diagram-image-controls button {
+.diagram-image-controls div {
   background-color: transparent;
   color: #333;
   border: none;
   transition: color 0.3s;
 }
 
-.diagram-image-controls button:hover {
+.diagram-image-controls div:hover {
   color: #555;
 }
 
-.diagram-image-controls button img {
+.diagram-image-controls div img {
   width: 35px;
   height: 35px;
+
+  cursor: pointer;
 }
 
 .diagram-image-controls-zoom-out {

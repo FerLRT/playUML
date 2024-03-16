@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   TransformWrapper,
   TransformComponent,
@@ -20,22 +20,33 @@ export function DiagramImage({ image }) {
 
   const Controls = () => {
     const { zoomIn, zoomOut } = useControls();
+
+    const handleZoomIn = (event) => {
+      event.stopPropagation(); // Evita que el evento se propague al contenedor padre
+      zoomIn();
+    };
+
+    const handleZoomOut = (event) => {
+      event.stopPropagation(); // Evita que el evento se propague al contenedor padre
+      zoomOut();
+    };
+
     return (
       <>
         <div className="diagram-image-controls-zoom">
-          <button onClick={() => zoomIn()}>
+          <div onClick={handleZoomIn}>
             <img src="/src/assets/ZoomIn.png" alt="Ampliar" />
-          </button>
-          <button
+          </div>
+          <div
             className="diagram-image-controls-zoom-out"
-            onClick={() => zoomOut()}
+            onClick={handleZoomOut}
           >
             <img src="/src/assets/ZoomOut.png" alt="Reducir" />
-          </button>
+          </div>
         </div>
-        <button onClick={handleOpen}>
+        <div onClick={handleOpen}>
           <img src="/src/assets/OpenImage.png" alt="Abrir" />
-        </button>
+        </div>
       </>
     );
   };
@@ -47,6 +58,7 @@ export function DiagramImage({ image }) {
         minScale={0.3}
         smooth="true"
         pinch={{ step: 10 }}
+        doubleClick={{ disabled: true }}
         className="custom-transform-wrapper"
       >
         <div className="diagram-image-controls">

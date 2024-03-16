@@ -14,22 +14,22 @@ export function DiagramModal({ open, handleClose, image }) {
     return (
       <>
         <div className="diagram-modal-image-controls-zoom">
-          <button onClick={() => zoomIn()}>
+          <div onClick={() => zoomIn()}>
             <img src="/src/assets/ZoomIn.png" alt="Ampliar" />
-          </button>
-          <button
+          </div>
+          <div
             className="diagram-modal-image-controls-zoom-out"
             onClick={() => zoomOut()}
           >
             <img src="/src/assets/ZoomOut.png" alt="Reducir" />
-          </button>
+          </div>
         </div>
-        <button
+        <div
           className="diagram-modal-image-controls-close"
           onClick={handleClose}
         >
           &times;
-        </button>
+        </div>
       </>
     );
   };
