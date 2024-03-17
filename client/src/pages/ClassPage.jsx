@@ -119,6 +119,21 @@ export function ClassPage() {
     return acc;
   }, {});
 
+  const classStatsByCategory = quizzes.reduce((acc, quiz) => {
+    const { category, id } = quiz;
+    const numResolveStudents = classStatsObject[id] || 0;
+    if (!acc[category]) {
+      acc[category] = {
+        totalStudents: students.length,
+        numResolveStudents: 0,
+        numTests: 0,
+      };
+    }
+    acc[category].numResolveStudents += parseInt(numResolveStudents);
+    acc[category].numTests++;
+    return acc;
+  }, {});
+
   return (
     <div className="class-page">
       <h1>{className}</h1>
@@ -164,7 +179,13 @@ export function ClassPage() {
       {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
         <details className="category-quizzes-group" key={category} open>
           <summary>
-            <h2>{category}</h2>
+            <h2>
+              {category} (
+              {parseInt(classStatsByCategory[category].numResolveStudents)}/
+              {parseInt(classStatsByCategory[category].totalStudents) *
+                classStatsByCategory[category].numTests}
+              )
+            </h2>
           </summary>
           <div className="category-quizzes">
             {categoryQuizzes
