@@ -4,6 +4,7 @@ import { sequelize } from "../config/dbConfig.js";
 import { UserQuestionAnswerController } from "./userQuestionAnswer-controller.js";
 import { AuthController } from "./auth-controller.js";
 import { UserClassController } from "./userClass-controller.js";
+import { UserQuizController } from "./userQuiz-controller.js";
 
 export class QuizController {
   static async getQuizzes(req, res) {
@@ -155,6 +156,87 @@ export class QuizController {
     } catch (error) {
       console.error("Error getting total quizzes:", error);
       res.status(500).send("Internal Server Error: " + error.message);
+    }
+  }
+
+  static async getAverageScoresByCategory(userId) {
+    try {
+      // Consultar los quizzes completados por el usuario
+      const userQuizzes = await UserQuizController.getUserQuizzes(userId);
+
+      // Crear un mapa para almacenar las puntuaciones acumuladas y el número de quizzes por categoría
+      const scoresByCategory = new Map();
+
+      // Iterar sobre los quizzes completados por el usuario
+      for (const userQuiz of userQuizzes) {
+        // Obtener el quiz asociado al usuario
+        const quiz = await QuizController.getQuizById(userQuiz.quiz_id);
+
+        // Obtener las categorías asociadas al quiz
+        const categories = await QuizController.getCategoriesByQuizId(quiz.id);
+
+        // Iterar sobre las categorías del quiz
+        for (const category of categories) {
+          // Obtener la puntuación del usuario para este quiz
+          const score = userQuiz.score;
+
+          // Actualizar la suma de puntuaciones y el número de quizzes para esta categoría
+          if (scoresByCategory.has(category)) {
+            const currentScore = scoresByCategory.get(category);
+            scoresByCategory.set(category, {
+              score: currentScore.score + score,
+              count: currentScore.count + 1,
+            });
+          } else {
+            scoresByCategory.set(category, { score, count: 1 });
+          }
+        }
+      }
+
+      // Calcular la media de puntuación por categoría
+      const averageScoresByCategory = {};
+      for (const [category, { score, count }] of scoresByCategory.entries()) {
+        const averageScore = count > 0 ? score / count : 0;
+        averageScoresByCategory[category] = averageScore.toFixed(2);
+      }
+
+      return averageScoresByCategory;
+    } catch (error) {
+      console.error("Error fetching average scores by category:", error);
+      throw error;
+    }
+  }
+
+  static async getQuizById(quizId) {
+    try {
+      const quiz = await quizModel.findByPk(quizId);
+
+      if (!quiz) {
+        throw new Error("Quiz not found with the provided ID");
+      }
+
+      return quiz;
+    } catch (error) {
+      console.error("Error getting quiz by ID:", error);
+      throw new Error("Failed to retrieve quiz by ID");
+    }
+  }
+
+  static async getCategoriesByQuizId(quizId) {
+    try {
+      const categories = await sequelize.query(
+        `
+        SELECT c.name
+        FROM quiz_category qc
+        INNER JOIN categories c ON qc.category_id = c.id
+        WHERE qc.quiz_id = ${quizId}
+      `
+      );
+
+      return categories[0].map((category) => category.name);
+    } catch (error) {
+      console.error("Error getting categories by quiz ID:", error);
+      throw new Error("Failed to retrieve categories by quiz ID");
     }
   }
 }

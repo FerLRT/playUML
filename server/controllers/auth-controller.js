@@ -220,11 +220,16 @@ export class AuthController {
         averageScore = NaN;
       }
 
+      // Obtener la media del estudiante por categoría
+      const averageScoresByCategory =
+        await QuizController.getAverageScoresByCategory(studentId);
+
       res.json({
         studentEmail,
         positionRanking,
         averageScore,
         completionPercentage,
+        averageScoresByCategory,
       });
     } catch (error) {
       console.error("Error getting student stats:", error);
