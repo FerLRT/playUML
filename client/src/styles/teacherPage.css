@@ -1,13 +1,11 @@
 .teacher-page-container {
-  flex: 1;
+  display: flex;
   flex-direction: column;
+  flex: 1;
   height: 85%;
-  position: relative;
 
-  padding-left: 5%;
-  padding-right: 5%;
-
-  overflow-y: auto;
+  padding: 20px 15%;
+  overflow: auto;
 }
 
 .teacher-page-header {
@@ -34,20 +32,25 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow-x: hidden;
 
   margin-top: 5px;
 }
 
 .teacher-page-modalside {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  display: flex;
+  flex-direction: column;
+
+  padding: 5% 10%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .teacher-page-modalside-title {
+  display: flex;
+  justify-content: center;
+
   font-size: 24px;
   margin-bottom: 20px;
 }
@@ -65,10 +68,11 @@
   margin-bottom: 20px;
 }
 
-.teacher-page-modalside-button {
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: none;
-  font-size: 16px;
-  margin: 10px 0;
+.teacher-page-modalside-button-container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: end;
+
+  padding: 20px 0;
 }

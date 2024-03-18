@@ -1,0 +1,13 @@
+.ranking-table-container {
+  width: 100%;
+  padding: 20px;
+}
+
+.ranking-table-scrollable {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.ant-table {
+  min-width: 800px;
+}

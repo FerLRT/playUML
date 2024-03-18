@@ -37,6 +37,7 @@ export class AuthController {
         return res.status(401).send("Unauthorized");
       }
 
+      await AuthController.updateUserLastConnection(user.id);
       res.status(200).json(user);
     } catch (error) {
       console.error("Error during login:", error);
@@ -64,6 +65,18 @@ export class AuthController {
     } catch (error) {
       console.error("Error al procesar el archivo:", error);
       res.status(400).send("Bad Request");
+    }
+  }
+
+  static async updateUserLastConnection(userId) {
+    try {
+      await authModel.update(
+        { last_connection: sequelize.fn("NOW") },
+        { where: { id: userId } }
+      );
+    } catch (error) {
+      console.error("Error updating user last connection:", error);
+      throw new Error("Failed to update user last connection");
     }
   }
 
@@ -170,7 +183,7 @@ export class AuthController {
     try {
       const studentsInfo = await authModel.findAll({
         where: { id: studentsIds },
-        attributes: ["id", "email", "level"],
+        attributes: ["id", "email", "level", "last_connection"],
       });
 
       return studentsInfo;

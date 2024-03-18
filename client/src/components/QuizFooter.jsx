@@ -57,7 +57,7 @@ export function QuizFooter({
             : index === currentQuestionIndex
             ? "#498bf9" // blue
             : userAnswerIds.length > 0
-            ? "#808080" // purple
+            ? "#808080" // gray
             : "#ffffff"; // white
           return (
             <div

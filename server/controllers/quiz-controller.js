@@ -1,17 +1,22 @@
 import { quizModel } from "../models/quiz-model.js";
 
-import { userClassModel } from "../models/userClass-model.js";
-import { userQuizModel } from "../models/userQuiz-model.js";
-
 import { sequelize } from "../config/dbConfig.js";
 import { UserQuestionAnswerController } from "./userQuestionAnswer-controller.js";
+import { AuthController } from "./auth-controller.js";
+import { UserClassController } from "./userClass-controller.js";
 
 export class QuizController {
   static async getQuizzes(req, res) {
     try {
-      const quizzes = await quizModel.findAll();
+      // Realiza una consulta SQL para obtener los quizzes con información sobre sus categorías
+      const quizzes = await sequelize.query(`
+          SELECT q.*, c.name AS category
+          FROM quizzes q
+          INNER JOIN quiz_category qc ON q.id = qc.quiz_id
+          INNER JOIN categories c ON qc.category_id = c.id
+      `);
 
-      res.json(quizzes);
+      res.json(quizzes[0]);
     } catch (error) {
       console.error("Error getting quizzes:", error);
       res.status(500).send("Internal Server Error: " + error.message);
@@ -74,6 +79,56 @@ export class QuizController {
       }
     } catch (error) {
       console.error("Error getting student answers:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+
+  static async getChartStats(req, res) {
+    try {
+      const userId = req.params.userId;
+      const quizId = req.params.quizId;
+
+      const user = await AuthController.getUserById(userId);
+      const currentClassId = user.current_class_id;
+
+      // Obtener los IDs de los usuarios en la clase actual del usuario
+      const usersInClass = await UserClassController.getClassStudents(
+        currentClassId
+      );
+      const userIdsInClass = usersInClass.map(
+        (user) => user.dataValues.user_id
+      );
+
+      // Obtener el número total de estudiantes que han completado el quiz
+      const completedQuizUsers = await sequelize.query(`
+      SELECT DISTINCT user_id
+      FROM user_quizzes
+      WHERE quiz_id = ${quizId}
+      AND user_id IN (${userIdsInClass.join(",")})
+    `);
+      const totalCompletedQuizUsers = completedQuizUsers[0].length;
+
+      // Obtener las puntuaciones de los alumnos de la clase actual para el quiz dado
+      const chartStats = await sequelize.query(`
+        SELECT uq.score, COUNT(*) * 100.0 / ${totalCompletedQuizUsers} as percentage, COUNT(*) as numStudents
+        FROM user_quizzes uq
+        WHERE uq.user_id IN (${userIdsInClass.join(
+          ","
+        )}) AND uq.quiz_id = ${quizId}
+        GROUP BY uq.score
+        ORDER BY uq.score;
+      `);
+
+      // Redondear los puntajes a números enteros
+      const roundedChartStats = chartStats[0].map((entry) => ({
+        score: Math.round(entry.score),
+        percentage: parseFloat(entry.percentage).toFixed(2), // Redondear el porcentaje a 2 decimales
+        numStudents: parseFloat(entry.numstudents).toFixed(0), // Utilizar numstudents en minúsculas
+      }));
+
+      res.json(roundedChartStats);
+    } catch (error) {
+      console.error("Error getting chart stats:", error);
       res.status(500).send("Internal Server Error");
     }
   }

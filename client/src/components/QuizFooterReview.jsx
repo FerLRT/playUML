@@ -18,8 +18,14 @@ export function QuizFooterReview({
   const navigate = useNavigate();
 
   const getCircleColor = (index) => {
+    const userAnswer = userAnswers[index];
+
+    if (userAnswer.length === 0) {
+      return "#ffffff"; // Si no hay respuestas marcadas, mantener el círculo blanco
+    }
+
     const score = questions[index].answers
-      .filter((answer) => userAnswers[index].includes(answer.id))
+      .filter((answer) => userAnswer.includes(answer.id))
       .reduce((acc, curr) => acc + curr.score, 0);
 
     if (score === 1) {
@@ -53,10 +59,7 @@ export function QuizFooterReview({
         </button>
 
         {questions.map((_, index) => {
-          const circleColor =
-            index === currentQuestionIndex
-              ? "#498bf9" // blue
-              : "#ffffff"; // white
+          const circleColor = getCircleColor(index); // Calcula el color del círculo
           return (
             <div
               key={index}
@@ -69,9 +72,7 @@ export function QuizFooterReview({
                   ? getCircleColor(index)
                   : circleColor,
                 border:
-                  index === currentQuestionIndex && studentId
-                    ? "3px solid #498bf9"
-                    : "",
+                  index === currentQuestionIndex ? "3px solid #498bf9" : "",
               }}
             >
               {index + 1}
@@ -95,7 +96,7 @@ export function QuizFooterReview({
           className="quiz-footer-button-finish"
           onClick={handleButtonClick}
         >
-          {studentId ? "Volver al estudiante" : "Volver a la clase"}
+          Volver
         </button>
       </div>
     </div>

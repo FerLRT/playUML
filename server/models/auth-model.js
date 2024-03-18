@@ -37,4 +37,8 @@ export const authModel = sequelize.define("users", {
       key: "id",
     },
   },
+  last_connection: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 });

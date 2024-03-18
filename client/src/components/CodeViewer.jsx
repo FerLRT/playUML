@@ -13,7 +13,12 @@ export function CodeViewer({ code }) {
         language="javascript"
         style={docco}
         wrapLines={false}
-        showLineNumbers={true}
+        customStyle={{
+          textAlign: "left",
+          backgroundColor: "transparent",
+          overflow: "auto",
+          maxWidth: "100%",
+        }}
       >
         {correctedCode}
       </SyntaxHighlighter>

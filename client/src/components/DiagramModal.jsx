@@ -9,6 +9,31 @@ import {
 import "../styles/diagramModal.css";
 
 export function DiagramModal({ open, handleClose, image }) {
+  const Controls = () => {
+    const { zoomIn, zoomOut } = useControls();
+    return (
+      <>
+        <div className="diagram-modal-image-controls-zoom">
+          <div onClick={() => zoomIn()}>
+            <img src="/src/assets/ZoomIn.png" alt="Ampliar" />
+          </div>
+          <div
+            className="diagram-modal-image-controls-zoom-out"
+            onClick={() => zoomOut()}
+          >
+            <img src="/src/assets/ZoomOut.png" alt="Reducir" />
+          </div>
+        </div>
+        <div
+          className="diagram-modal-image-controls-close"
+          onClick={handleClose}
+        >
+          &times;
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className="diagram-modal-container">
       <Modal
@@ -20,11 +45,14 @@ export function DiagramModal({ open, handleClose, image }) {
         <div className="diagram-modal-image-container">
           <TransformWrapper
             maxScale={3}
+            minScale={0.3}
             smooth="true"
             pinch={{ step: 10 }}
             className="diagram-modal-custom-transform-wrapper"
           >
-            <Controls />
+            <div className="diagram-image-controls">
+              <Controls />
+            </div>
             <TransformComponent>
               <img
                 className="diagram-modal-image"

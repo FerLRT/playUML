@@ -10,14 +10,21 @@
   flex: 1;
   border-right: 1px solid black;
   width: 50%;
+  min-width: 170px;
 }
 
 .question-type-1-question-answers-container {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 10px;
   width: 50%;
+
+  min-width: 300px;
+}
+
+.question-type-1-question-answers-container h2 {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
 }
 
 .question-type-1-answers-container {

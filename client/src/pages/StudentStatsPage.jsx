@@ -46,17 +46,18 @@ export function StudentStatsPage() {
   }, [studentId]);
 
   // Lógica para filtrar la lista de tests
-  const filteredQuizzes = quizzes.filter((quiz) =>
-    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const quizzesByCategory = quizzes.reduce((acc, quiz) => {
+    const { category } = quiz;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(quiz);
+    return acc;
+  }, {});
 
   return (
     <div className="student-stats-page">
-      <h1>Estadísticas del estudiante: {studentStats.studentEmail}</h1>
-
-      <button className="back-button" onClick={handleButtonClick}>
-        Volver
-      </button>
+      <h1>Estadísticas de: {studentStats.studentEmail}</h1>
 
       <div className="student-stats-button-container">
         <StatButton
@@ -95,14 +96,32 @@ export function StudentStatsPage() {
         className="class-page-search-bar"
       />
 
-      {filteredQuizzes.map((quiz) => (
-        <StudentQuizButtonReview
-          key={quiz.id}
-          to={quiz.id}
-          quizId={quiz.id}
-          quizName={quiz.name}
-        />
+      {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
+        <details className="category-quizzes-group" key={category} open>
+          <summary>
+            <h2>{category}</h2>
+          </summary>
+          <div className="category-quizzes">
+            {categoryQuizzes
+              .filter((quiz) =>
+                quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((quiz) => (
+                <StudentQuizButtonReview
+                  key={quiz.id}
+                  to={quiz.id}
+                  quizId={quiz.id}
+                  quizName={quiz.name}
+                />
+              ))}
+          </div>
+        </details>
       ))}
+      <div className="student-stats-back-button-container">
+        <button className="button-basic" onClick={handleButtonClick}>
+          Volver
+        </button>
+      </div>
     </div>
   );
 }

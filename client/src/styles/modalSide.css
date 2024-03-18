@@ -13,7 +13,8 @@
 }
 
 .modal-content {
-  padding: 20px;
+  display: flex;
+  height: 100%;
 }
 
 .close {

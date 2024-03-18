@@ -97,9 +97,14 @@ export function ClassPage() {
   }, [classId]);
 
   // Lógica para filtrar la lista de tests
-  const filteredQuizzes = quizzes.filter((quiz) =>
-    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const quizzesByCategory = quizzes.reduce((acc, quiz) => {
+    const { category } = quiz;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(quiz);
+    return acc;
+  }, {});
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -111,6 +116,21 @@ export function ClassPage() {
 
   const classStatsObject = classStats.reduce((acc, curr) => {
     acc[curr.quiz_id] = curr.numstudents;
+    return acc;
+  }, {});
+
+  const classStatsByCategory = quizzes.reduce((acc, quiz) => {
+    const { category, id } = quiz;
+    const numResolveStudents = classStatsObject[id] || 0;
+    if (!acc[category]) {
+      acc[category] = {
+        totalStudents: students.length,
+        numResolveStudents: 0,
+        numTests: 0,
+      };
+    }
+    acc[category].numResolveStudents += parseInt(numResolveStudents);
+    acc[category].numTests++;
     return acc;
   }, {});
 
@@ -156,29 +176,51 @@ export function ClassPage() {
         className="class-page-search-bar"
       />
 
-      {filteredQuizzes.map((quiz) => (
-        <QuizButtonReview
-          key={quiz.id}
-          to={quiz.id}
-          classId={classId}
-          className={quiz.name}
-          numResolveStudents={classStatsObject[quiz.id] || 0} // Usar la información de classStatsObject
-          numStudents={students.length}
-        />
+      {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
+        <details className="category-quizzes-group" key={category} open>
+          <summary>
+            <h2>
+              {category} (
+              {parseInt(classStatsByCategory[category].numResolveStudents)}/
+              {parseInt(classStatsByCategory[category].totalStudents) *
+                classStatsByCategory[category].numTests}
+              )
+            </h2>
+          </summary>
+          <div className="category-quizzes">
+            {categoryQuizzes
+              .filter((quiz) =>
+                quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((quiz) => (
+                <QuizButtonReview
+                  key={quiz.id}
+                  to={quiz.id}
+                  classId={classId}
+                  className={quiz.name}
+                  numResolveStudents={classStatsObject[quiz.id] || 0}
+                  numStudents={students.length}
+                />
+              ))}
+          </div>
+        </details>
       ))}
 
       <ModalSide isModalVisible={isModalVisible} closeModal={closeModal}>
-        <h2>Lista de estudiantes</h2>
-        <ul>
-          {students.map((student) => (
-            <StudentButton
-              key={student.id}
-              to={student.id}
-              email={student.email}
-              level={student.level}
-            />
-          ))}
-        </ul>
+        <div className="class-page-modalside">
+          <h2>Lista de estudiantes</h2>
+          <ul>
+            {students.map((student) => (
+              <StudentButton
+                key={student.id}
+                to={student.id}
+                email={student.email}
+                level={student.level}
+                last_connection={student.last_connection}
+              />
+            ))}
+          </ul>
+        </div>
       </ModalSide>
     </div>
   );

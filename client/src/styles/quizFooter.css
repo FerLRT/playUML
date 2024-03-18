@@ -2,10 +2,12 @@
   display: flex;
   width: 100%;
   height: 100%;
+
   align-items: center;
   justify-content: center;
 
   background-color: #f2f2f2;
+  overflow: auto;
 }
 
 .quiz-footer-button-previous {
@@ -85,8 +87,28 @@
   justify-content: center;
 
   width: auto;
-  height: auto;
+  height: 80%;
+  max-height: 40px;
   margin: 20px;
+
+  font-weight: bold;
+
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  border: 2px solid #6edb9e;
+  border-radius: 5px;
+  background-color: #6edb9e;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.quiz-footer-button-finish:hover,
+.quiz-footer-button-finish:focus {
+  background-color: #57c79e;
+  border-color: #57c79e;
+  color: #fff;
 }
 
 .quiz-footer-circle.completed {
