@@ -1,13 +1,17 @@
 .ranking-table-container {
   width: 100%;
-  padding: 20px;
 }
 
 .ranking-table-scrollable {
   overflow-x: auto;
   max-width: 100%;
+  margin-top: 5px;
 }
 
 .ant-table {
   min-width: 800px;
+}
+
+.highlight-row {
+  background-color: #f0f8ff;
 }

@@ -5,6 +5,7 @@ import { getQuizzes } from "../hooks/useQuiz";
 
 import { LevelIndicator } from "../components/LevelIndicator.jsx";
 import { QuizButton } from "../components/QuizButton.jsx";
+import { Ranking } from "../components/Ranking.jsx";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -48,6 +49,8 @@ export function HomePage() {
   return (
     <div className="home-container">
       <LevelIndicator />
+
+      <Ranking classId={user.current_class_id} userId={user.email} />
 
       <h1>Tests disponibles</h1>
       <div className="home-test-list-container">
