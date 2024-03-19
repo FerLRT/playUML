@@ -170,4 +170,18 @@ export class UserQuizController {
       throw error;
     }
   }
+
+  static async getUserQuizMaxScore(userId, quizId) {
+    try {
+      // Consulta para obtener la puntuación máxima del usuario en un quiz específico
+      const maxScore = await userQuizModel.max("score", {
+        where: { user_id: userId, quiz_id: quizId },
+      });
+
+      return maxScore || 0;
+    } catch (error) {
+      console.error("Error fetching user quiz max score:", error);
+      throw error;
+    }
+  }
 }

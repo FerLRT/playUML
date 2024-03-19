@@ -92,6 +92,12 @@ export class QuizController {
       const user = await AuthController.getUserById(userId);
       const currentClassId = user.current_class_id;
 
+      // Obtener la puntuación máxima del usuario para el quiz dado
+      const maxScore = await UserQuizController.getUserQuizMaxScore(
+        userId,
+        quizId
+      );
+
       // Obtener los IDs de los usuarios en la clase actual del usuario
       const usersInClass = await UserClassController.getClassStudents(
         currentClassId
@@ -102,11 +108,11 @@ export class QuizController {
 
       // Obtener el número total de estudiantes que han completado el quiz
       const completedQuizUsers = await sequelize.query(`
-      SELECT DISTINCT user_id
-      FROM user_quizzes
-      WHERE quiz_id = ${quizId}
-      AND user_id IN (${userIdsInClass.join(",")})
-    `);
+        SELECT DISTINCT user_id
+        FROM user_quizzes
+        WHERE quiz_id = ${quizId}
+        AND user_id IN (${userIdsInClass.join(",")})
+      `);
       const totalCompletedQuizUsers = completedQuizUsers[0].length;
 
       // Obtener las puntuaciones de los alumnos de la clase actual para el quiz dado
@@ -127,7 +133,7 @@ export class QuizController {
         numStudents: parseFloat(entry.numstudents).toFixed(0), // Utilizar numstudents en minúsculas
       }));
 
-      res.json(roundedChartStats);
+      res.json({ maxScore, roundedChartStats });
     } catch (error) {
       console.error("Error getting chart stats:", error);
       res.status(500).send("Internal Server Error");

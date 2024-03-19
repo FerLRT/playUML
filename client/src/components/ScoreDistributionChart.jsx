@@ -18,13 +18,15 @@ export function ScoreDistributionChart({ userScore }) {
   const { user } = useAuth();
   const { quizId } = useParams();
   const [chartData, setChartData] = useState([]);
+  const [maxLastScore, setMaxLastScore] = useState(0);
 
   useEffect(() => {
     const fetchScoreDistributionData = async () => {
       try {
         // Hacer la petición al servidor para obtener los datos de distribución de puntajes
-        const stats = await getChartStats(user.id, quizId);
-        setChartData(stats); // Suponiendo que la respuesta contiene los datos en la forma necesaria para el gráfico
+        const response = await getChartStats(user.id, quizId);
+        setChartData(response.roundedChartStats);
+        setMaxLastScore(response.maxScore);
       } catch (error) {
         console.error("Error fetching score distribution data:", error);
       }
@@ -49,7 +51,10 @@ export function ScoreDistributionChart({ userScore }) {
 
   const coloredBars = chartData.map((entry) => ({
     ...entry,
-    fill: entry.score === Math.round(userScore) ? "orange" : "#8884d8",
+    fill:
+      entry.score === Math.round(userScore) && userScore == maxLastScore
+        ? "orange"
+        : "#8884d8",
   }));
 
   // Completar las puntuaciones faltantes con un porcentaje de 0

@@ -41,6 +41,9 @@ export function Quiz() {
 
   const [posiblePoints, setPosiblePoints] = useState(0);
 
+  const [sendingAnswers, setSendingAnswers] = useState(false);
+  const [loadingSummary, setLoadingSummary] = useState(true);
+
   // Obtener los datos del quiz
   useEffect(() => {
     const loadData = async () => {
@@ -137,10 +140,7 @@ export function Quiz() {
       if (quizCompleted) {
         // Guardar la hora de finalización
         setEndTime(new Date());
-
-        console.log(
-          "Test completado. Vamos a enviar las respuestas al servidor."
-        );
+        setSendingAnswers(true);
 
         // Preparar respuestas para enviar al servidor
         const preparedAnswers = [];
@@ -161,6 +161,9 @@ export function Quiz() {
             setNewAchievements(response.unlockedAchievements);
             setStudentQuizScore(response.totalScore);
             setPosiblePoints(response.maxExperience);
+
+            setSendingAnswers(false);
+            setLoadingSummary(false);
           })
           .catch((error) => {
             console.error("Error al enviar respuestas:", error);
@@ -188,12 +191,18 @@ export function Quiz() {
 
     if (quizCompleted && showSummaryView) {
       return (
-        <SummaryView
-          quizScore={studentQuizScore}
-          startTime={startTime}
-          endTime={endTime}
-          posiblePoints={posiblePoints}
-        />
+        <>
+          {loadingSummary ? (
+            <p>Cargando...</p>
+          ) : (
+            <SummaryView
+              quizScore={studentQuizScore}
+              startTime={startTime}
+              endTime={endTime}
+              posiblePoints={posiblePoints}
+            />
+          )}
+        </>
       );
     }
 
