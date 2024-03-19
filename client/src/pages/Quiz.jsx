@@ -39,6 +39,8 @@ export function Quiz() {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
 
+  const [posiblePoints, setPosiblePoints] = useState(0);
+
   // Obtener los datos del quiz
   useEffect(() => {
     const loadData = async () => {
@@ -158,6 +160,7 @@ export function Quiz() {
             user.level = response.level;
             setNewAchievements(response.unlockedAchievements);
             setStudentQuizScore(response.totalScore);
+            setPosiblePoints(response.maxExperience);
           })
           .catch((error) => {
             console.error("Error al enviar respuestas:", error);
@@ -189,6 +192,7 @@ export function Quiz() {
           quizScore={studentQuizScore}
           startTime={startTime}
           endTime={endTime}
+          posiblePoints={posiblePoints}
         />
       );
     }
