@@ -19,6 +19,8 @@ export function TeacherPage() {
   const [newClassName, setNewClassName] = useState("");
   const [fileData, setFileData] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     getTeacherClasses(user.email).then((response) => {
       setTeacherClasses(response);
@@ -43,6 +45,8 @@ export function TeacherPage() {
         return;
       }
 
+      setIsLoading(true);
+
       const { newClass, usersCredentials, fileName } = await createClass(
         newClassName,
         user.email,
@@ -64,6 +68,8 @@ export function TeacherPage() {
       downloadLink.click();
     } catch (error) {
       console.error("Error al crear la clase:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -125,9 +131,13 @@ export function TeacherPage() {
           <FileImport onFileUpload={handleFileUpload} />
 
           <div className="teacher-page-modalside-button-container">
-            <button className="button-basic" onClick={handleCreateClass}>
-              Crear Clase
-            </button>
+            {isLoading ? (
+              <div className="loader"></div>
+            ) : (
+              <button className="button-basic" onClick={handleCreateClass}>
+                Crear Clase
+              </button>
+            )}
           </div>
         </div>
       </ModalSide>

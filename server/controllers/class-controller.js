@@ -67,6 +67,7 @@ export class ClassController {
       });
 
       let usersCredentials = null;
+      let numberOfStudents = 0;
 
       if (newClass) {
         // Crear usuarios y asociarlos a la clase
@@ -74,11 +75,22 @@ export class ClassController {
           fileData,
           newClass
         );
+
+        numberOfStudents = await ClassController.getNumberOfStudentsInClass(
+          newClass.id
+        );
       }
 
-      // Enviar el enlace de descarga al cliente
+      const formattedNewClass = {
+        id: newClass.id,
+        name: newClass.name,
+        description: newClass.description,
+        teacher_id: newClass.teacher_id,
+        numberOfStudents: numberOfStudents,
+      };
+
       res.json({
-        newClass: newClass,
+        newClass: formattedNewClass,
         usersCredentials: usersCredentials,
         fileName: `${newClass.name}-credentials.json`,
       });
@@ -277,5 +289,10 @@ export class ClassController {
       }
     }
     return usersCredentials;
+  }
+
+  static async getNumberOfStudentsInClass(classId) {
+    const students = await UserClassController.getClassStudents(classId);
+    return students.length;
   }
 }
