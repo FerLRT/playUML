@@ -6,6 +6,8 @@ import { AuthController } from "./auth-controller.js";
 import { UserClassController } from "./userClass-controller.js";
 import { UserQuizController } from "./userQuiz-controller.js";
 
+import { customRound } from "../utils/round-utils.js";
+
 export class QuizController {
   static async getQuizzes(req, res) {
     try {
@@ -126,9 +128,8 @@ export class QuizController {
         ORDER BY uq.score;
       `);
 
-      // Redondear los puntajes a números enteros
       const roundedChartStats = chartStats[0].map((entry) => ({
-        score: Math.round(entry.score),
+        score: customRound(entry.score),
         percentage: parseFloat(entry.percentage).toFixed(2), // Redondear el porcentaje a 2 decimales
         numStudents: parseFloat(entry.numstudents).toFixed(0), // Utilizar numstudents en minúsculas
       }));
