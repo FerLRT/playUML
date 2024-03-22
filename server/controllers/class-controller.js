@@ -201,9 +201,13 @@ export class ClassController {
   static async getClassRanking(req, res) {
     try {
       const classId = req.params.id;
+      const role = req.params.role;
 
       // Obtener las estadísticas de todos los estudiantes
-      const studentStats = await ClassController.getClassRankingById(classId);
+      const studentStats = await ClassController.getClassRankingById(
+        classId,
+        role
+      );
 
       // Devolver el array completo de estadísticas de los estudiantes
       res.json(studentStats);
@@ -213,7 +217,7 @@ export class ClassController {
     }
   }
 
-  static async getClassRankingById(classId) {
+  static async getClassRankingById(classId, role) {
     try {
       // Obtener estudiantes de la clase
       const students = await UserClassController.getClassStudents(classId);
@@ -235,14 +239,22 @@ export class ClassController {
         const completionPercentage = (numQuizzes / totalQuizzes) * 100;
 
         // Calcular un valor ponderado que tenga en cuenta tanto la nota media como el porcentaje de quizzes completados
-        const weightedValue =
+        const weightedValue = +(
           (averageScore * totalQuizzes + completionPercentage) /
-          (totalQuizzes + 1);
+          (totalQuizzes + 1)
+        ).toFixed(2);
+
+        if (role === "profesor") {
+          return {
+            userId: user.email,
+            averageScore: averageScore,
+            completionPercentage: completionPercentage,
+            weightedValue: weightedValue,
+          };
+        }
 
         return {
           userId: user.email,
-          averageScore: averageScore,
-          completionPercentage: completionPercentage,
           weightedValue: weightedValue,
         };
       });

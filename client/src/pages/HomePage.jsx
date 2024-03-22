@@ -50,7 +50,11 @@ export function HomePage() {
     <div className="home-container">
       <LevelIndicator />
 
-      <Ranking classId={user.current_class_id} userId={user.email} />
+      <Ranking
+        classId={user.current_class_id}
+        userId={user.email}
+        userRole={user.role}
+      />
 
       <h1>Tests disponibles</h1>
       <div className="home-test-list-container">

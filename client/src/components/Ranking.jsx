@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { getClassRanking } from "../hooks/useRanking";
 
-import { tableColumns } from "../utils/rankingTableConfig";
+import { studentColumns, teacherColumns } from "../utils/rankingTableConfig";
 
 import "../styles/ranking.css";
 
-export function Ranking({ classId, userId }) {
+export function Ranking({ classId, userId, userRole }) {
   const [ranking, setRanking] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -15,7 +15,7 @@ export function Ranking({ classId, userId }) {
   useEffect(() => {
     const loadRanking = async () => {
       try {
-        const rankingData = await getClassRanking(classId);
+        const rankingData = await getClassRanking(classId, userRole);
 
         const sortedRanking = rankingData
           .slice()
@@ -59,7 +59,7 @@ export function Ranking({ classId, userId }) {
       <div className="ranking-table-scrollable">
         <Table
           dataSource={rankedData}
-          columns={tableColumns}
+          columns={userRole === "profesor" ? teacherColumns : studentColumns}
           pagination={{
             pageSize: pageSize,
             current: currentPage,
