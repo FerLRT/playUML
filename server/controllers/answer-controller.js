@@ -26,19 +26,7 @@ export class AnswerController {
         attributes: { exclude: ["score"] },
       });
 
-      const answersWithBase64Data = await Promise.all(
-        answers.map(async (answer) => {
-          if (answer.answer_image !== null) {
-            // Convertir answer_image a base64
-            answer.answer_image = Buffer.from(answer.answer_image).toString(
-              "base64"
-            );
-          }
-          return answer;
-        })
-      );
-
-      res.json(answersWithBase64Data);
+      res.json(answers);
     } catch (error) {
       console.error("Error getting question answers:", error);
       res.status(500).send("Internal Server Error");
@@ -53,19 +41,7 @@ export class AnswerController {
         where: { question_id: questionId },
       });
 
-      const answersWithBase64Data = await Promise.all(
-        answers.map(async (answer) => {
-          if (answer.answer_image !== null) {
-            // Convertir answer_image a base64
-            answer.answer_image = Buffer.from(answer.answer_image).toString(
-              "base64"
-            );
-          }
-          return answer;
-        })
-      );
-
-      res.json(answersWithBase64Data);
+      res.json(answers);
     } catch (error) {
       console.error("Error getting question answers:", error);
       res.status(500).send("Internal Server Error");

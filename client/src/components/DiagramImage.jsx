@@ -14,10 +14,6 @@ export function DiagramImage({ image }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const imageData = image.startsWith("data:image/jpeg;base64,")
-    ? image
-    : `data:image/jpeg;base64,${image}`;
-
   const handleContainerClick = (event) => {
     event.stopPropagation(); // Evitar la propagación del evento al botón encapsulante
   };
@@ -69,11 +65,11 @@ export function DiagramImage({ image }) {
           <Controls />
         </div>
         <TransformComponent>
-          <img src={imageData} alt="Diagrama UML" width="100%" />
+          <img src={image} alt="Diagrama UML" width="100%" />
         </TransformComponent>
       </TransformWrapper>
 
-      <DiagramModal open={open} handleClose={handleClose} image={imageData} />
+      <DiagramModal open={open} handleClose={handleClose} image={image} />
     </div>
   );
 }
