@@ -26,19 +26,7 @@ export class AnswerController {
         attributes: { exclude: ["score"] },
       });
 
-      const answersWithBase64Data = await Promise.all(
-        answers.map(async (answer) => {
-          if (answer.answer_image !== null) {
-            // Convertir answer_image a base64
-            answer.answer_image = Buffer.from(answer.answer_image).toString(
-              "base64"
-            );
-          }
-          return answer;
-        })
-      );
-
-      res.json(answersWithBase64Data);
+      res.json(answers);
     } catch (error) {
       console.error("Error getting question answers:", error);
       res.status(500).send("Internal Server Error");
@@ -53,19 +41,7 @@ export class AnswerController {
         where: { question_id: questionId },
       });
 
-      const answersWithBase64Data = await Promise.all(
-        answers.map(async (answer) => {
-          if (answer.answer_image !== null) {
-            // Convertir answer_image a base64
-            answer.answer_image = Buffer.from(answer.answer_image).toString(
-              "base64"
-            );
-          }
-          return answer;
-        })
-      );
-
-      res.json(answersWithBase64Data);
+      res.json(answers);
     } catch (error) {
       console.error("Error getting question answers:", error);
       res.status(500).send("Internal Server Error");
@@ -85,18 +61,23 @@ export class AnswerController {
       // Obtener el usuario
       const user = await AuthController.getUser(userEmail);
 
-      // Calcular los nuevos puntos de experiencia y nivel del usuario
-      const newPoints = user.experience_points + quizExperiencePoints;
-      const newLevel = await AuthController.updateUserLevel(
-        userEmail,
-        newPoints
-      );
-
       // Calcular el puntaje total sumando los puntajes individuales
       const scores = await AnswerController.getQuestionsScores(answers);
       const totalScore = await AnswerController.calculateUserScore(
         answers,
         scores
+      );
+
+      // Calcular el porcentaje en función del totalScore
+      const percentage = totalScore >= 0 ? (totalScore / 10) * 100 : 0;
+
+      // Calcular los nuevos puntos de experiencia y nivel del usuario
+      const newPoints = parseInt(
+        user.experience_points + (quizExperiencePoints * percentage) / 100
+      );
+      const newLevel = await AuthController.updateUserLevel(
+        userEmail,
+        newPoints
       );
 
       // Guardar el resultado del quiz y las respuestas del usuario
@@ -122,11 +103,16 @@ export class AnswerController {
         );
       }
 
+      const maxExperience = parseInt(
+        user.experience_points + quizExperiencePoints
+      );
+
       res.status(200).json({
         totalScore: totalScore,
         scores: scores,
         level: newLevel,
         experience: newPoints,
+        maxExperience: maxExperience,
         unlockedAchievements: newAchievements.map(
           (achievement) => achievement.name
         ),

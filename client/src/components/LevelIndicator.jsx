@@ -5,23 +5,30 @@ import { getRequiredPointsForNextLevel } from "../hooks/useLevel";
 
 import "../styles/levelIndicator.css";
 
-export function LevelIndicator() {
+export function LevelIndicator({ posiblePoints }) {
   const { user } = useAuth();
-  const [currentLevelData, setCurrentLevelData] = useState(null);
-  const [nextLevelData, setNextLevelData] = useState(null);
   const [progress, setProgress] = useState(0);
+
+  const [maxPosibleProgress, setMaxPosibleProgress] = useState(0);
+
+  const [currentPoints, setCurrentPoints] = useState(0);
+  const [currentLevelRequiredPoints, setCurrentLevelRequiredPoints] =
+    useState(0);
+  const [nextLevelRequiredPoints, setNextLevelRequiredPoints] = useState(0);
 
   useEffect(() => {
     const fetchLevelData = async () => {
       try {
         const response = await getRequiredPointsForNextLevel(user.level);
-        setCurrentLevelData(response.current_level);
-        setNextLevelData(response.next_level);
         updateProgress(
           user.experience_points,
           response.current_level.required_points,
           response.next_level.required_points
         );
+
+        setCurrentPoints(user.experience_points);
+        setCurrentLevelRequiredPoints(response.current_level.required_points);
+        setNextLevelRequiredPoints(response.next_level.required_points);
       } catch (error) {
         console.error("Error fetching level data:", error);
       }
@@ -31,6 +38,21 @@ export function LevelIndicator() {
       fetchLevelData();
     }
   }, [user.level, user.experience_points]);
+
+  useEffect(() => {
+    if (posiblePoints !== undefined) {
+      const posibleLevelProgress = posiblePoints - currentLevelRequiredPoints;
+      const levelRange = nextLevelRequiredPoints - currentLevelRequiredPoints;
+      const posibleProgressPercentage =
+        (posibleLevelProgress / levelRange) * 100;
+      setMaxPosibleProgress(posibleProgressPercentage);
+    }
+  }, [
+    currentPoints,
+    currentLevelRequiredPoints,
+    nextLevelRequiredPoints,
+    posiblePoints,
+  ]);
 
   const updateProgress = (
     currentPoints,
@@ -46,10 +68,26 @@ export function LevelIndicator() {
   return (
     <div className="level-indicator-container">
       <div className="level-indicator-number">{user.level}</div>
-      <div className="level-indicator-progress-bar">
-        {currentLevelData && nextLevelData && (
-          <ProgressBar completed={progress} bgColor="#6EDB9E" />
-        )}
+      <div className="progress-container">
+        <ProgressBar
+          completed={maxPosibleProgress || 0}
+          bgColor="rgba(110, 219, 158, 0.2)"
+          width="100%"
+          borderRadius="10px"
+          height="20px"
+          isLabelVisible={false}
+          className="progress-bar overlay"
+        />
+        <ProgressBar
+          completed={progress}
+          bgColor="rgba(110, 219, 158, 1)"
+          baseBgColor="transparent"
+          width="100%"
+          borderRadius="10px"
+          height="20px"
+          isLabelVisible={false}
+          className="progress-bar base"
+        />
       </div>
     </div>
   );

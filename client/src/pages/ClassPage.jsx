@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 import { QuizButtonReview } from "../components/QuizButtonReview";
 import { ModalSide } from "../components/ModalSide";
@@ -19,6 +20,7 @@ import { getQuizzes } from "../hooks/useQuiz";
 import "../styles/classPage.css";
 
 export function ClassPage() {
+  const { user } = useAuth();
   const { classId } = useParams();
 
   const [className, setClassName] = useState("");
@@ -165,7 +167,7 @@ export function ClassPage() {
         />
       </div>
 
-      <Ranking classId={classId} />
+      <Ranking classId={classId} userId={user.id} userRole={user.role} />
 
       <h1>Tests</h1>
       <input

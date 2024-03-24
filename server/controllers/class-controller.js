@@ -67,6 +67,7 @@ export class ClassController {
       });
 
       let usersCredentials = null;
+      let numberOfStudents = 0;
 
       if (newClass) {
         // Crear usuarios y asociarlos a la clase
@@ -74,11 +75,22 @@ export class ClassController {
           fileData,
           newClass
         );
+
+        numberOfStudents = await ClassController.getNumberOfStudentsInClass(
+          newClass.id
+        );
       }
 
-      // Enviar el enlace de descarga al cliente
+      const formattedNewClass = {
+        id: newClass.id,
+        name: newClass.name,
+        description: newClass.description,
+        teacher_id: newClass.teacher_id,
+        numberOfStudents: numberOfStudents,
+      };
+
       res.json({
-        newClass: newClass,
+        newClass: formattedNewClass,
         usersCredentials: usersCredentials,
         fileName: `${newClass.name}-credentials.json`,
       });
@@ -189,9 +201,13 @@ export class ClassController {
   static async getClassRanking(req, res) {
     try {
       const classId = req.params.id;
+      const role = req.params.role;
 
       // Obtener las estadísticas de todos los estudiantes
-      const studentStats = await ClassController.getClassRankingById(classId);
+      const studentStats = await ClassController.getClassRankingById(
+        classId,
+        role
+      );
 
       // Devolver el array completo de estadísticas de los estudiantes
       res.json(studentStats);
@@ -201,7 +217,7 @@ export class ClassController {
     }
   }
 
-  static async getClassRankingById(classId) {
+  static async getClassRankingById(classId, role) {
     try {
       // Obtener estudiantes de la clase
       const students = await UserClassController.getClassStudents(classId);
@@ -223,14 +239,22 @@ export class ClassController {
         const completionPercentage = (numQuizzes / totalQuizzes) * 100;
 
         // Calcular un valor ponderado que tenga en cuenta tanto la nota media como el porcentaje de quizzes completados
-        const weightedValue =
+        const weightedValue = +(
           (averageScore * totalQuizzes + completionPercentage) /
-          (totalQuizzes + 1);
+          (totalQuizzes + 1)
+        ).toFixed(2);
+
+        if (role === "profesor") {
+          return {
+            userId: user.email,
+            averageScore: averageScore,
+            completionPercentage: completionPercentage,
+            weightedValue: weightedValue,
+          };
+        }
 
         return {
           userId: user.email,
-          averageScore: averageScore,
-          completionPercentage: completionPercentage,
           weightedValue: weightedValue,
         };
       });
@@ -277,5 +301,10 @@ export class ClassController {
       }
     }
     return usersCredentials;
+  }
+
+  static async getNumberOfStudentsInClass(classId) {
+    const students = await UserClassController.getClassStudents(classId);
+    return students.length;
   }
 }

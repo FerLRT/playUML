@@ -15,7 +15,6 @@ export function StudentStatsPage() {
 
   const [quizzes, setQuizzes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
   const [studentStats, setStudentStats] = useState({});
 
   const handleButtonClick = () => {
@@ -23,26 +22,20 @@ export function StudentStatsPage() {
   };
 
   useEffect(() => {
-    const loadStudentStats = async () => {
+    const fetchData = async () => {
       try {
-        const studentStats = await getStudentStats(studentId);
+        const [studentStats, quizzes] = await Promise.all([
+          getStudentStats(studentId),
+          getQuizzes(),
+        ]);
         setStudentStats(studentStats);
-      } catch (error) {
-        console.error("Error loading student stats", error);
-      }
-    };
-
-    const loadQuizzes = async () => {
-      try {
-        const quizzes = await getQuizzes();
         setQuizzes(quizzes);
       } catch (error) {
-        console.error("Error loading quizzes", error);
+        console.error("Error loading data", error);
       }
     };
 
-    loadStudentStats();
-    loadQuizzes();
+    fetchData();
   }, [studentId]);
 
   // Lógica para filtrar la lista de tests
@@ -58,7 +51,6 @@ export function StudentStatsPage() {
   return (
     <div className="student-stats-page">
       <h1>Estadísticas de: {studentStats.studentEmail}</h1>
-
       <div className="student-stats-button-container">
         <StatButton
           image_src="/src/assets/trofeo.png"
@@ -86,7 +78,6 @@ export function StudentStatsPage() {
           openModal={null}
         />
       </div>
-
       <h1>Tests</h1>
       <input
         type="text"
@@ -99,7 +90,10 @@ export function StudentStatsPage() {
       {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
         <details className="category-quizzes-group" key={category} open>
           <summary>
-            <h2>{category}</h2>
+            <h2>
+              {category} (
+              {studentStats.averageScoresByCategory[category] || "--"}/10)
+            </h2>
           </summary>
           <div className="category-quizzes">
             {categoryQuizzes
@@ -117,6 +111,7 @@ export function StudentStatsPage() {
           </div>
         </details>
       ))}
+
       <div className="student-stats-back-button-container">
         <button className="button-basic" onClick={handleButtonClick}>
           Volver

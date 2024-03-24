@@ -18,13 +18,15 @@ export function ScoreDistributionChart({ userScore }) {
   const { user } = useAuth();
   const { quizId } = useParams();
   const [chartData, setChartData] = useState([]);
+  const [maxLastScore, setMaxLastScore] = useState(0);
 
   useEffect(() => {
     const fetchScoreDistributionData = async () => {
       try {
         // Hacer la petición al servidor para obtener los datos de distribución de puntajes
-        const stats = await getChartStats(user.id, quizId);
-        setChartData(stats); // Suponiendo que la respuesta contiene los datos en la forma necesaria para el gráfico
+        const response = await getChartStats(user.id, quizId);
+        setChartData(response.roundedChartStats);
+        setMaxLastScore(response.maxScore);
       } catch (error) {
         console.error("Error fetching score distribution data:", error);
       }
@@ -47,15 +49,36 @@ export function ScoreDistributionChart({ userScore }) {
     return null;
   };
 
+  const customRound = (num) => {
+    const floor = Math.floor(num);
+    const decimal = num - floor;
+
+    if (decimal === 0 || decimal === 0.5) {
+      // Si el decimal es 0 o 0.5, no es necesario redondear
+      return num;
+    } else if (decimal < 0.5) {
+      // Si el decimal es menor que 0.5, redondea hacia abajo
+      return floor;
+    } else {
+      // Si el decimal es mayor que 0.5, redondea hacia arriba
+      return floor + 1;
+    }
+  };
+
   const coloredBars = chartData.map((entry) => ({
     ...entry,
-    fill: entry.score === Math.round(userScore) ? "orange" : "#8884d8",
+    fill:
+      entry.score == customRound(userScore) &&
+      (userScore == maxLastScore || !maxLastScore)
+        ? "orange"
+        : "#8884d8",
   }));
 
   // Completar las puntuaciones faltantes con un porcentaje de 0
-  const completeChartData = Array.from({ length: 10 }, (_, i) => {
-    const score = i + 1;
-    const existingEntry = coloredBars.find((entry) => entry.score === score);
+  const completeChartData = Array.from({ length: 21 }, (_, i) => {
+    let score = (i * 0.5).toFixed(1);
+
+    const existingEntry = coloredBars.find((entry) => entry.score == score);
     return existingEntry
       ? existingEntry
       : { score, percentage: 0, numStudents: 0 };

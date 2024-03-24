@@ -9,17 +9,7 @@ export class ImageController {
         where: { question_id: questionId },
       });
 
-      const imagesWithBase64Data = images.map((image) => {
-        if (image.image_data !== null) {
-          // Convertir image_data a base64
-          image.image_data = Buffer.from(image.image_data, "binary").toString(
-            "base64"
-          );
-        }
-        return image;
-      });
-
-      res.json(imagesWithBase64Data);
+      res.json(images);
     } catch (error) {
       console.error("Error getting question images:", error);
       res.status(500).send("Internal Server Error: " + error);

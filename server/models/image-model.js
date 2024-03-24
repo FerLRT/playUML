@@ -19,7 +19,7 @@ export const imageModel = sequelize.define("images", {
     onDelete: "CASCADE",
   },
   image_data: {
-    type: DataTypes.BLOB("long"),
+    type: DataTypes.TEXT,
     allowNull: false,
   },
 });

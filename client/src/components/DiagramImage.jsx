@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TransformWrapper,
   TransformComponent,
@@ -10,24 +10,24 @@ import { DiagramModal } from "./DiagramModal";
 import "../styles/diagramImage.css";
 
 export function DiagramImage({ image }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const imageData = image.startsWith("data:image/jpeg;base64,")
-    ? image
-    : `data:image/jpeg;base64,${image}`;
+  const handleContainerClick = (event) => {
+    event.stopPropagation(); // Evitar la propagación del evento al botón encapsulante
+  };
 
   const Controls = () => {
     const { zoomIn, zoomOut } = useControls();
 
     const handleZoomIn = (event) => {
-      event.stopPropagation(); // Evita que el evento se propague al contenedor padre
+      event.stopPropagation(); // Evitar la propagación del evento al contenedor principal
       zoomIn();
     };
 
     const handleZoomOut = (event) => {
-      event.stopPropagation(); // Evita que el evento se propague al contenedor padre
+      event.stopPropagation(); // Evitar la propagación del evento al contenedor principal
       zoomOut();
     };
 
@@ -52,7 +52,7 @@ export function DiagramImage({ image }) {
   };
 
   return (
-    <div className="diagram-image">
+    <div className="diagram-image" onClick={handleContainerClick}>
       <TransformWrapper
         maxScale={3}
         minScale={0.3}
@@ -65,11 +65,11 @@ export function DiagramImage({ image }) {
           <Controls />
         </div>
         <TransformComponent>
-          <img src={imageData} alt="Diagrama UML" width="100%" />
+          <img src={image} alt="Diagrama UML" width="100%" />
         </TransformComponent>
       </TransformWrapper>
 
-      <DiagramModal open={open} handleClose={handleClose} image={imageData} />
+      <DiagramModal open={open} handleClose={handleClose} image={image} />
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { ScoreDistributionChart } from "./ScoreDistributionChart";
 
 import "../styles/summaryQuiz.css";
 
-export function SummaryView({ quizScore, startTime, endTime }) {
+export function SummaryView({ quizScore, startTime, endTime, posiblePoints }) {
   const navigate = useNavigate();
   const [numberOfPieces, setNumberOfPieces] = useState(0);
   const [elapsedTime, setElapsedTime] = useState("0 minutos y 0 segundos");
@@ -47,7 +47,7 @@ export function SummaryView({ quizScore, startTime, endTime }) {
   return (
     <div className="summary-view-container">
       <h1>Resumen del test</h1>
-      <LevelIndicator />
+      <LevelIndicator posiblePoints={posiblePoints} />
       <h2>Nota: {quizScore}/10</h2>
       <h2>Has completado el test en {elapsedTime}</h2>
 

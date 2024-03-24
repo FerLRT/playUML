@@ -2,74 +2,56 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { getClassRanking } from "../hooks/useRanking";
 
+import { studentColumns, teacherColumns } from "../utils/rankingTableConfig";
+
 import "../styles/ranking.css";
 
-export function Ranking({ classId }) {
+export function Ranking({ classId, userId, userRole }) {
   const [ranking, setRanking] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 5;
 
   useEffect(() => {
     const loadRanking = async () => {
       try {
-        const rankingData = await getClassRanking(classId);
-        setRanking(rankingData);
+        const rankingData = await getClassRanking(classId, userRole);
+
+        const sortedRanking = rankingData
+          .slice()
+          .sort((a, b) => b.weightedValue - a.weightedValue);
+
+        setRanking(sortedRanking);
+
+        if (userId) {
+          const userIndex = sortedRanking.findIndex(
+            (record) => record.userId === userId
+          );
+
+          if (userIndex !== -1) {
+            // Calcular la página correspondiente al usuario
+            const userPage = Math.ceil((userIndex + 1) / pageSize);
+            setCurrentPage(userPage);
+          }
+        }
       } catch (error) {
         console.error("Error loading ranking", error);
       }
     };
 
     loadRanking();
-  }, [classId]);
-
-  const columns = [
-    {
-      title: "Pos.",
-      dataIndex: "position",
-      key: "position",
-      width: 10,
-    },
-    {
-      title: "Estudiante",
-      dataIndex: "userId",
-      key: "userId",
-      width: 100,
-    },
-    {
-      title: "Puntuación Media",
-      dataIndex: "averageScore",
-      key: "averageScore",
-      width: 100,
-      sorter: (a, b) => a.averageScore - b.averageScore,
-      render: (averageScore) => averageScore.toFixed(2),
-    },
-    {
-      title: "Porcentaje Completado",
-      dataIndex: "completionPercentage",
-      key: "completionPercentage",
-      width: 100,
-      sorter: (a, b) => a.completionPercentage - b.completionPercentage,
-      render: (completionPercentage) => completionPercentage.toFixed(2) + "%",
-    },
-    {
-      title: "Puntuación Ranking",
-      dataIndex: "weightedValue",
-      key: "weightedValue",
-      width: 100,
-      sorter: (a, b) => a.weightedValue - b.weightedValue,
-      render: (weightedValue) => weightedValue.toFixed(2),
-      defaultSortOrder: "descend", // Orden descendente por defecto
-    },
-  ];
-
-  // Ordenar el ranking por la columna "Puntuación Ranking"
-  const sortedRanking = ranking
-    .slice()
-    .sort((a, b) => b.weightedValue - a.weightedValue);
+  }, [classId, userId, pageSize]);
 
   // Agregar posición al ranking
-  const rankedData = sortedRanking.map((student, index) => ({
+  const rankedData = ranking.map((student, index) => ({
     ...student,
     position: index + 1,
   }));
+
+  // Función para agregar clase condicional a la fila
+  const rowClassName = (record) => {
+    return userId && record.userId === userId ? "highlight-row" : "";
+  };
 
   return (
     <div className="ranking-table-container">
@@ -77,9 +59,14 @@ export function Ranking({ classId }) {
       <div className="ranking-table-scrollable">
         <Table
           dataSource={rankedData}
-          columns={columns}
-          pagination={{ pageSize: 5 }}
+          columns={userRole === "profesor" ? teacherColumns : studentColumns}
+          pagination={{
+            pageSize: pageSize,
+            current: currentPage,
+            onChange: setCurrentPage,
+          }}
           rowKey={(record) => record.userId}
+          rowClassName={rowClassName}
         />
       </div>
     </div>

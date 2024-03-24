@@ -27,7 +27,7 @@ export const answerModel = sequelize.define("answers", {
     allowNull: false,
   },
   answer_image: {
-    type: DataTypes.BLOB("long"),
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   score: {
