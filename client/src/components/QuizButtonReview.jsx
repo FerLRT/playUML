@@ -9,6 +9,7 @@ export function QuizButtonReview({
   className,
   numResolveStudents,
   numStudents,
+  averageScore,
 }) {
   const navigate = useNavigate();
 
@@ -30,6 +31,17 @@ export function QuizButtonReview({
         <h1 className="quiz-button-review-number">
           {numResolveStudents}/{numStudents}
         </h1>
+
+        <h1 className="quiz-button-review-number">
+          {isNaN(averageScore) || averageScore === null
+            ? "--"
+            : `${averageScore.toFixed(2)}/10`}
+        </h1>
+
+        <h1 className="quiz-button-review-number">
+          {((numResolveStudents * 100) / numStudents).toFixed(0)}%
+        </h1>
+
         <h2>&rang;</h2>
       </div>
     </button>

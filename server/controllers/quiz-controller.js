@@ -57,7 +57,30 @@ export class QuizController {
       `
       );
 
-      res.json(quizStats[0]);
+      // Obtener nota media de cada quiz para la clase
+      const averageScores = await sequelize.query(
+        `
+        SELECT uq.quiz_id, AVG(uq.score) AS avgScore
+        FROM user_quizzes uq
+        INNER JOIN user_classes uc ON uq.user_id = uc.user_id
+        WHERE uc.class_id = ${classId}
+        GROUP BY uq.quiz_id;
+      `
+      );
+
+      // Combinar la información de quizStats y averageScores
+      const combinedStats = quizStats[0].map((quiz) => {
+        const avgScoreObj = averageScores[0].find(
+          (score) => score.quiz_id === quiz.quiz_id
+        );
+        return {
+          quiz_id: quiz.quiz_id,
+          numStudents: parseInt(quiz.numstudents),
+          avgScore: avgScoreObj ? parseFloat(avgScoreObj.avgscore) : null,
+        };
+      });
+
+      res.json(combinedStats);
     } catch (error) {
       console.error("Error fetching quiz stats by class:", error);
       res.status(500).json({ error: "Internal Server Error" });
