@@ -1,4 +1,6 @@
 import { quizModel } from "../models/quiz-model.js";
+import { userQuizModel } from "../models/userQuiz-model.js";
+import { categoryModel } from "../models/category-model.js";
 
 import { sequelize } from "../config/dbConfig.js";
 import { UserQuestionAnswerController } from "./userQuestionAnswer-controller.js";
@@ -11,15 +13,101 @@ import { customRound } from "../utils/round-utils.js";
 export class QuizController {
   static async getQuizzes(req, res) {
     try {
-      // Realiza una consulta SQL para obtener los quizzes con información sobre sus categorías
-      const quizzes = await sequelize.query(`
+      const userId = req.params.userId;
+
+      const user = await AuthController.getUserById(userId);
+
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      if (user.role === "estudiante") {
+        // Obtener todas las categorías
+        const allCategories = await categoryModel.findAll();
+
+        // Obtener los quizzes del usuario que están en la tabla userQuizzes
+        const userQuizzes = await userQuizModel.findAll({
+          where: { user_id: userId },
+        });
+
+        // Obtener todos los quizzes organizados por categorías
+        const quizzesByCategories = await sequelize.query(`
           SELECT q.*, c.name AS category
           FROM quizzes q
           INNER JOIN quiz_category qc ON q.id = qc.quiz_id
           INNER JOIN categories c ON qc.category_id = c.id
-      `);
+        `);
 
-      res.json(quizzes[0]);
+        // Determinar las categorías completadas por el usuario
+        const completedCategories = new Set();
+
+        for (const category of allCategories) {
+          // Filtrar los quizzes por la categoría actual
+          const quizzesInCategory = quizzesByCategories
+            .flat()
+            .filter((quiz) => quiz.category === category.name);
+
+          // Verificar si todos los quizzes de la categoría están completados por el usuario
+          const allQuizzesCompleted = quizzesInCategory.every((quiz) => {
+            return userQuizzes.some((userQuiz) => userQuiz.quiz_id === quiz.id);
+          });
+
+          // Si todos los quizzes de la categoría están completados, agregar la categoría al conjunto de completadas
+          if (allQuizzesCompleted) {
+            completedCategories.add(category.id);
+          }
+        }
+
+        // Obtener el unlock_order máximo entre las categorías completadas
+        let maxUnlockOrder = 0;
+        completedCategories.forEach((categoryId) => {
+          const category = allCategories.find((cat) => cat.id === categoryId);
+          if (category.unlock_order > maxUnlockOrder) {
+            maxUnlockOrder = category.unlock_order;
+          }
+        });
+
+        // Añadir categorías desbloqueadas
+        const unlockedCategories = new Set();
+        allCategories.forEach((category) => {
+          // Añadir categorías completadas como desbloqueadas
+          if (completedCategories.has(category.id)) {
+            unlockedCategories.add(category.id);
+          }
+          // Añadir la siguiente categoría si es la siguiente a la máxima categoría completada
+          if (category.unlock_order === maxUnlockOrder + 1) {
+            unlockedCategories.add(category.id);
+          }
+        });
+
+        const quizzesToShow = await sequelize.query(
+          `
+            SELECT q.*, c.name AS category
+            FROM quizzes q
+            INNER JOIN quiz_category qc ON q.id = qc.quiz_id
+            INNER JOIN categories c ON qc.category_id = c.id
+            WHERE c.id IN (:unlockedCategories)
+          `,
+          {
+            replacements: {
+              unlockedCategories: Array.from(unlockedCategories),
+            },
+            type: sequelize.QueryTypes.SELECT,
+          }
+        );
+
+        res.json(quizzesToShow);
+      } else {
+        // Realiza una consulta SQL para obtener los quizzes con información sobre sus categorías
+        const quizzes = await sequelize.query(`
+          SELECT q.*, c.name AS category
+          FROM quizzes q
+          INNER JOIN quiz_category qc ON q.id = qc.quiz_id
+          INNER JOIN categories c ON qc.category_id = c.id
+        `);
+
+        res.json(quizzes[0]);
+      }
     } catch (error) {
       console.error("Error getting quizzes:", error);
       res.status(500).send("Internal Server Error: " + error.message);

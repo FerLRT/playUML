@@ -49,7 +49,7 @@ export function ClassPage() {
         const classPercentage = await getClassPercentage(classId);
         setClassPercentage(classPercentage);
 
-        const quizzes = await getQuizzes();
+        const quizzes = await getQuizzes(user.id);
         setQuizzes(quizzes);
 
         const classStats = await getClassStats(classId);

@@ -24,7 +24,7 @@ export function HomePage() {
       try {
         const [studentStats, quizzes] = await Promise.all([
           getStudentStats(user.id),
-          getQuizzes(),
+          getQuizzes(user.id),
         ]);
         setStudentStats(studentStats);
         setQuizzes(quizzes);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 import { StatButton } from "../components/StatButton";
 import { StudentQuizButtonReview } from "../components/StudentQuizButtonReview";
@@ -10,6 +11,7 @@ import { getQuizzes } from "../hooks/useQuiz";
 import "../styles/studentStatsPage.css";
 
 export function StudentStatsPage() {
+  const { user } = useAuth();
   const { classId, studentId } = useParams();
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ export function StudentStatsPage() {
       try {
         const [studentStats, quizzes] = await Promise.all([
           getStudentStats(studentId),
-          getQuizzes(),
+          getQuizzes(user.id),
         ]);
         setStudentStats(studentStats);
         setQuizzes(quizzes);
