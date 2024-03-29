@@ -53,7 +53,7 @@ export class QuizController {
           });
 
           // Si todos los quizzes de la categoría están completados, agregar la categoría al conjunto de completadas
-          if (allQuizzesCompleted) {
+          if (allQuizzesCompleted && category.name !== "Repaso") {
             completedCategories.add(category.id);
           }
         }
@@ -80,7 +80,7 @@ export class QuizController {
           }
         });
 
-        const quizzesToShow = await sequelize.query(
+        let quizzesToShow = await sequelize.query(
           `
             SELECT q.*, c.name AS category
             FROM quizzes q
@@ -95,6 +95,38 @@ export class QuizController {
             type: sequelize.QueryTypes.SELECT,
           }
         );
+
+        const completedCategoryIds = Array.from(completedCategories);
+
+        let repasoQuizzes;
+
+        if (completedCategoryIds.length > 0) {
+          // Obtener los nombres de las categorías completadas
+          const completedCategoryNames = allCategories
+            .filter((category) => completedCategoryIds.includes(category.id))
+            .map((category) => category.name);
+
+          // Verificar si hay categorías completadas
+          if (completedCategoryNames.length > 0) {
+            // Construir la consulta para obtener los quizzes de repaso
+            repasoQuizzes = await sequelize.query(
+              `
+                SELECT q.*, c.name AS category
+                FROM quizzes q
+                INNER JOIN quiz_category qc ON q.id = qc.quiz_id
+                INNER JOIN categories c ON qc.category_id = c.id
+                WHERE c.name = 'Repaso' AND (${completedCategoryNames
+                  .map((name) => `q.name LIKE CONCAT('${name}', ' EXTRA')`)
+                  .join(" OR ")})
+              `,
+              {
+                type: sequelize.QueryTypes.SELECT,
+              }
+            );
+          }
+          // Añadir los quizzes de repaso a la lista de quizzesToShow
+          quizzesToShow = [...quizzesToShow, ...repasoQuizzes];
+        }
 
         res.json(quizzesToShow);
       } else {
