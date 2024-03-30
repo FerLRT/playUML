@@ -2,6 +2,7 @@ import { authModel } from "../models/auth-model.js";
 import { hashPassword, comparePassword } from "../utils/user-utils.js";
 import { LevelController } from "./level-controller.js";
 import { UserQuizController } from "./userQuiz-controller.js";
+import { userQuizModel } from "../models/userQuiz-model.js";
 
 import { sequelize } from "../config/dbConfig.js";
 import { QuizController } from "./quiz-controller.js";
@@ -288,6 +289,18 @@ export class AuthController {
       return { averageScore, numQuizzes };
     } catch (error) {
       console.error("Error fetching user stats:", error);
+      throw error;
+    }
+  }
+
+  static async getUserAttempts(userId) {
+    try {
+      const totalAttempts = await userQuizModel.sum("attempts", {
+        where: { user_id: userId },
+      });
+      return totalAttempts || 0; // Si no hay intentos, devolvemos 0
+    } catch (error) {
+      console.error("Error getting total attempts by user:", error);
       throw error;
     }
   }
