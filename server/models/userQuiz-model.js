@@ -16,4 +16,9 @@ export const userQuizModel = sequelize.define("user_quizzes", {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
+  attempts: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+  },
 });
