@@ -1,7 +1,9 @@
 import { instance } from "./axiosInstance";
 
-export function getQuizzes() {
-  return instance.get("/quizzes").then((response) => response.data);
+export function getQuizzes(userId) {
+  return instance
+    .get(`/quizzes/user/${userId}`)
+    .then((response) => response.data);
 }
 
 export function getQuestions(quizId) {

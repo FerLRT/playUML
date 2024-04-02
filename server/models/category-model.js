@@ -1,24 +1,19 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/dbConfig.js";
 
-export const userQuizModel = sequelize.define("user_quizzes", {
-  user_id: {
+export const categoryModel = sequelize.define("categories", {
+  id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
+    autoIncrement: true,
   },
-  quiz_id: {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  unlock_order: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true,
-  },
-  score: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  attempts: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
   },
 });

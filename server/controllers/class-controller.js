@@ -238,10 +238,14 @@ export class ClassController {
         // Calcular el porcentaje de quizzes completados
         const completionPercentage = (numQuizzes / totalQuizzes) * 100;
 
+        // Calcular número de intentos
+        const attempts = await AuthController.getUserAttempts(userId);
+
         // Calcular un valor ponderado que tenga en cuenta tanto la nota media como el porcentaje de quizzes completados
         const weightedValue = +(
           (averageScore * totalQuizzes + completionPercentage) /
-          (totalQuizzes + 1)
+            (totalQuizzes + 1) -
+          attempts * 0.1
         ).toFixed(2);
 
         if (role === "profesor") {

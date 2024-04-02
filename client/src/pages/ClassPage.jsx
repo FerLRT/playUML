@@ -28,113 +28,51 @@ export function ClassPage() {
   const [averageScore, setAverageScore] = useState(0);
   const [classPercentage, setClassPercentage] = useState(0);
   const [quizzes, setQuizzes] = useState([]);
-  const [classStats, setClassStats] = useState([{}]);
+  const [classStats, setClassStats] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    const loadClassName = async () => {
+    const fetchData = async () => {
       try {
         const classData = await getClassName(classId);
         setClassName(classData.name);
-      } catch (error) {
-        console.error("Error loading class name", error);
-      }
-    };
 
-    // Obtener estudiantes de la clase
-    const loadStudents = async () => {
-      try {
         const studentsList = await getClassStudents(classId);
         setStudents(studentsList);
-      } catch (error) {
-        console.error("Error loading students", error);
-      }
-    };
 
-    const loadAverageScore = async () => {
-      try {
         const averageScore = await getClassAverageScore(classId);
         setAverageScore(averageScore);
-      } catch (error) {
-        console.error("Error loading average score", error);
-      }
-    };
 
-    const loadClassPercentage = async () => {
-      try {
         const classPercentage = await getClassPercentage(classId);
         setClassPercentage(classPercentage);
-      } catch (error) {
-        console.error("Error loading class percentage", error);
-      }
-    };
 
-    const loadQuizzes = async () => {
-      try {
-        const quizzes = await getQuizzes();
+        const quizzes = await getQuizzes(user.id);
         setQuizzes(quizzes);
-      } catch (error) {
-        console.error("Error loading quizzes", error);
-      }
-    };
 
-    const loadClassStats = async () => {
-      try {
         const classStats = await getClassStats(classId);
         setClassStats(classStats);
       } catch (error) {
-        console.error("Error loading class stats", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    loadClassName();
-    loadStudents();
-    loadAverageScore();
-    loadClassPercentage();
-    loadQuizzes();
-    loadClassStats();
+    fetchData();
   }, [classId]);
 
-  // Lógica para filtrar la lista de tests
-  const quizzesByCategory = quizzes.reduce((acc, quiz) => {
-    const { category } = quiz;
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(quiz);
-    return acc;
-  }, {});
+  const getTestCountByCategory = (category) => {
+    if (!classStats.length) return 0;
 
-  const openModal = () => {
-    setIsModalVisible(true);
+    return classStats.reduce((acc, stat) => {
+      const quiz = quizzes.find((quiz) => quiz.id === stat.quiz_id);
+      if (quiz && quiz.category === category) {
+        return acc + parseInt(stat.numStudents);
+      }
+      return acc;
+    }, 0);
   };
-
-  const closeModal = () => {
-    setIsModalVisible(false);
-  };
-
-  const classStatsObject = classStats.reduce((acc, curr) => {
-    acc[curr.quiz_id] = curr.numstudents;
-    return acc;
-  }, {});
-
-  const classStatsByCategory = quizzes.reduce((acc, quiz) => {
-    const { category, id } = quiz;
-    const numResolveStudents = classStatsObject[id] || 0;
-    if (!acc[category]) {
-      acc[category] = {
-        totalStudents: students.length,
-        numResolveStudents: 0,
-        numTests: 0,
-      };
-    }
-    acc[category].numResolveStudents += parseInt(numResolveStudents);
-    acc[category].numTests++;
-    return acc;
-  }, {});
 
   return (
     <div className="class-page">
@@ -145,7 +83,7 @@ export function ClassPage() {
           image_src="/src/assets/grupo.png"
           stat="Estudiantes"
           value={students.length}
-          openModal={openModal}
+          openModal={() => setIsModalVisible(true)}
         />
 
         <StatButton
@@ -178,15 +116,21 @@ export function ClassPage() {
         className="class-page-search-bar"
       />
 
-      {Object.entries(quizzesByCategory).map(([category, categoryQuizzes]) => (
+      {Object.entries(
+        quizzes.reduce((acc, quiz) => {
+          const { category } = quiz;
+          if (!acc[category]) {
+            acc[category] = [];
+          }
+          acc[category].push(quiz);
+          return acc;
+        }, {})
+      ).map(([category, categoryQuizzes]) => (
         <details className="category-quizzes-group" key={category} open>
           <summary>
             <h2>
-              {category} (
-              {parseInt(classStatsByCategory[category].numResolveStudents)}/
-              {parseInt(classStatsByCategory[category].totalStudents) *
-                classStatsByCategory[category].numTests}
-              )
+              {category} ({getTestCountByCategory(category)}/
+              {students.length * categoryQuizzes.length})
             </h2>
           </summary>
           <div className="category-quizzes">
@@ -194,21 +138,30 @@ export function ClassPage() {
               .filter((quiz) =>
                 quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
               )
-              .map((quiz) => (
-                <QuizButtonReview
-                  key={quiz.id}
-                  to={quiz.id}
-                  classId={classId}
-                  className={quiz.name}
-                  numResolveStudents={classStatsObject[quiz.id] || 0}
-                  numStudents={students.length}
-                />
-              ))}
+              .map((quiz) => {
+                const quizStats = classStats.find(
+                  (stat) => stat.quiz_id === quiz.id
+                );
+                return (
+                  <QuizButtonReview
+                    key={quiz.id}
+                    to={quiz.id}
+                    classId={classId}
+                    className={quiz.name}
+                    numResolveStudents={quizStats ? quizStats.numStudents : 0}
+                    numStudents={students.length}
+                    averageScore={quizStats ? quizStats.avgScore : 0}
+                  />
+                );
+              })}
           </div>
         </details>
       ))}
 
-      <ModalSide isModalVisible={isModalVisible} closeModal={closeModal}>
+      <ModalSide
+        isModalVisible={isModalVisible}
+        closeModal={() => setIsModalVisible(false)}
+      >
         <div className="class-page-modalside">
           <h2>Lista de estudiantes</h2>
           <ul>

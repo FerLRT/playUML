@@ -94,6 +94,7 @@ export class UserQuizController {
           // Si el totalScore del nuevo resultado es mayor, actualizar los resultados
           existingUserQuiz = await existingUserQuiz.update({
             score: score,
+            attempts: existingUserQuiz.attempts + 1,
           });
           const existingUserQuestionAnswers = await Promise.all(
             answers.map(async (answer) => {
@@ -119,6 +120,10 @@ export class UserQuizController {
           return { existingUserQuiz, existingUserQuestionAnswers };
         } else {
           // Si el totalScore del nuevo resultado no es mayor, no guardar los nuevos resultados
+          existingUserQuiz = await existingUserQuiz.update({
+            attempts: existingUserQuiz.attempts + 1,
+          });
+
           return existingUserQuiz;
         }
       } else {
