@@ -1,3 +1,11 @@
+.student-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+
 .student-button {
   display: flex;
   justify-content: space-between;
@@ -62,4 +70,37 @@
 .student-button__content-student {
   height: 70%;
   width: auto;
+}
+
+.student-button-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.student-button-wrapper {
+  position: relative;
+}
+
+.student-button-menu-options {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 999;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+}
+
+.student-button-menu-options p {
+  margin: 0;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.student-button-menu-options p:hover {
+  background-color: #f5f5f5;
 }

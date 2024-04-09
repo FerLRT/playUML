@@ -14,6 +14,7 @@ import {
   getClassPercentage,
   getClassName,
   addStudentToClass,
+  removeStudentFromClass,
 } from "../hooks/useClass";
 import { getClassStats } from "../hooks/useQuiz";
 import { getQuizzes } from "../hooks/useQuiz";
@@ -106,6 +107,18 @@ export function ClassPage() {
       }
       return acc;
     }, 0);
+  };
+
+  const handleRemoveStudent = async (studentId) => {
+    await removeStudentFromClass(studentId);
+
+    // Filtrar la lista de estudiantes para eliminar al estudiante eliminado
+    const updatedStudents = students.filter(
+      (student) => student.id !== studentId
+    );
+
+    // Actualizar el estado con la nueva lista de estudiantes
+    setStudents(updatedStudents);
   };
 
   return (
@@ -212,6 +225,8 @@ export function ClassPage() {
                 email={student.email}
                 level={student.level}
                 last_connection={student.last_connection}
+                handleRemoveStudent={handleRemoveStudent}
+                setStudents={setStudents} // Pasar la función setStudents como prop
               />
             ))}
           </ul>

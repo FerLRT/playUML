@@ -23,6 +23,15 @@ export async function addStudentToClass(classId, studentEmail) {
     );
 }
 
+export async function removeStudentFromClass(studentId) {
+  return await instance
+    .delete(`/classes/remove-student/${studentId}`)
+    .then((response) => response.data)
+    .catch((error) =>
+      console.error("Error al remover estudiante de la clase:", error)
+    );
+}
+
 export async function getClassStudents(classId) {
   return await instance
     .get(`/classes/${classId}/students`)

@@ -1,4 +1,5 @@
 import { classModel } from "../models/class-model.js";
+import { authModel } from "../models/auth-model.js";
 
 import { AuthController } from "./auth-controller.js";
 import { UserClassController } from "./userClass-controller.js";
@@ -147,6 +148,20 @@ export class ClassController {
     } catch (error) {
       console.error("Error adding student to class:", error);
       res.status(500).send("Internal Server Error: " + error);
+    }
+  }
+
+  static async removeStudent(req, res) {
+    try {
+      const { studentId } = req.params;
+      console.log(studentId);
+
+      await authModel.destroy({
+        where: { id: studentId },
+        cascade: true, // Esto eliminará automáticamente las entradas relacionadas
+      });
+    } catch (error) {
+      console.error("Error al eliminar usuario", error);
     }
   }
 
