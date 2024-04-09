@@ -25,7 +25,7 @@ summary h2 {
   margin-right: 10px;
 }
 
-input[type="text"] {
+input {
   width: 100%;
   max-width: 350px;
   padding: 7px;
@@ -36,7 +36,7 @@ input[type="text"] {
   transition: border-color 0.2s ease;
 }
 
-input[type="text"]:focus {
+input:focus {
   border-color: #007bff;
   outline: none;
 }

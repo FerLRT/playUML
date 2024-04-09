@@ -100,6 +100,56 @@ export class ClassController {
     }
   }
 
+  static async addStudentToClass(req, res) {
+    try {
+      const { studentEmail, classId } = req.body;
+
+      // Obtener el usuario
+      let student = await AuthController.getUser(studentEmail);
+      const password = Math.random().toString(36).substring(7);
+
+      // Actualizar la contraseña del usuario existente
+      if (student) {
+        await AuthController.updateUserPassword(studentEmail, password);
+      }
+
+      // Crear el usuario
+      if (!student) {
+        student = await AuthController.createUser(studentEmail, password);
+      }
+
+      // Asociar el usuario a la clase
+      if (student) {
+        await AuthController.updateCurrentClass(student.email, classId);
+        await UserClassController.addUserToClass(student.id, classId);
+
+        // Enviar correo electrónico al usuario con sus credenciales
+        await sendCredentialsEmail(studentEmail, password);
+      }
+
+      const formattedNewStudent = {
+        email: student.email,
+        id: student.id,
+        last_connection: student.last_connection,
+        level: student.level,
+      };
+
+      const userCredentials = {
+        email: studentEmail,
+        password: password,
+      };
+
+      res.json({
+        newStudent: formattedNewStudent,
+        userCredentials: userCredentials,
+        fileName: `new-student-credentials.json`,
+      });
+    } catch (error) {
+      console.error("Error adding student to class:", error);
+      res.status(500).send("Internal Server Error: " + error);
+    }
+  }
+
   static async getClassStudents(req, res) {
     try {
       const classId = req.params.id;

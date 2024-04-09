@@ -13,6 +13,7 @@ import {
   getClassAverageScore,
   getClassPercentage,
   getClassName,
+  addStudentToClass,
 } from "../hooks/useClass";
 import { getClassStats } from "../hooks/useQuiz";
 import { getQuizzes } from "../hooks/useQuiz";
@@ -33,6 +34,10 @@ export function ClassPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isNewStudentModalVisible, setIsNewStudentModalVisible] =
+    useState(false);
+
+  const [newStudentEmail, setNewStudentEmail] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,6 +67,35 @@ export function ClassPage() {
     fetchData();
   }, [classId]);
 
+  const handleButtonAddStudent = () => {
+    setIsNewStudentModalVisible(true);
+  };
+
+  const handlerAddStudent = async () => {
+    if (!newStudentEmail) return;
+
+    const { newStudent, userCredentials, fileName } = await addStudentToClass(
+      classId,
+      newStudentEmail
+    );
+
+    setStudents([...students, newStudent]);
+    setIsNewStudentModalVisible(false);
+    setNewStudentEmail("");
+
+    const jsonBlob = new Blob([JSON.stringify(userCredentials)], {
+      type: "application/json",
+    });
+
+    // Crear un enlace de descarga para el Blob
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(jsonBlob);
+    downloadLink.download = fileName;
+
+    // Simular un clic en el enlace de descarga para iniciar la descarga del archivo
+    downloadLink.click();
+  };
+
   const getTestCountByCategory = (category) => {
     if (!classStats.length) return 0;
 
@@ -76,7 +110,13 @@ export function ClassPage() {
 
   return (
     <div className="class-page">
-      <h1>{className}</h1>
+      <div className="class-page-header">
+        <h1>{className}</h1>
+
+        <button className="button-basic" onClick={handleButtonAddStudent}>
+          Añadir estudiante
+        </button>
+      </div>
 
       <div className="class-page-button-container">
         <StatButton
@@ -175,6 +215,30 @@ export function ClassPage() {
               />
             ))}
           </ul>
+        </div>
+      </ModalSide>
+
+      <ModalSide
+        isModalVisible={isNewStudentModalVisible}
+        closeModal={() => setIsNewStudentModalVisible(false)}
+      >
+        <div className="class-page-modalside">
+          <h2>Añadir nuevo estudiante</h2>
+
+          <div className="class-page-modalside-new-student">
+            <h3>Correo del nuevo estudiante:</h3>
+            <input
+              type="email"
+              placeholder="Correo"
+              value={newStudentEmail}
+              onChange={(e) => setNewStudentEmail(e.target.value)}
+            />
+          </div>
+          <div className="class-page-modalside-button-container">
+            <button className="button-basic" onClick={handlerAddStudent}>
+              Añadir
+            </button>
+          </div>
         </div>
       </ModalSide>
     </div>
