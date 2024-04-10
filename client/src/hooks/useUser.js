@@ -7,6 +7,13 @@ export async function login(email, password) {
     .catch((error) => console.error("Error al hacer login:", error));
 }
 
+export async function register(email, password, confirmPassword) {
+  return await instance
+    .post("/auth/signup", { email, password, confirmPassword })
+    .then((response) => response.data)
+    .catch((error) => console.error("Error al hacer registro:", error));
+}
+
 export async function sendFileData(data) {
   return await instance
     .post("/auth/import", data)

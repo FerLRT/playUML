@@ -7,10 +7,6 @@ import { StudentRouter } from "./routerStudent";
 export function Router() {
   const { user } = useAuth();
 
-  if (user === null) {
-    return <div>Loading...</div>;
-  }
-
   if (user) {
     if (user.role === "profesor") {
       return <TeacherRouter />;
