@@ -44,7 +44,7 @@ export function AchievementPage() {
               achievement.unlocked ? "unlocked" : "locked"
             }`}
           >
-            <img src="/src/assets/insignia.png" alt={achievement.name} />
+            <img src={achievement.badge_url} alt={achievement.name} />
             <div className="achievement-text">
               <h3>{achievement.name}</h3>
               <p>{achievement.description}</p>
