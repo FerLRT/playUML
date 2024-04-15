@@ -1,5 +1,7 @@
 import React from "react";
-import { Modal, Box, Typography, Button } from "@mui/material";
+import { Modal, Box, Typography } from "@mui/material";
+
+import "../styles/newAchievement.css";
 
 export function NewAchievement({ open, onClose, achievement }) {
   return (
@@ -15,31 +17,44 @@ export function NewAchievement({ open, onClose, achievement }) {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
+          width: "auto",
+          minWidth: 300,
           bgcolor: "background.paper",
           boxShadow: 24,
           p: 4,
         }}
       >
-        <Typography
-          id="new-achievement-modal-title"
-          variant="h6"
-          component="h2"
-          gutterBottom
-        >
-          ¡Nuevo logro obtenido!
-        </Typography>
-        <Typography
-          id="new-achievement-modal-description"
-          variant="body1"
-          component="div"
-          gutterBottom
-        >
-          Has desbloqueado el logro "{achievement}".
-        </Typography>
-        <Button onClick={onClose} variant="contained">
-          Cerrar
-        </Button>
+        <div className="new-achievement-modal-content">
+          <img src={achievement.badge_url} alt={achievement.name} />
+
+          <div className="new-achievement-modal-text">
+            <Typography
+              id="new-achievement-modal-title"
+              variant="h6"
+              component="h2"
+              gutterBottom
+              style={{ fontWeight: "bold" }}
+            >
+              ¡Nuevo logro obtenido!
+            </Typography>
+            <Typography
+              id="new-achievement-modal-description"
+              variant="h6"
+              component="div"
+              gutterBottom
+            >
+              Has desbloqueado el logro "{achievement.name}"
+            </Typography>
+            <Typography
+              id="new-achievement-modal-description"
+              variant="body1"
+              component="div"
+              gutterBottom
+            >
+              {achievement.description}
+            </Typography>
+          </div>
+        </div>
       </Box>
     </Modal>
   );

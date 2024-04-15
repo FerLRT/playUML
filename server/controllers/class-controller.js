@@ -1,4 +1,5 @@
 import { classModel } from "../models/class-model.js";
+import { authModel } from "../models/auth-model.js";
 
 import { AuthController } from "./auth-controller.js";
 import { UserClassController } from "./userClass-controller.js";
@@ -97,6 +98,70 @@ export class ClassController {
     } catch (error) {
       console.error("Error creating class:", error);
       res.status(500).send("Internal Server Error: " + error);
+    }
+  }
+
+  static async addStudentToClass(req, res) {
+    try {
+      const { studentEmail, classId } = req.body;
+
+      // Obtener el usuario
+      let student = await AuthController.getUser(studentEmail);
+      const password = Math.random().toString(36).substring(7);
+
+      // Actualizar la contraseña del usuario existente
+      if (student) {
+        await AuthController.updateUserPassword(studentEmail, password);
+      }
+
+      // Crear el usuario
+      if (!student) {
+        student = await AuthController.createUser(studentEmail, password);
+      }
+
+      // Asociar el usuario a la clase
+      if (student) {
+        await AuthController.updateCurrentClass(student.email, classId);
+        await UserClassController.addUserToClass(student.id, classId);
+
+        // Enviar correo electrónico al usuario con sus credenciales
+        await sendCredentialsEmail(studentEmail, password);
+      }
+
+      const formattedNewStudent = {
+        email: student.email,
+        id: student.id,
+        last_connection: student.last_connection,
+        level: student.level,
+      };
+
+      const userCredentials = {
+        email: studentEmail,
+        password: password,
+      };
+
+      res.json({
+        newStudent: formattedNewStudent,
+        userCredentials: userCredentials,
+        fileName: `new-student-credentials.json`,
+      });
+    } catch (error) {
+      console.error("Error adding student to class:", error);
+      res.status(500).send("Internal Server Error: " + error);
+    }
+  }
+
+  static async removeStudent(req, res) {
+    try {
+      const { studentId } = req.params;
+      console.log(studentId);
+
+      await authModel.destroy({
+        where: { id: studentId },
+        cascade: true, // Esto eliminará automáticamente las entradas relacionadas
+      });
+    } catch (error) {
+      console.error("Error al eliminar usuario", error);
     }
   }
 

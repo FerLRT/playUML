@@ -12,9 +12,18 @@ export class AuthController {
   static async signup(req, res) {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).send("Bad Request: Missing required fields");
+    }
+
     try {
       const hashedPassword = await hashPassword(password);
-      const user = await authModel.create({ email, password: hashedPassword });
+      const user = await authModel.create({
+        email,
+        password: hashedPassword,
+        role: "profesor",
+      });
+
       res.status(201).json(user);
     } catch (error) {
       console.error("Error creating user:", error);

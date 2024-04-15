@@ -14,6 +14,24 @@ export async function createClass(name, teacherEmail, fileData) {
     .catch((error) => console.error("Error al crear clase:", error));
 }
 
+export async function addStudentToClass(classId, studentEmail) {
+  return await instance
+    .post("/classes/add-student", { classId, studentEmail })
+    .then((response) => response.data)
+    .catch((error) =>
+      console.error("Error al añadir estudiante a la clase:", error)
+    );
+}
+
+export async function removeStudentFromClass(studentId) {
+  return await instance
+    .delete(`/classes/remove-student/${studentId}`)
+    .then((response) => response.data)
+    .catch((error) =>
+      console.error("Error al remover estudiante de la clase:", error)
+    );
+}
+
 export async function getClassStudents(classId) {
   return await instance
     .get(`/classes/${classId}/students`)

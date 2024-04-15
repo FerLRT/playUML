@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/auth-controller.js";
 
+import { bodyRegisterValidator } from "../middlewares/validatorManager.js";
+
 export const authRouter = Router();
 
-authRouter.post("/signup", AuthController.signup);
+authRouter.post("/signup", bodyRegisterValidator, AuthController.signup);
 authRouter.post("/login", AuthController.login);
 authRouter.get("/logout", AuthController.logout);
 

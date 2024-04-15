@@ -81,7 +81,7 @@ export class AnswerController {
       );
 
       // Guardar el resultado del quiz y las respuestas del usuario
-      await UserQuizController.createUserQuiz(
+      const lastScore = await UserQuizController.createUserQuiz(
         user.id,
         quizId,
         totalScore,
@@ -90,12 +90,19 @@ export class AnswerController {
 
       // Determinar los logros desbloqueados y guardarlos para el usuario
       const unlockedAchievements =
-        await AchievementController.calculateUnlockedAchievements(newPoints);
+        await AchievementController.calculateUnlockedAchievements(
+          user.id,
+          quizId,
+          totalScore,
+          lastScore
+        );
+
       const newAchievements =
         await UserAchievementController.determineNewAchievements(
           user.id,
           unlockedAchievements
         );
+
       if (newAchievements.length > 0) {
         await UserAchievementController.saveUserAchievements(
           user.id,
@@ -113,9 +120,7 @@ export class AnswerController {
         level: newLevel,
         experience: newPoints,
         maxExperience: maxExperience,
-        unlockedAchievements: newAchievements.map(
-          (achievement) => achievement.name
-        ),
+        unlockedAchievements: newAchievements,
       });
     } catch (error) {
       console.error("Error submitting answers:", error);

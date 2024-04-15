@@ -16,4 +16,16 @@ export const Achievement = sequelize.define("achievements", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  badge_url: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  type: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  requirement: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });

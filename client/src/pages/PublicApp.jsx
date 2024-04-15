@@ -1,3 +1,5 @@
+import React from "react";
+import { PublicHeader } from "../components/PublicHeader";
 import { Outlet } from "react-router-dom";
 
 import "../styles/app.css";
@@ -5,7 +7,7 @@ import "../styles/app.css";
 export function PublicApp() {
   return (
     <main className="main">
-      <h1>Public Header</h1>
+      <PublicHeader />
       <Outlet />
     </main>
   );

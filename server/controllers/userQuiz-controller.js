@@ -83,12 +83,16 @@ export class UserQuizController {
 
   static async createUserQuiz(userId, quizId, score, answers) {
     try {
+      let lastScore = null;
+
       // Consultar si ya hay resultados almacenados para este usuario y este quiz
       let existingUserQuiz = await userQuizModel.findOne({
         where: { user_id: userId, quiz_id: quizId },
       });
 
       if (existingUserQuiz) {
+        lastScore = existingUserQuiz.score;
+
         // Si ya existen resultados, comparar el totalScore con los anteriores
         if (score > existingUserQuiz.score) {
           // Si el totalScore del nuevo resultado es mayor, actualizar los resultados
@@ -117,14 +121,14 @@ export class UserQuizController {
             })
           );
 
-          return { existingUserQuiz, existingUserQuestionAnswers };
+          return lastScore;
         } else {
           // Si el totalScore del nuevo resultado no es mayor, no guardar los nuevos resultados
           existingUserQuiz = await existingUserQuiz.update({
             attempts: existingUserQuiz.attempts + 1,
           });
 
-          return existingUserQuiz;
+          return lastScore;
         }
       } else {
         // Si no hay resultados almacenados, crear un nuevo registro
@@ -155,7 +159,7 @@ export class UserQuizController {
           })
         );
 
-        return { newUserQuiz, newUserQuestionAnswers };
+        return lastScore;
       }
     } catch (error) {
       throw new Error(`Error creating user quiz: ${error.message}`);
