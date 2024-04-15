@@ -113,15 +113,21 @@ export function StudentButton({
   return (
     <div className="student-button-wrapper" ref={containerRef}>
       <div className="student-button-container">
-        <button className="student-button" onClick={handleButtonClick}>
-          <div className="student-button__content">
+        <button
+          className="student-button"
+          onClick={handleButtonClick}
+          title={email}
+        >
+          <div className="student-button__content-img">
             <img
               src="/src/assets/student.png"
               alt="Estudiante"
               className="student-button__content-student"
             />
-            <p className="student-button-email">{email}</p>
           </div>
+
+          <div className="student-button__content-name">{email}</div>
+
           <div className="student-button__content-info">
             <p className="student-button-last-connection">
               {formattedLastConnection(last_connection)}
