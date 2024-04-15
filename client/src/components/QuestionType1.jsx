@@ -35,7 +35,7 @@ export function QuestionType1({
       </div>
 
       <div className="question-type-1-question-answers-container">
-        <h2>{question.question_text}</h2>
+        <h2 className="question-text">{question.question_text}</h2>
         <div className="question-type-1-answers-container">
           {question.answers.map((answer, index) => {
             // Buscar el puntaje de esta respuesta específica

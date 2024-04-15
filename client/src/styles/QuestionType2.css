@@ -60,5 +60,21 @@
 
 .question-type-2-answers-container {
   flex: 1;
-  overflow: auto;
+}
+
+@media (any-pointer: coarse) {
+  .question-type-2-question-answers-container {
+    overflow: auto;
+  }
+}
+
+@media (any-pointer: fine) {
+  .question-type-2-answers-container {
+    overflow: auto;
+  }
+
+  .question-text {
+    max-height: 300px;
+    overflow: auto;
+  }
 }
