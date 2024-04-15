@@ -43,7 +43,7 @@
   }
 
   .question-text {
-    max-height: 300px;
+    max-height: 40vh;
     overflow: auto;
   }
 }
