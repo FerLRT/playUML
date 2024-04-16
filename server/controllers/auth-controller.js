@@ -10,13 +10,9 @@ import { ClassController } from "./class-controller.js";
 
 export class AuthController {
   static async signup(req, res) {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).send("Bad Request: Missing required fields");
-    }
-
     try {
+      const { email, password } = req.body;
+
       const hashedPassword = await hashPassword(password);
       const user = await authModel.create({
         email,
@@ -26,8 +22,11 @@ export class AuthController {
 
       res.status(201).json(user);
     } catch (error) {
-      console.error("Error creating user:", error);
-      res.status(500).send("Internal Server Error: " + error);
+      if (error.name === "SequelizeUniqueConstraintError") {
+        return res.status(409).send("El correo ya está registrado");
+      }
+
+      res.status(500).send("Algo salió mal, intentelo de nuevo");
     }
   }
 

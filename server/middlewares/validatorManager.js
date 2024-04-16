@@ -16,17 +16,21 @@ export const bodyRegisterValidator = [
     .trim()
     .isEmail()
     .normalizeEmail(),
-  body("password", "Necesarios mínimo 6 caracteres")
+  body("password", "La contraseña debe tener mínimo 6 caracteres")
     .trim()
     .isLength({ min: 6 }),
-  body("password", "Las contraseñas introducidas no coinciden").custom(
-    (value, { req }) => {
-      if (value !== req.body.confirmPassword) {
-        throw new Error("Los passwords no coinciden");
-      } else {
-        return value;
-      }
+  body("password").custom((value, { req }) => {
+    if (value !== req.body.confirmPassword) {
+      throw new Error("Las contraseñas no coinciden");
+    } else {
+      return true;
     }
-  ),
-  validationResultExpress,
+  }),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
 ];

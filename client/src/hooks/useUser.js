@@ -9,8 +9,7 @@ export async function login(email, password) {
 export async function register(email, password, confirmPassword) {
   return await instance
     .post("/auth/signup", { email, password, confirmPassword })
-    .then((response) => response.data)
-    .catch((error) => console.error("Error al hacer registro:", error));
+    .then((response) => response);
 }
 
 export async function sendFileData(data) {
