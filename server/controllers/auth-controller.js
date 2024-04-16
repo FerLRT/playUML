@@ -26,30 +26,29 @@ export class AuthController {
         return res.status(409).send("El correo ya está registrado");
       }
 
-      res.status(500).send("Algo salió mal, intentelo de nuevo");
+      res.status(500).send("Internal Server Error");
     }
   }
 
   static async login(req, res) {
-    const { email, password } = req.body;
-
     try {
+      const { email, password } = req.body;
+
       const user = await authModel.findOne({ where: { email } });
 
       if (!user) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send("Usuario o contraseña incorrectos");
       }
 
       const isMatch = await comparePassword(password, user.password);
 
       if (!isMatch) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send("Usuario o contraseña incorrectos");
       }
 
       await AuthController.updateUserLastConnection(user.id);
       res.status(200).json(user);
     } catch (error) {
-      console.error("Error during login:", error);
       return res.status(500).send("Internal Server Error");
     }
   }

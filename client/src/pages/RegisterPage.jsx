@@ -16,21 +16,25 @@ export function RegisterPage() {
   const [error, setError] = useState("");
 
   const handleRegister = async () => {
-    try {
-      await register(email, password, confirmPassword).then((response) => {
+    await register(email, password, confirmPassword)
+      .then((response) => {
         setUser(response.data);
         navigate("/");
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
+          const errorMessage = error.response.data.errors
+            .map((error) => error.msg)
+            .join(". ");
+          setError(errorMessage);
+        } else if (error.response && error.response.data) {
+          setError(error.response.data);
+        }
       });
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.errors) {
-        const errorMessage = error.response.data.errors
-          .map((error) => error.msg)
-          .join(". ");
-        setError(errorMessage);
-      } else if (error.response && error.response.data) {
-        setError(error.response.data);
-      }
-    }
   };
 
   return (

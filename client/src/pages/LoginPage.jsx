@@ -15,19 +15,17 @@ export function LoginPage() {
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
-    try {
-      await login(email, password).then((response) => {
-        if (response.data.error) {
-          setError(response.data.error);
-          return;
-        }
+    await login(email, password)
+      .then((response) => {
         setUser(response.data);
         navigate("/");
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          setError(error.response.data);
+          setPassword("");
+        }
       });
-    } catch (error) {
-      setError("Correo electrónico o contraseña incorrectos");
-      setPassword("");
-    }
   };
 
   return (
