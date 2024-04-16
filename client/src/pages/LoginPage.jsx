@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../hooks/useUser";
 import { useAuth } from "../context/AuthContext";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 import "../styles/login.css";
 
@@ -14,11 +16,17 @@ export function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const user = await login(email, password);
-      setUser(user);
-      navigate("/");
+      await login(email, password).then((response) => {
+        if (response.data.error) {
+          setError(response.data.error);
+          return;
+        }
+        setUser(response.data);
+        navigate("/");
+      });
     } catch (error) {
       setError("Correo electrónico o contraseña incorrectos");
+      setPassword("");
     }
   };
 
@@ -55,7 +63,9 @@ export function LoginPage() {
               Iniciar sesión
             </button>
           </div>
-          {error && <div className="error">{error}</div>}
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            {error && <Alert severity="error">{error}</Alert>}
+          </Stack>
           <div>
             ¿No tienes una cuenta? <Link to="/register">Crear cuenta aquí</Link>
           </div>
