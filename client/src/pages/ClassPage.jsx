@@ -42,7 +42,10 @@ export function ClassPage() {
 
   const [newStudentEmail, setNewStudentEmail] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState("");
+  const [newStudentError, setNewStudentError] = useState("");
 
   useEffect(() => {
     const fetchData = () => {
@@ -81,31 +84,43 @@ export function ClassPage() {
 
   const handleButtonAddStudent = () => {
     setIsNewStudentModalVisible(true);
+    setNewStudentError("");
   };
 
   const handlerAddStudent = async () => {
-    if (!newStudentEmail) return;
+    if (!newStudentEmail) {
+      setNewStudentError("Debes ingresar un correo electrónico");
+      return;
+    }
 
-    const { newStudent, userCredentials, fileName } = await addStudentToClass(
-      classId,
-      newStudentEmail
-    );
+    setIsLoading(true);
 
-    setStudents([...students, newStudent]);
-    setIsNewStudentModalVisible(false);
-    setNewStudentEmail("");
+    await addStudentToClass(classId, newStudentEmail)
+      .then((response) => {
+        const { newStudent, userCredentials, fileName } = response.data;
 
-    const jsonBlob = new Blob([JSON.stringify(userCredentials)], {
-      type: "application/json",
-    });
+        setStudents([...students, newStudent]);
+        setIsNewStudentModalVisible(false);
+        setNewStudentEmail("");
 
-    // Crear un enlace de descarga para el Blob
-    const downloadLink = document.createElement("a");
-    downloadLink.href = URL.createObjectURL(jsonBlob);
-    downloadLink.download = fileName;
+        const jsonBlob = new Blob([JSON.stringify(userCredentials)], {
+          type: "application/json",
+        });
 
-    // Simular un clic en el enlace de descarga para iniciar la descarga del archivo
-    downloadLink.click();
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(jsonBlob);
+        downloadLink.download = fileName;
+
+        downloadLink.click();
+      })
+      .catch((error) => {
+        setNewStudentError(
+          "Error al añadir estudiante a la clase. Comprueba que el correo electrónico sea correcto o intentalo de nuevo más tarde."
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const getTestCountByCategory = (category) => {
@@ -134,7 +149,7 @@ export function ClassPage() {
 
   return (
     <div className="class-page">
-      <Stack sx={{ width: "100%" }} spacing={2}>
+      <Stack sx={{ width: "100%", marginBottom: "10px" }} spacing={2}>
         {error && <Alert severity="error">{error}</Alert>}
       </Stack>
 
@@ -264,10 +279,21 @@ export function ClassPage() {
               onChange={(e) => setNewStudentEmail(e.target.value)}
             />
           </div>
+
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            {newStudentError && (
+              <Alert severity="error">{newStudentError}</Alert>
+            )}
+          </Stack>
+
           <div className="class-page-modalside-button-container">
-            <button className="button-basic" onClick={handlerAddStudent}>
-              Añadir
-            </button>
+            {isLoading ? (
+              <div className="loader"></div>
+            ) : (
+              <button className="button-basic" onClick={handlerAddStudent}>
+                Añadir
+              </button>
+            )}
           </div>
         </div>
       </ModalSide>

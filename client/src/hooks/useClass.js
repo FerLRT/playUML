@@ -10,13 +10,10 @@ export async function createClass(name, teacherEmail, fileData) {
     .then((response) => response);
 }
 
-export async function addStudentToClass(classId, studentEmail) {
-  return await instance
+export function addStudentToClass(classId, studentEmail) {
+  return instance
     .post("/classes/add-student", { classId, studentEmail })
-    .then((response) => response.data)
-    .catch((error) =>
-      console.error("Error al añadir estudiante a la clase:", error)
-    );
+    .then((response) => response);
 }
 
 export async function removeStudentFromClass(studentId) {
