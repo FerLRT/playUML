@@ -18,6 +18,8 @@ import {
 } from "../hooks/useClass";
 import { getClassStats } from "../hooks/useQuiz";
 import { getQuizzes } from "../hooks/useQuiz";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 import "../styles/classPage.css";
 
@@ -40,29 +42,38 @@ export function ClassPage() {
 
   const [newStudentEmail, setNewStudentEmail] = useState("");
 
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const classData = await getClassName(classId);
-        setClassName(classData.name);
-
-        const studentsList = await getClassStudents(classId);
-        setStudents(studentsList);
-
-        const averageScore = await getClassAverageScore(classId);
-        setAverageScore(averageScore);
-
-        const classPercentage = await getClassPercentage(classId);
-        setClassPercentage(classPercentage);
-
-        const quizzes = await getQuizzes(user.id);
-        setQuizzes(quizzes);
-
-        const classStats = await getClassStats(classId);
-        setClassStats(classStats);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+    const fetchData = () => {
+      Promise.all([
+        getClassName(classId),
+        getClassStudents(classId),
+        getClassAverageScore(classId),
+        getClassPercentage(classId),
+        getQuizzes(user.id),
+        getClassStats(classId),
+      ])
+        .then(
+          ([
+            classData,
+            studentsList,
+            averageScore,
+            classPercentage,
+            quizzes,
+            classStats,
+          ]) => {
+            setClassName(classData.data.name);
+            setStudents(studentsList.data);
+            setAverageScore(averageScore.data);
+            setClassPercentage(classPercentage.data);
+            setQuizzes(quizzes.data);
+            setClassStats(classStats.data);
+          }
+        )
+        .catch((error) => {
+          setError("Se ha producido un error cargando los datos de la clase.");
+        });
     };
 
     fetchData();
@@ -123,6 +134,10 @@ export function ClassPage() {
 
   return (
     <div className="class-page">
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        {error && <Alert severity="error">{error}</Alert>}
+      </Stack>
+
       <div className="class-page-header">
         <h1>{className}</h1>
 
