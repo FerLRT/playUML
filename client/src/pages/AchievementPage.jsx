@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getUserAchievements } from "../hooks/useAchievement";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 import "../styles/achievement.css";
 
 export function AchievementPage() {
   const { user } = useAuth();
   const [achievements, setAchievements] = useState([]);
+
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -16,26 +20,32 @@ export function AchievementPage() {
   };
 
   useEffect(() => {
-    const loadAchievements = async () => {
-      if (user) {
-        try {
-          const userAchievements = await getUserAchievements(user.email);
-          const mappedAchievements = userAchievements.map((achievement) => ({
-            ...achievement.dataValues,
-            unlocked: achievement.unlocked,
-          }));
-          setAchievements(mappedAchievements);
-        } catch (error) {
-          console.error("Error loading achievements:", error);
-        }
-      }
+    const fetchData = () => {
+      getUserAchievements(user.id)
+        .then((response) => {
+          setAchievements(
+            response.data.map((achievement) => ({
+              ...achievement.dataValues,
+              unlocked: achievement.unlocked,
+            }))
+          );
+        })
+        .catch((error) => {
+          setError(
+            "Algo salió mal al cargar la página. Por favor, intentalo de nuevo."
+          );
+        });
     };
 
-    loadAchievements();
+    fetchData();
   }, [user]);
 
   return (
     <div className="achievement-page">
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        {error && <Alert severity="error">{error}</Alert>}
+      </Stack>
+
       <div className="achievement-list">
         {achievements.map((achievement) => (
           <div
