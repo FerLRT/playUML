@@ -26,9 +26,9 @@ export function getQuestionImages(questionId) {
     .then((response) => response.data);
 }
 
-export function submitAnswers(userEmail, quizId, answers) {
+export function submitAnswers(userId, quizId, answers) {
   return instance
-    .post("/answers/user", { userEmail, quizId, answers })
+    .post("/answers/user", { userId, quizId, answers })
     .then((response) => response.data);
 }
 

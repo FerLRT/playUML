@@ -118,7 +118,7 @@ export class AuthController {
     }
   }
 
-  static async updateUserLevel(userEmail, newPoints) {
+  static async updateUserLevel(userId, newPoints) {
     try {
       // Obtener todos los niveles
       const allLevels = await LevelController.getAllLevels();
@@ -140,7 +140,7 @@ export class AuthController {
       // Actualizar los puntos de experiencia y el nivel del usuario
       await authModel.update(
         { experience_points: newPoints, level: newUserLevel },
-        { where: { email: userEmail } }
+        { where: { id: userId } }
       );
 
       return newUserLevel;
