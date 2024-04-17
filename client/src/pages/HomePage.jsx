@@ -6,6 +6,7 @@ import { getQuizzes } from "../hooks/useQuiz";
 import { LevelIndicator } from "../components/LevelIndicator.jsx";
 import { QuizButton } from "../components/QuizButton.jsx";
 import { Ranking } from "../components/Ranking.jsx";
+import { StatButton } from "../components/StatButton.jsx";
 
 import { useAuth } from "../context/AuthContext";
 import Alert from "@mui/material/Alert";
@@ -57,6 +58,34 @@ export function HomePage() {
       </Stack>
 
       <LevelIndicator />
+
+      <div className="student-stats-button-container">
+        <StatButton
+          image_src="/src/assets/trofeo.png"
+          stat="Ranking"
+          value={studentStats.positionRanking}
+          openModal={null}
+        />
+
+        <StatButton
+          image_src="/src/assets/medalla.png"
+          stat="Nota media"
+          value={
+            isNaN(studentStats.averageScore) ||
+            studentStats.averageScore === null
+              ? "--"
+              : `${studentStats.averageScore}/10`
+          }
+          openModal={null}
+        />
+
+        <StatButton
+          image_src="/src/assets/aceptar.png"
+          stat="Completado"
+          value={`${studentStats.completionPercentage}%`}
+          openModal={null}
+        />
+      </div>
 
       <Ranking
         classId={user.current_class_id}
