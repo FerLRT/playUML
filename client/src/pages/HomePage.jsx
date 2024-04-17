@@ -8,6 +8,8 @@ import { QuizButton } from "../components/QuizButton.jsx";
 import { Ranking } from "../components/Ranking.jsx";
 
 import { useAuth } from "../context/AuthContext";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 import "../styles/homePage.css";
 
@@ -18,19 +20,21 @@ export function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [studentStats, setStudentStats] = useState({});
 
+  const [error, setError] = useState("");
+
   // Lógica para obtener la lista de tests
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [studentStats, quizzes] = await Promise.all([
-          getStudentStats(user.id),
-          getQuizzes(user.id),
-        ]);
-        setStudentStats(studentStats);
-        setQuizzes(quizzes);
-      } catch (error) {
-        console.error("Error loading data", error);
-      }
+    const fetchData = () => {
+      Promise.all([getStudentStats(user.id), getQuizzes(user.id)])
+        .then(([studentStats, quizzes]) => {
+          setStudentStats(studentStats.data);
+          setQuizzes(quizzes.data);
+        })
+        .catch((error) => {
+          setError(
+            "Algo salió mal al cargar la página. Por favor, intentalo de nuevo."
+          );
+        });
     };
 
     fetchData();
@@ -48,6 +52,10 @@ export function HomePage() {
 
   return (
     <div className="home-container">
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        {error && <Alert severity="error">{error}</Alert>}
+      </Stack>
+
       <LevelIndicator />
 
       <Ranking
