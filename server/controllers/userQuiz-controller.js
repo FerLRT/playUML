@@ -193,4 +193,20 @@ export class UserQuizController {
       throw error;
     }
   }
+
+  static async getUserQuizAttempts(userId, quizId) {
+    try {
+      // Consulta para obtener el número de intentos del usuario en un quiz específico
+      const userQuiz = await userQuizModel.findOne({
+        where: { user_id: userId, quiz_id: quizId },
+      });
+
+      return userQuiz
+        ? { attempts: userQuiz.attempts, score: userQuiz.score }
+        : { attempts: 0, score: 0 };
+    } catch (error) {
+      console.error("Error fetching user quiz attempts:", error);
+      throw error;
+    }
+  }
 }

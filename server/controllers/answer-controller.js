@@ -68,13 +68,29 @@ export class AnswerController {
         scores
       );
 
+      // Número de intentos del quiz
+      const { attempts, score } = await UserQuizController.getUserQuizAttempts(
+        userId,
+        quizId
+      );
+
+      let factor = 0;
+
+      if (attempts < 10) {
+        factor = 1 - attempts * 0.1;
+      }
+
       // Calcular el porcentaje en función del totalScore
-      const percentage = totalScore >= 0 ? (totalScore / 10) * 100 : 0;
+      const percentage =
+        totalScore >= 0 && totalScore - score > 0
+          ? ((totalScore - score) / 10) * 100 * factor
+          : 0;
 
       // Calcular los nuevos puntos de experiencia y nivel del usuario
       const newPoints = parseInt(
         user.experience_points + (quizExperiencePoints * percentage) / 100
       );
+
       const newLevel = await AuthController.updateUserLevel(userId, newPoints);
 
       // Guardar el resultado del quiz y las respuestas del usuario
