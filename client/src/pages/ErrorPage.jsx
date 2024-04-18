@@ -15,7 +15,9 @@ export function ErrorPage() {
           <h1>Error 404</h1>
           <h2>Ooops!</h2>
           <h3>La página no existe o ha ocurrido un error</h3>
-          <button onClick={handleButtonClick}>Volver al inicio</button>
+          <button onClick={handleButtonClick} className="button-basic">
+            Volver al inicio
+          </button>
         </div>
       </div>
     </div>
