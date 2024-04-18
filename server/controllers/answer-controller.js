@@ -123,9 +123,13 @@ export class AnswerController {
         );
       }
 
-      const maxExperience = parseInt(
-        user.experience_points + quizExperiencePoints
-      );
+      const maxExperience =
+        totalScore >= 0 && totalScore - score > 0
+          ? parseInt(
+              user.experience_points +
+                quizExperiencePoints * ((totalScore - score) / 10) * factor
+            )
+          : user.experience_points + quizExperiencePoints;
 
       res.status(200).json({
         totalScore: totalScore,
