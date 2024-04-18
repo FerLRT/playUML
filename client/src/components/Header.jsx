@@ -25,6 +25,17 @@ export function Header() {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleMenuProfileClick = () => {
+    handleMenuClose();
+    navigate("/profile");
+  };
+
+  const handleMenuLogoutClick = () => {
+    setUser(null);
+    handleMenuClose();
+    navigate("/");
+  };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
@@ -63,9 +74,8 @@ export function Header() {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Configuración</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Cerrar sesión</MenuItem>
+            <MenuItem onClick={handleMenuProfileClick}>Perfil</MenuItem>
+            <MenuItem onClick={handleMenuLogoutClick}>Cerrar sesión</MenuItem>
           </Menu>
         </div>
       </div>

@@ -34,3 +34,25 @@ export const bodyRegisterValidator = [
     next();
   },
 ];
+
+export const bodyChangePasswordValidator = [
+  body("currentPassword", "La contraseña actual es requerida").notEmpty(),
+  body("password", "La nueva contraseña debe tener mínimo 6 caracteres")
+    .trim()
+    .isLength({ min: 6 }),
+  body("confirmPassword", "Las contraseñas no coinciden").custom(
+    (value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Las contraseñas no coinciden");
+      }
+      return true;
+    }
+  ),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];

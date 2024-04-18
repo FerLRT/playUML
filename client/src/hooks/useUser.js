@@ -22,3 +22,18 @@ export async function sendFileData(data) {
 export function getStudentStats(id) {
   return instance.get(`/auth/student/${id}`).then((response) => response);
 }
+
+export function updatePassword(
+  userId,
+  currentPassword,
+  password,
+  confirmPassword
+) {
+  return instance
+    .put(`/auth/update/${userId}`, {
+      currentPassword,
+      password,
+      confirmPassword,
+    })
+    .then((response) => response);
+}

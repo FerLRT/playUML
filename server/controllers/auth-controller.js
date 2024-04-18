@@ -57,6 +57,35 @@ export class AuthController {
     res.status(200).send("OK");
   }
 
+  static async updatePassword(req, res) {
+    try {
+      const userId = req.params.id;
+      const { currentPassword, password, confirmPassword } = req.body;
+
+      const user = await AuthController.getUserById(userId);
+
+      if (!user) {
+        return res.status(404).send("Algo salió mal, inténtalo de nuevo");
+      }
+
+      const isMatch = await comparePassword(currentPassword, user.password);
+
+      if (!isMatch) {
+        return res.status(401).send("La contraseña actual es incorrecta");
+      }
+
+      if (password !== confirmPassword) {
+        return res.status(400).send("Las contraseñas no coinciden");
+      }
+
+      await AuthController.updateUserPassword(user.email, password);
+
+      res.status(200).send("Contraseña actualizada con éxito");
+    } catch (error) {
+      return res.status(500).send("Internal Server Error");
+    }
+  }
+
   static async importFile(req, res) {
     const fileContent = req.body;
 

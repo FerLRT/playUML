@@ -12,7 +12,7 @@ import logo from "../assets/logo.png";
 import "../styles/header.css";
 
 export function TeacherHeader() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navigate = useNavigate();
@@ -23,6 +23,17 @@ export function TeacherHeader() {
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuProfileClick = () => {
+    handleMenuClose();
+    navigate("/profile");
+  };
+
+  const handleMenuLogoutClick = () => {
+    setUser(null);
+    handleMenuClose();
+    navigate("/");
   };
 
   const handleMenuClose = () => {
@@ -37,12 +48,6 @@ export function TeacherHeader() {
           <button onClick={handleClassButtonClick}>Mis clases</button>
         </div>
         <div className="header-user-container">
-          {/* <p className="header-user">{user ? `${user.email}` : ""}</p>
-          <img
-            className="header-avatar"
-            src={`/src/assets/avatar.png`}
-            alt="Avatar"
-          /> */}
           <Button
             aria-controls={anchorEl ? "basic-menu" : undefined}
             aria-haspopup="true"
@@ -69,9 +74,8 @@ export function TeacherHeader() {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Configuración</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Cerrar sesión</MenuItem>
+            <MenuItem onClick={handleMenuProfileClick}>Perfil</MenuItem>
+            <MenuItem onClick={handleMenuLogoutClick}>Cerrar sesión</MenuItem>
           </Menu>
         </div>
       </div>
