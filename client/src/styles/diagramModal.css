@@ -30,10 +30,6 @@
   width: 100%;
 }
 
-.diagram-modal-image-controls-zoom-out {
-  margin-left: 10px;
-}
-
 .diagram-modal-image-controls-close {
   display: flex;
   align-items: center;

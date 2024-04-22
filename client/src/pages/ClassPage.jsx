@@ -21,6 +21,10 @@ import { getQuizzes } from "../hooks/useQuiz";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 
+import { FlowbiteUsersGroupSolid } from "../assets/icons/Group";
+import { FluentEmojiFlatSportsMedal } from "../assets/icons/Medal";
+import { MaterialSymbolsCheckBox } from "../assets/icons/Check";
+
 import "../styles/classPage.css";
 
 export function ClassPage() {
@@ -163,14 +167,14 @@ export function ClassPage() {
 
       <div className="class-page-button-container">
         <StatButton
-          image_src="/src/assets/grupo.png"
+          imageComponent={<FlowbiteUsersGroupSolid />}
           stat="Estudiantes"
           value={students.length}
           openModal={() => setIsModalVisible(true)}
         />
 
         <StatButton
-          image_src="/src/assets/medalla.png"
+          imageComponent={<FluentEmojiFlatSportsMedal />}
           stat="Nota media"
           value={
             isNaN(averageScore) || averageScore === null
@@ -181,7 +185,7 @@ export function ClassPage() {
         />
 
         <StatButton
-          image_src="/src/assets/aceptar.png"
+          imageComponent={<MaterialSymbolsCheckBox />}
           stat="Completado"
           value={`${classPercentage}%`}
           openModal={null}

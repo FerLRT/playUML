@@ -1,6 +1,7 @@
 import { React, useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RiMore2Fill } from "react-icons/ri";
+import { SolarUserBold } from "../assets/icons/User";
 import moment from "moment";
 import "moment/locale/es";
 moment.locale("es");
@@ -119,11 +120,7 @@ export function StudentButton({
           title={email}
         >
           <div className="student-button__content-img">
-            <img
-              src="/src/assets/student.png"
-              alt="Estudiante"
-              className="student-button__content-student"
-            />
+            <SolarUserBold />
           </div>
 
           <div className="student-button__content-name">{email}</div>

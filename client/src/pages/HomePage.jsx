@@ -12,6 +12,10 @@ import { useAuth } from "../context/AuthContext";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 
+import { EmojioneTrophy } from "../assets/icons/Trophy";
+import { FluentEmojiFlatSportsMedal } from "../assets/icons/Medal";
+import { MaterialSymbolsCheckBox } from "../assets/icons/Check";
+
 import "../styles/homePage.css";
 
 export function HomePage() {
@@ -61,14 +65,14 @@ export function HomePage() {
 
       <div className="student-stats-button-container">
         <StatButton
-          image_src="/src/assets/trofeo.png"
+          imageComponent={<EmojioneTrophy />}
           stat="Ranking"
           value={studentStats.positionRanking}
           openModal={null}
         />
 
         <StatButton
-          image_src="/src/assets/medalla.png"
+          imageComponent={<FluentEmojiFlatSportsMedal />}
           stat="Nota media"
           value={
             isNaN(studentStats.averageScore) ||
@@ -80,7 +84,7 @@ export function HomePage() {
         />
 
         <StatButton
-          image_src="/src/assets/aceptar.png"
+          imageComponent={<MaterialSymbolsCheckBox />}
           stat="Completado"
           value={`${studentStats.completionPercentage}%`}
           openModal={null}
@@ -93,7 +97,7 @@ export function HomePage() {
         userRole={user.role}
       />
 
-      <h1>Tests disponibles</h1>
+      <h1 className="home-test-list-title">Tests disponibles</h1>
       <div className="home-test-list-container">
         <input
           type="text"

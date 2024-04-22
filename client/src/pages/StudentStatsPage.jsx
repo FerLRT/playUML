@@ -10,6 +10,10 @@ import { getQuizzes } from "../hooks/useQuiz";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 
+import { MaterialSymbolsCheckBox } from "../assets/icons/Check";
+import { FluentEmojiFlatSportsMedal } from "../assets/icons/Medal";
+import { EmojioneTrophy } from "../assets/icons/Trophy";
+
 import "../styles/studentStatsPage.css";
 
 export function StudentStatsPage() {
@@ -60,14 +64,14 @@ export function StudentStatsPage() {
       <h1>Estadísticas de: {studentStats.studentEmail}</h1>
       <div className="student-stats-button-container">
         <StatButton
-          image_src="/src/assets/trofeo.png"
+          imageComponent={<EmojioneTrophy />}
           stat="Ranking"
           value={studentStats.positionRanking}
           openModal={null}
         />
 
         <StatButton
-          image_src="/src/assets/medalla.png"
+          imageComponent={<FluentEmojiFlatSportsMedal />}
           stat="Nota media"
           value={
             isNaN(studentStats.averageScore) ||
@@ -79,7 +83,7 @@ export function StudentStatsPage() {
         />
 
         <StatButton
-          image_src="/src/assets/aceptar.png"
+          imageComponent={<MaterialSymbolsCheckBox />}
           stat="Completado"
           value={`${studentStats.completionPercentage}%`}
           openModal={null}

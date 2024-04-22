@@ -5,6 +5,10 @@ import { useAuth } from "../context/AuthContext";
 
 import { getStudentQuizScore } from "../hooks/useQuiz";
 
+import { MaterialSymbolsCheckCircleRounded } from "../assets/icons/CheckCircle";
+import { PhXCircleFill } from "../assets/icons/Uncheck";
+import { MdiClock } from "../assets/icons/Clock";
+
 import "../styles/quizButton.css";
 
 export function QuizButton({ to, quizId, quizName }) {
@@ -31,10 +35,14 @@ export function QuizButton({ to, quizId, quizName }) {
   };
 
   // Determinar la imagen a mostrar según el puntaje
-  let imageSrc = "/src/assets/clock.png";
+  let imageSrc = <MdiClock className="quiz-button-icon" />;
   if (quizScore !== null) {
     imageSrc =
-      quizScore >= 5 ? "/src/assets/check.png" : "/src/assets/uncheck.png";
+      quizScore >= 5 ? (
+        <MaterialSymbolsCheckCircleRounded className="quiz-button-icon" />
+      ) : (
+        <PhXCircleFill className="quiz-button-icon" />
+      );
   }
 
   const scoreClass =
@@ -47,11 +55,7 @@ export function QuizButton({ to, quizId, quizName }) {
   return (
     <button className="quiz-button" onClick={handleButtonClick}>
       <div className="quiz-button__content">
-        <img
-          src={imageSrc}
-          alt="Clase"
-          className="quiz-button__content-class"
-        />
+        {imageSrc}
         <h2 className="quiz-button-name">{quizName}</h2>
       </div>
       <div className="quiz-button__content">

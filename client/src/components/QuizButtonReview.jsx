@@ -1,5 +1,6 @@
 import { React } from "react";
 import { useNavigate } from "react-router-dom";
+import { MdiEyeCircle } from "../assets/icons/Eye";
 
 import "../styles/quizButtonReview.css";
 
@@ -20,11 +21,7 @@ export function QuizButtonReview({
   return (
     <button className="quiz-button-review" onClick={handleButtonClick}>
       <div className="quiz-button-review__content">
-        <img
-          src="/src/assets/ojo.png"
-          alt="Clase"
-          className="quiz-button-review__content-class"
-        />
+        <MdiEyeCircle className="quiz-button-review-icon" />
         <h2 className="quiz-button-review-name">{className}</h2>
       </div>
       <div className="quiz-button-review__content">

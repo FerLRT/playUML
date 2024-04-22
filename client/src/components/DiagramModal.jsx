@@ -6,6 +6,9 @@ import {
   useControls,
 } from "react-zoom-pan-pinch";
 
+import { MaterialSymbolsZoomInRounded } from "../assets/icons/ZoomIn";
+import { MaterialSymbolsZoomOut } from "../assets/icons/ZoomOut";
+
 import "../styles/diagramModal.css";
 
 export function DiagramModal({ open, handleClose, image }) {
@@ -15,13 +18,13 @@ export function DiagramModal({ open, handleClose, image }) {
       <>
         <div className="diagram-modal-image-controls-zoom">
           <div onClick={() => zoomIn()}>
-            <img src="/src/assets/ZoomIn.png" alt="Ampliar" />
+            <MaterialSymbolsZoomInRounded />
           </div>
           <div
             className="diagram-modal-image-controls-zoom-out"
             onClick={() => zoomOut()}
           >
-            <img src="/src/assets/ZoomOut.png" alt="Reducir" />
+            <MaterialSymbolsZoomOut />
           </div>
         </div>
         <div

@@ -43,10 +43,6 @@
   cursor: pointer;
 }
 
-.diagram-image-controls-zoom-out {
-  margin-left: 10px;
-}
-
 .react-transform-wrapper {
   width: 100% !important;
   height: 100% !important;

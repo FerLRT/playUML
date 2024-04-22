@@ -7,6 +7,10 @@ import {
 
 import { DiagramModal } from "./DiagramModal";
 
+import { MaterialSymbolsZoomInRounded } from "../assets/icons/ZoomIn";
+import { MaterialSymbolsZoomOut } from "../assets/icons/ZoomOut";
+import { MaterialSymbolsZoomOutMap } from "../assets/icons/FullScreen";
+
 import "../styles/diagramImage.css";
 
 export function DiagramImage({ image }) {
@@ -35,17 +39,17 @@ export function DiagramImage({ image }) {
       <>
         <div className="diagram-image-controls-zoom">
           <div onClick={handleZoomIn}>
-            <img src="/src/assets/ZoomIn.png" alt="Ampliar" />
+            <MaterialSymbolsZoomInRounded />
           </div>
           <div
             className="diagram-image-controls-zoom-out"
             onClick={handleZoomOut}
           >
-            <img src="/src/assets/ZoomOut.png" alt="Reducir" />
+            <MaterialSymbolsZoomOut />
           </div>
         </div>
         <div onClick={handleOpen}>
-          <img src="/src/assets/OpenImage.png" alt="Abrir" />
+          <MaterialSymbolsZoomOutMap />
         </div>
       </>
     );
