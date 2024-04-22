@@ -12,7 +12,7 @@ import logo from "../assets/logo.png";
 import "../styles/header.css";
 
 export function Header() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navigate = useNavigate();
