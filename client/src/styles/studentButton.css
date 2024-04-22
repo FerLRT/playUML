@@ -22,16 +22,46 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.student-button-email {
+.student-button__content-img,
+.student-button__content-name,
+.student-button__content-info {
+  padding: 5px;
+}
+
+.student-button__content-img {
   display: flex;
+  justify-content: center;
   align-items: center;
   height: 100%;
-  margin-left: 5px;
-  margin-right: 10px;
+  width: 50px;
+}
 
-  white-space: nowrap;
+.student-button__content-img > img {
+  max-height: 70%;
+  max-width: 80%;
+
+  min-width: 20px;
+
+  aspect-ratio: 1/1;
+}
+
+.student-button__content-name {
+  flex: 1;
+  align-content: center;
+  text-align: left;
+  height: 100%;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.student-button__content-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 5px;
+  height: 100%;
+  width: auto;
 }
 
 .student-button-level {
@@ -49,27 +79,9 @@
   font-size: 14px;
 }
 
-.student-button > div {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
 .student-button > div > img {
   max-height: 50px;
   overflow: hidden;
-}
-
-.student-button__content {
-  height: 100%;
-  width: auto;
-}
-
-.student-button__content-student {
-  height: 70%;
-  width: auto;
 }
 
 .student-button-menu {

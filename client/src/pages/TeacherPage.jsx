@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import { FileImport } from "../components/FileImport";
 import { ClassButton } from "../components/ClassButton";
 import { ModalSide } from "../components/ModalSide";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 import { validateJSONStructure } from "../utils/jsonValidator";
 
@@ -21,10 +23,17 @@ export function TeacherPage() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [teacherClassesError, setTeacherClassesError] = useState("");
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    getTeacherClasses(user.email).then((response) => {
-      setTeacherClasses(response);
-    });
+    getTeacherClasses(user.email)
+      .then((response) => {
+        setTeacherClasses(response.data);
+      })
+      .catch((error) => {
+        setTeacherClassesError("Error al cargar las clases del profesor");
+      });
   }, []);
 
   const filteredClasses = teacherClasses.filter((classItem) =>
@@ -32,45 +41,54 @@ export function TeacherPage() {
   );
 
   const handleCreateClass = async () => {
-    try {
-      // Comprobar que los parámetros no sean nulos o cadenas vacías
-      if (!newClassName || !user || !user.email || !fileData) {
-        console.error("Alguno de los parámetros es nulo o una cadena vacía");
-        return;
-      }
-
-      // Llamar a la función de validación de JSON
-      if (!validateJSONStructure(fileData)) {
-        console.error("El JSON no tiene la estructura deseada");
-        return;
-      }
-
-      setIsLoading(true);
-
-      const { newClass, usersCredentials, fileName } = await createClass(
-        newClassName,
-        user.email,
-        fileData
-      );
-      setTeacherClasses([...teacherClasses, newClass]); // Agregar la nueva clase al estado local
-      closeModal();
-
-      const jsonBlob = new Blob([JSON.stringify(usersCredentials)], {
-        type: "application/json",
-      });
-
-      // Crear un enlace de descarga para el Blob
-      const downloadLink = document.createElement("a");
-      downloadLink.href = URL.createObjectURL(jsonBlob);
-      downloadLink.download = fileName;
-
-      // Simular un clic en el enlace de descarga para iniciar la descarga del archivo
-      downloadLink.click();
-    } catch (error) {
-      console.error("Error al crear la clase:", error);
-    } finally {
-      setIsLoading(false);
+    if (!newClassName) {
+      setError("Debes ponerle un nombre a la clase");
+      return;
     }
+
+    if (!fileData) {
+      setError(
+        "Debes incluir un archivo con la información de los estudiantes"
+      );
+      return;
+    }
+
+    if (!user || !user.email) {
+      setError("Algo salió mal, por favor vuelve a iniciar sesión");
+      return;
+    }
+
+    if (!validateJSONStructure(fileData)) {
+      setError("El archivo no contiene la estructura correcta");
+      return;
+    }
+
+    setIsLoading(true);
+
+    await createClass(newClassName, user.email, fileData)
+      .then((response) => {
+        const { newClass, usersCredentials, fileName } = response.data;
+        setTeacherClasses([...teacherClasses, newClass]);
+        closeModal();
+
+        const jsonBlob = new Blob([JSON.stringify(usersCredentials)], {
+          type: "application/json",
+        });
+
+        // Crear un enlace de descarga para el Blob
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(jsonBlob);
+        downloadLink.download = fileName;
+
+        // Simular un clic en el enlace de descarga para iniciar la descarga del archivo
+        downloadLink.click();
+      })
+      .catch((error) => {
+        setError("Error al crear la clase");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleFileUpload = (data) => {
@@ -86,8 +104,20 @@ export function TeacherPage() {
     setNewClassName("");
   };
 
+  const handleCloseError = () => {
+    setTeacherClassesError("");
+  };
+
   return (
     <div className="teacher-page-container">
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        {teacherClassesError && (
+          <Alert severity="error" onClose={handleCloseError}>
+            {teacherClassesError}
+          </Alert>
+        )}
+      </Stack>
+
       <div className="teacher-page-header">
         <h1>Mis clases</h1>
         <button className="button-basic" onClick={openModal}>
@@ -129,6 +159,10 @@ export function TeacherPage() {
           />
 
           <FileImport onFileUpload={handleFileUpload} />
+
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            {error && <Alert severity="error">{error}</Alert>}
+          </Stack>
 
           <div className="teacher-page-modalside-button-container">
             {isLoading ? (

@@ -18,6 +18,12 @@ import {
 } from "../hooks/useClass";
 import { getClassStats } from "../hooks/useQuiz";
 import { getQuizzes } from "../hooks/useQuiz";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+
+import { FlowbiteUsersGroupSolid } from "../assets/icons/Group";
+import { FluentEmojiFlatSportsMedal } from "../assets/icons/Medal";
+import { MaterialSymbolsCheckBox } from "../assets/icons/Check";
 
 import "../styles/classPage.css";
 
@@ -40,29 +46,41 @@ export function ClassPage() {
 
   const [newStudentEmail, setNewStudentEmail] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [error, setError] = useState("");
+  const [newStudentError, setNewStudentError] = useState("");
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const classData = await getClassName(classId);
-        setClassName(classData.name);
-
-        const studentsList = await getClassStudents(classId);
-        setStudents(studentsList);
-
-        const averageScore = await getClassAverageScore(classId);
-        setAverageScore(averageScore);
-
-        const classPercentage = await getClassPercentage(classId);
-        setClassPercentage(classPercentage);
-
-        const quizzes = await getQuizzes(user.id);
-        setQuizzes(quizzes);
-
-        const classStats = await getClassStats(classId);
-        setClassStats(classStats);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+    const fetchData = () => {
+      Promise.all([
+        getClassName(classId),
+        getClassStudents(classId),
+        getClassAverageScore(classId),
+        getClassPercentage(classId),
+        getQuizzes(user.id),
+        getClassStats(classId),
+      ])
+        .then(
+          ([
+            classData,
+            studentsList,
+            averageScore,
+            classPercentage,
+            quizzes,
+            classStats,
+          ]) => {
+            setClassName(classData.data.name);
+            setStudents(studentsList.data);
+            setAverageScore(averageScore.data);
+            setClassPercentage(classPercentage.data);
+            setQuizzes(quizzes.data);
+            setClassStats(classStats.data);
+          }
+        )
+        .catch((error) => {
+          setError("Se ha producido un error cargando los datos de la clase.");
+        });
     };
 
     fetchData();
@@ -70,31 +88,43 @@ export function ClassPage() {
 
   const handleButtonAddStudent = () => {
     setIsNewStudentModalVisible(true);
+    setNewStudentError("");
   };
 
   const handlerAddStudent = async () => {
-    if (!newStudentEmail) return;
+    if (!newStudentEmail) {
+      setNewStudentError("Debes ingresar un correo electrónico");
+      return;
+    }
 
-    const { newStudent, userCredentials, fileName } = await addStudentToClass(
-      classId,
-      newStudentEmail
-    );
+    setIsLoading(true);
 
-    setStudents([...students, newStudent]);
-    setIsNewStudentModalVisible(false);
-    setNewStudentEmail("");
+    await addStudentToClass(classId, newStudentEmail)
+      .then((response) => {
+        const { newStudent, userCredentials, fileName } = response.data;
 
-    const jsonBlob = new Blob([JSON.stringify(userCredentials)], {
-      type: "application/json",
-    });
+        setStudents([...students, newStudent]);
+        setIsNewStudentModalVisible(false);
+        setNewStudentEmail("");
 
-    // Crear un enlace de descarga para el Blob
-    const downloadLink = document.createElement("a");
-    downloadLink.href = URL.createObjectURL(jsonBlob);
-    downloadLink.download = fileName;
+        const jsonBlob = new Blob([JSON.stringify(userCredentials)], {
+          type: "application/json",
+        });
 
-    // Simular un clic en el enlace de descarga para iniciar la descarga del archivo
-    downloadLink.click();
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(jsonBlob);
+        downloadLink.download = fileName;
+
+        downloadLink.click();
+      })
+      .catch((error) => {
+        setNewStudentError(
+          "Error al añadir estudiante a la clase. Comprueba que el correo electrónico sea correcto o intentalo de nuevo más tarde."
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const getTestCountByCategory = (category) => {
@@ -123,6 +153,10 @@ export function ClassPage() {
 
   return (
     <div className="class-page">
+      <Stack sx={{ width: "100%", marginBottom: "10px" }} spacing={2}>
+        {error && <Alert severity="error">{error}</Alert>}
+      </Stack>
+
       <div className="class-page-header">
         <h1>{className}</h1>
 
@@ -133,14 +167,14 @@ export function ClassPage() {
 
       <div className="class-page-button-container">
         <StatButton
-          image_src="/src/assets/grupo.png"
+          imageComponent={<FlowbiteUsersGroupSolid />}
           stat="Estudiantes"
           value={students.length}
           openModal={() => setIsModalVisible(true)}
         />
 
         <StatButton
-          image_src="/src/assets/medalla.png"
+          imageComponent={<FluentEmojiFlatSportsMedal />}
           stat="Nota media"
           value={
             isNaN(averageScore) || averageScore === null
@@ -151,7 +185,7 @@ export function ClassPage() {
         />
 
         <StatButton
-          image_src="/src/assets/aceptar.png"
+          imageComponent={<MaterialSymbolsCheckBox />}
           stat="Completado"
           value={`${classPercentage}%`}
           openModal={null}
@@ -249,10 +283,21 @@ export function ClassPage() {
               onChange={(e) => setNewStudentEmail(e.target.value)}
             />
           </div>
+
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            {newStudentError && (
+              <Alert severity="error">{newStudentError}</Alert>
+            )}
+          </Stack>
+
           <div className="class-page-modalside-button-container">
-            <button className="button-basic" onClick={handlerAddStudent}>
-              Añadir
-            </button>
+            {isLoading ? (
+              <div className="loader"></div>
+            ) : (
+              <button className="button-basic" onClick={handlerAddStudent}>
+                Añadir
+              </button>
+            )}
           </div>
         </div>
       </ModalSide>

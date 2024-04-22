@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../hooks/useUser";
 import { useAuth } from "../context/AuthContext";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 import "../styles/login.css";
 
@@ -14,19 +16,25 @@ export function RegisterPage() {
   const [error, setError] = useState("");
 
   const handleRegister = async () => {
-    try {
-      const user = await register(email, password, confirmPassword);
-
-      if (user.error) {
-        setError(user.error);
-        return;
-      }
-
-      setUser(user);
-      navigate("/");
-    } catch (error) {
-      setError("Correo electrónico o contraseña incorrectos");
-    }
+    await register(email, password, confirmPassword)
+      .then((response) => {
+        setUser(response.data);
+        navigate("/");
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
+          const errorMessage = error.response.data.errors
+            .map((error) => error.msg)
+            .join(". ");
+          setError(errorMessage);
+        } else if (error.response && error.response.data) {
+          setError(error.response.data);
+        }
+      });
   };
 
   return (
@@ -72,7 +80,9 @@ export function RegisterPage() {
               Registrarse
             </button>
           </div>
-          {error && <div className="error">{error}</div>}
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            {error && <Alert severity="error">{error}</Alert>}
+          </Stack>
           <div>
             ¿Ya tienes una cuenta? <Link to="/">Iniciar sesión aquí</Link>
           </div>

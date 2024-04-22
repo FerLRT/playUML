@@ -16,17 +16,43 @@ export const bodyRegisterValidator = [
     .trim()
     .isEmail()
     .normalizeEmail(),
-  body("password", "Necesarios mínimo 6 caracteres")
+  body("password", "La contraseña debe tener mínimo 6 caracteres")
     .trim()
     .isLength({ min: 6 }),
-  body("password", "Las contraseñas introducidas no coinciden").custom(
+  body("password").custom((value, { req }) => {
+    if (value !== req.body.confirmPassword) {
+      throw new Error("Las contraseñas no coinciden");
+    } else {
+      return true;
+    }
+  }),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
+
+export const bodyChangePasswordValidator = [
+  body("currentPassword", "La contraseña actual es requerida").notEmpty(),
+  body("password", "La nueva contraseña debe tener mínimo 6 caracteres")
+    .trim()
+    .isLength({ min: 6 }),
+  body("confirmPassword", "Las contraseñas no coinciden").custom(
     (value, { req }) => {
-      if (value !== req.body.confirmPassword) {
-        throw new Error("Los passwords no coinciden");
-      } else {
-        return value;
+      if (value !== req.body.password) {
+        throw new Error("Las contraseñas no coinciden");
       }
+      return true;
     }
   ),
-  validationResultExpress,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
 ];

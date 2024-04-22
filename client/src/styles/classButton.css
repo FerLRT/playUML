@@ -43,11 +43,6 @@
 }
 
 .class-button__content-class {
-  height: 100%;
-  width: auto;
-}
-
-.class-button__content-student {
-  height: 70%;
-  width: auto;
+  width: 50px;
+  min-width: 50px;
 }

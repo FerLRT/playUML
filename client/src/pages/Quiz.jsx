@@ -152,7 +152,7 @@ export function Quiz() {
           preparedAnswers.push({ questionId, selectedAnswerIds });
         });
 
-        submitAnswers(user.email, quizId, preparedAnswers)
+        submitAnswers(user.id, quizId, preparedAnswers)
           .then((response) => {
             // Response contiene scores y totalScore
             setAnswersScore(response.scores);

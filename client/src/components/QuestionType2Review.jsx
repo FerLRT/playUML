@@ -48,7 +48,7 @@ export function QuestionType2Review({
       </div>
 
       <div className="question-type-2-question-answers-container">
-        <h2>{question.question_text}</h2>
+        <h2 className="question-text">{question.question_text}</h2>
         <div className="question-type-2-answers-container">
           {question.answers.map((answer, index) => {
             return (

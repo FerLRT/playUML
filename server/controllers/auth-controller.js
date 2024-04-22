@@ -10,13 +10,9 @@ import { ClassController } from "./class-controller.js";
 
 export class AuthController {
   static async signup(req, res) {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).send("Bad Request: Missing required fields");
-    }
-
     try {
+      const { email, password } = req.body;
+
       const hashedPassword = await hashPassword(password);
       const user = await authModel.create({
         email,
@@ -26,37 +22,68 @@ export class AuthController {
 
       res.status(201).json(user);
     } catch (error) {
-      console.error("Error creating user:", error);
-      res.status(500).send("Internal Server Error: " + error);
+      if (error.name === "SequelizeUniqueConstraintError") {
+        return res.status(409).send("El correo ya está registrado");
+      }
+
+      res.status(500).send("Internal Server Error");
     }
   }
 
   static async login(req, res) {
-    const { email, password } = req.body;
-
     try {
+      const { email, password } = req.body;
+
       const user = await authModel.findOne({ where: { email } });
 
       if (!user) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send("Usuario o contraseña incorrectos");
       }
 
       const isMatch = await comparePassword(password, user.password);
 
       if (!isMatch) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send("Usuario o contraseña incorrectos");
       }
 
       await AuthController.updateUserLastConnection(user.id);
       res.status(200).json(user);
     } catch (error) {
-      console.error("Error during login:", error);
       return res.status(500).send("Internal Server Error");
     }
   }
 
   static logout(req, res) {
     res.status(200).send("OK");
+  }
+
+  static async updatePassword(req, res) {
+    try {
+      const userId = req.params.id;
+      const { currentPassword, password, confirmPassword } = req.body;
+
+      const user = await AuthController.getUserById(userId);
+
+      if (!user) {
+        return res.status(404).send("Algo salió mal, inténtalo de nuevo");
+      }
+
+      const isMatch = await comparePassword(currentPassword, user.password);
+
+      if (!isMatch) {
+        return res.status(401).send("La contraseña actual es incorrecta");
+      }
+
+      if (password !== confirmPassword) {
+        return res.status(400).send("Las contraseñas no coinciden");
+      }
+
+      await AuthController.updateUserPassword(user.email, password);
+
+      res.status(200).send("Contraseña actualizada con éxito");
+    } catch (error) {
+      return res.status(500).send("Internal Server Error");
+    }
   }
 
   static async importFile(req, res) {
@@ -120,7 +147,7 @@ export class AuthController {
     }
   }
 
-  static async updateUserLevel(userEmail, newPoints) {
+  static async updateUserLevel(userId, newPoints) {
     try {
       // Obtener todos los niveles
       const allLevels = await LevelController.getAllLevels();
@@ -142,7 +169,7 @@ export class AuthController {
       // Actualizar los puntos de experiencia y el nivel del usuario
       await authModel.update(
         { experience_points: newPoints, level: newUserLevel },
-        { where: { email: userEmail } }
+        { where: { id: userId } }
       );
 
       return newUserLevel;

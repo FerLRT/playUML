@@ -7,6 +7,12 @@ import { StudentQuizButtonReview } from "../components/StudentQuizButtonReview";
 
 import { getStudentStats } from "../hooks/useUser";
 import { getQuizzes } from "../hooks/useQuiz";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+
+import { MaterialSymbolsCheckBox } from "../assets/icons/Check";
+import { FluentEmojiFlatSportsMedal } from "../assets/icons/Medal";
+import { EmojioneTrophy } from "../assets/icons/Trophy";
 
 import "../styles/studentStatsPage.css";
 
@@ -19,22 +25,22 @@ export function StudentStatsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [studentStats, setStudentStats] = useState({});
 
+  const [error, setError] = useState("");
+
   const handleButtonClick = () => {
     navigate(`/class/${classId}`);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [studentStats, quizzes] = await Promise.all([
-          getStudentStats(studentId),
-          getQuizzes(user.id),
-        ]);
-        setStudentStats(studentStats);
-        setQuizzes(quizzes);
-      } catch (error) {
-        console.error("Error loading data", error);
-      }
+    const fetchData = () => {
+      Promise.all([getStudentStats(studentId), getQuizzes(user.id)])
+        .then(([studentStats, quizzes]) => {
+          setStudentStats(studentStats.data);
+          setQuizzes(quizzes.data);
+        })
+        .catch((error) => {
+          setError("Error al cargar los datos del estudiante");
+        });
     };
 
     fetchData();
@@ -52,17 +58,20 @@ export function StudentStatsPage() {
 
   return (
     <div className="student-stats-page">
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        {error && <Alert severity="error">{error}</Alert>}
+      </Stack>
       <h1>Estadísticas de: {studentStats.studentEmail}</h1>
       <div className="student-stats-button-container">
         <StatButton
-          image_src="/src/assets/trofeo.png"
+          imageComponent={<EmojioneTrophy />}
           stat="Ranking"
           value={studentStats.positionRanking}
           openModal={null}
         />
 
         <StatButton
-          image_src="/src/assets/medalla.png"
+          imageComponent={<FluentEmojiFlatSportsMedal />}
           stat="Nota media"
           value={
             isNaN(studentStats.averageScore) ||
@@ -74,7 +83,7 @@ export function StudentStatsPage() {
         />
 
         <StatButton
-          image_src="/src/assets/aceptar.png"
+          imageComponent={<MaterialSymbolsCheckBox />}
           stat="Completado"
           value={`${studentStats.completionPercentage}%`}
           openModal={null}

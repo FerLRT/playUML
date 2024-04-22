@@ -18,6 +18,11 @@
   align-items: center;
 }
 
+.quiz-button-icon {
+  width: 50px;
+  min-width: 50px;
+}
+
 .quiz-button-name {
   display: flex;
   align-items: center;

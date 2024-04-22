@@ -1,6 +1,7 @@
 import { React, useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RiMore2Fill } from "react-icons/ri";
+import { SolarUserBold } from "../assets/icons/User";
 import moment from "moment";
 import "moment/locale/es";
 moment.locale("es");
@@ -113,15 +114,17 @@ export function StudentButton({
   return (
     <div className="student-button-wrapper" ref={containerRef}>
       <div className="student-button-container">
-        <button className="student-button" onClick={handleButtonClick}>
-          <div className="student-button__content">
-            <img
-              src="/src/assets/student.png"
-              alt="Estudiante"
-              className="student-button__content-student"
-            />
-            <p className="student-button-email">{email}</p>
+        <button
+          className="student-button"
+          onClick={handleButtonClick}
+          title={email}
+        >
+          <div className="student-button__content-img">
+            <SolarUserBold />
           </div>
+
+          <div className="student-button__content-name">{email}</div>
+
           <div className="student-button__content-info">
             <p className="student-button-last-connection">
               {formattedLastConnection(last_connection)}

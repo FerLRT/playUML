@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { getStudentQuizScore } from "../hooks/useQuiz";
 
+import { MdiEyeCircle } from "../assets/icons/Eye";
+
 import "../styles/quizButtonReview.css";
 
 export function StudentQuizButtonReview({ to, quizId, quizName }) {
@@ -38,11 +40,7 @@ export function StudentQuizButtonReview({ to, quizId, quizName }) {
   return (
     <button className="quiz-button-review" onClick={handleButtonClick}>
       <div className="quiz-button-review__content">
-        <img
-          src="/src/assets/ojo.png"
-          alt="Clase"
-          className="quiz-button-review__content-class"
-        />
+        <MdiEyeCircle className="quiz-button-review-icon" />
         <h2 className="quiz-button-review-name">{quizName}</h2>
       </div>
       <div className="quiz-button-review__content">

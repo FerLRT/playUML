@@ -24,7 +24,7 @@ export class AchievementController {
 
   static async getUserAchievements(req, res) {
     try {
-      const userEmail = req.params.userEmail;
+      const userId = req.params.userId;
 
       // Obtener todos los logros
       const allAchievements = await Achievement.findAll();
@@ -32,7 +32,7 @@ export class AchievementController {
       // Obtener los logros desbloqueados del usuario
       const userAchievements =
         await UserAchievementController.getAllUserAchievements(
-          userEmail,
+          userId,
           allAchievements
         );
 

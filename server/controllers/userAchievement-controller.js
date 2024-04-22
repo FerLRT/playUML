@@ -67,19 +67,16 @@ export class UserAchievementController {
     }
   }
 
-  static async getAllUserAchievements(userEmail, achievements) {
+  static async getAllUserAchievements(userId, achievements) {
     try {
-      // Obtener el usuario por su correo electrónico
-      const user = await AuthController.getUser(userEmail);
-
-      if (!user) {
+      if (!userId) {
         throw new Error("User not found");
       }
 
       // Obtener los IDs de logros desbloqueados por el usuario
       const userAchievementIds = (
         await UserAchievement.findAll({
-          where: { user_id: user.id },
+          where: { user_id: userId },
           attributes: ["achievement_id"],
         })
       ).map((userAchievement) => userAchievement.achievement_id);

@@ -15,3 +15,8 @@
 .quiz-footer {
   height: 10%;
 }
+
+.question-text {
+  font-size: 18px;
+  font-weight: bold;
+}

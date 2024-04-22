@@ -1,9 +1,7 @@
 import { instance } from "./axiosInstance";
 
 export function getQuizzes(userId) {
-  return instance
-    .get(`/quizzes/user/${userId}`)
-    .then((response) => response.data);
+  return instance.get(`/quizzes/user/${userId}`).then((response) => response);
 }
 
 export function getQuestions(quizId) {
@@ -28,11 +26,9 @@ export function getQuestionImages(questionId) {
     .then((response) => response.data);
 }
 
-// Enviar las respuestas del usuario
-// Recibir la puntuación de cada respuesta
-export function submitAnswers(userEmail, quizId, answers) {
+export function submitAnswers(userId, quizId, answers) {
   return instance
-    .post("/answers/user", { userEmail, quizId, answers })
+    .post("/answers/user", { userId, quizId, answers })
     .then((response) => response.data);
 }
 
@@ -43,9 +39,7 @@ export function hasUserCompletedQuiz(userEmail, quizId) {
 }
 
 export function getClassStats(classId) {
-  return instance
-    .get(`/quizzes/stats/${classId}`)
-    .then((response) => response.data);
+  return instance.get(`/quizzes/stats/${classId}`).then((response) => response);
 }
 
 export function getStudentQuizScore(userId, quizId) {

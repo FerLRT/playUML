@@ -74,3 +74,8 @@
 .quiz-button-review-number-high {
   color: green;
 }
+
+.quiz-button-review-icon {
+  width: 50px;
+  min-width: 50px;
+}

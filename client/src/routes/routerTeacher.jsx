@@ -6,10 +6,8 @@ import { TeacherPage } from "../pages/TeacherPage";
 import { ClassPage } from "../pages/ClassPage";
 import { QuizReviewPage } from "../pages/QuizReviewPage";
 import { StudentStatsPage } from "../pages/StudentStatsPage";
+import { UserConfigPage } from "../pages/UserConfigPage";
 import { ErrorPage } from "../pages/ErrorPage";
-
-import { LoginPage } from "../pages/LoginPage";
-import { RegisterPage } from "../pages/RegisterPage";
 
 const teacherRouter = createBrowserRouter([
   {
@@ -17,6 +15,7 @@ const teacherRouter = createBrowserRouter([
     element: <TeacherApp />,
     children: [
       { index: true, element: <TeacherPage /> },
+      { path: "/profile", element: <UserConfigPage /> },
       { path: "/class/:classId", element: <ClassPage />, children: [] },
       {
         path: "/class/:classId/quiz/:quizId",
@@ -34,16 +33,6 @@ const teacherRouter = createBrowserRouter([
         children: [],
       },
     ],
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/register",
-    element: <RegisterPage />,
     errorElement: <ErrorPage />,
   },
 ]);

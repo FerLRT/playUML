@@ -147,7 +147,7 @@ export class ClassController {
       });
     } catch (error) {
       console.error("Error adding student to class:", error);
-      res.status(500).send("Internal Server Error: " + error);
+      res.status(500).send("Internal Server Error");
     }
   }
 
