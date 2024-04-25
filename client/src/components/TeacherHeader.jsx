@@ -12,7 +12,7 @@ import logo from "../assets/logo.png";
 import "../styles/header.css";
 
 export function TeacherHeader() {
-  const { uEmail, setURole } = useAuth();
+  const { uEmail, setURole, setUser, setUid } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navigate = useNavigate();
@@ -32,6 +32,8 @@ export function TeacherHeader() {
 
   const handleMenuLogoutClick = () => {
     setURole(null);
+    setUser(null);
+    setUid(null);
     handleMenuClose();
     navigate("/");
   };

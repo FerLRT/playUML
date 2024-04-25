@@ -20,7 +20,7 @@ import { NewAchievement } from "../components/NewAchievement";
 import "../styles/quiz.css";
 
 export function Quiz() {
-  const { uid, token } = useAuth();
+  const { uid, token, user } = useAuth();
   const { quizId } = useParams();
 
   // Información de las preguntas
@@ -156,8 +156,8 @@ export function Quiz() {
           .then((response) => {
             // Response contiene scores y totalScore
             setAnswersScore(response.scores);
-            // user.experience_points = response.experience;
-            // user.level = response.level;
+            user.experience_points = response.experience;
+            user.level = response.level;
             setNewAchievements(response.unlockedAchievements);
             setStudentQuizScore(response.totalScore);
             setPosiblePoints(response.maxExperience);
