@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import "../styles/achievement.css";
 
 export function AchievementPage() {
-  const { user } = useAuth();
+  const { uid, token } = useAuth();
   const [achievements, setAchievements] = useState([]);
 
   const [error, setError] = useState("");
@@ -21,10 +21,10 @@ export function AchievementPage() {
 
   useEffect(() => {
     const fetchData = () => {
-      getUserAchievements(user.id)
+      getUserAchievements(uid, token)
         .then((response) => {
           setAchievements(
-            response.data.map((achievement) => ({
+            response.map((achievement) => ({
               ...achievement.dataValues,
               unlocked: achievement.unlocked,
             }))
@@ -38,7 +38,7 @@ export function AchievementPage() {
     };
 
     fetchData();
-  }, [user]);
+  }, []);
 
   return (
     <div className="achievement-page">

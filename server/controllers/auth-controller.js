@@ -8,6 +8,8 @@ import { sequelize } from "../config/dbConfig.js";
 import { QuizController } from "./quiz-controller.js";
 import { ClassController } from "./class-controller.js";
 
+import { generateRefreshToken, generateToken } from "../utils/tokenManager.js";
+
 export class AuthController {
   static async signup(req, res) {
     try {
@@ -20,7 +22,16 @@ export class AuthController {
         role: "profesor",
       });
 
-      res.status(201).json(user);
+      // Generar token JWT
+      const { token, expiresIn } = generateToken(
+        user.id,
+        user.email,
+        user.role
+      );
+
+      generateRefreshToken(user.id, user.email, user.role, res);
+
+      return res.json({ token, expiresIn });
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") {
         return res.status(409).send("El correo ya está registrado");
@@ -47,7 +58,17 @@ export class AuthController {
       }
 
       await AuthController.updateUserLastConnection(user.id);
-      res.status(200).json(user);
+
+      // Generar token JWT
+      const { token, expiresIn } = generateToken(
+        user.id,
+        user.email,
+        user.role
+      );
+
+      generateRefreshToken(user.id, user.email, user.role, res);
+
+      return res.json({ token, expiresIn });
     } catch (error) {
       return res.status(500).send("Internal Server Error");
     }
@@ -55,6 +76,17 @@ export class AuthController {
 
   static logout(req, res) {
     res.status(200).send("OK");
+  }
+
+  static async refreshToken(req, res) {
+    try {
+      const { token, expiresIn } = generateToken(req.uid, req.email, req.role);
+
+      return res.json({ token, expiresIn });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ ok: false, error: "Error de servidor" });
+    }
   }
 
   static async updatePassword(req, res) {
@@ -102,6 +134,29 @@ export class AuthController {
     } catch (error) {
       console.error("Error al procesar el archivo:", error);
       res.status(400).send("Bad Request");
+    }
+  }
+
+  static async getUserInfo(req, res) {
+    try {
+      const userId = req.params.id;
+
+      const user = await AuthController.getUserById(userId);
+
+      if (!user) {
+        return res.status(404).send("Usuario no encontrado");
+      }
+
+      const userInfo = {
+        current_class_id: user.current_class_id,
+        experience_points: user.experience_points,
+        level: user.level,
+      };
+
+      res.json(userInfo);
+    } catch (error) {
+      console.error("Error al obtener la clase actual del usuario:", error);
+      res.status(500).send("Internal Server Error");
     }
   }
 

@@ -12,7 +12,7 @@ import logo from "../assets/logo.png";
 import "../styles/header.css";
 
 export function Header() {
-  const { user, setUser } = useAuth();
+  const { uEmail, setURole } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export function Header() {
   };
 
   const handleMenuLogoutClick = () => {
-    setUser(null);
+    setURole(null);
     handleMenuClose();
     navigate("/");
   };
@@ -55,7 +55,7 @@ export function Header() {
             color="inherit"
             style={{ padding: 0 }}
           >
-            <p className="header-user">{user ? `${user.email}` : ""}</p>
+            <p className="header-user">{uEmail ? `${uEmail}` : ""}</p>
             <img
               className="header-avatar"
               src={`/src/assets/avatar.png`}

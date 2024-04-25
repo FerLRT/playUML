@@ -5,14 +5,14 @@ import { TeacherRouter } from "./routerTeacher";
 import { StudentRouter } from "./routerStudent";
 
 export function Router() {
-  const { user } = useAuth();
+  const { uRole } = useAuth();
 
-  if (user) {
-    if (user.role === "profesor") {
+  if (uRole) {
+    if (uRole === "profesor") {
       return <TeacherRouter />;
     }
 
-    if (user.role === "estudiante") {
+    if (uRole === "estudiante") {
       return <StudentRouter />;
     }
   }

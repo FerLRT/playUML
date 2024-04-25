@@ -6,7 +6,7 @@ import { getRequiredPointsForNextLevel } from "../hooks/useLevel";
 import "../styles/levelIndicator.css";
 
 export function LevelIndicator({ posiblePoints }) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [progress, setProgress] = useState(0);
 
   const [maxPosibleProgress, setMaxPosibleProgress] = useState(0);
@@ -19,7 +19,7 @@ export function LevelIndicator({ posiblePoints }) {
   useEffect(() => {
     const fetchLevelData = async () => {
       try {
-        const response = await getRequiredPointsForNextLevel(user.level);
+        const response = await getRequiredPointsForNextLevel(user.level, token);
         updateProgress(
           user.experience_points,
           response.current_level.required_points,
@@ -34,10 +34,10 @@ export function LevelIndicator({ posiblePoints }) {
       }
     };
 
-    if (user.level) {
+    if (user) {
       fetchLevelData();
     }
-  }, [user.level, user.experience_points]);
+  }, [user]);
 
   useEffect(() => {
     if (posiblePoints !== undefined) {
@@ -67,7 +67,7 @@ export function LevelIndicator({ posiblePoints }) {
 
   return (
     <div className="level-indicator-container">
-      <div className="level-indicator-number">{user.level}</div>
+      {user && <div className="level-indicator-number">{user.level}</div>}
       <div className="progress-container">
         <ProgressBar
           completed={maxPosibleProgress || 0}

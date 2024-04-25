@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 import "../styles/userConfigPage.css";
 
 export function UserConfigPage() {
-  const { user } = useAuth();
+  const { uid, token } = useAuth();
 
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -21,7 +21,7 @@ export function UserConfigPage() {
   const navigate = useNavigate();
 
   const handleChangePassword = async () => {
-    await updatePassword(user.id, password, newPassword, confirmPassword)
+    await updatePassword(uid, password, newPassword, confirmPassword, token)
       .then((response) => {
         setSuccess("Contraseña cambiada con éxito");
         setError("");

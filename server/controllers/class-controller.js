@@ -29,10 +29,10 @@ export class ClassController {
 
   static async getTeacherClasses(req, res) {
     try {
-      const teacherEmail = req.params.id;
+      const uid = req.params.id;
 
       // Obtener el usuario
-      const teacher = await AuthController.getUser(teacherEmail);
+      const teacher = await AuthController.getUserById(uid);
 
       // Obtener las clases asociadas al profesor
       const classes = await classModel.findAll({
@@ -56,10 +56,10 @@ export class ClassController {
 
   static async createClass(req, res) {
     try {
-      const { name, teacherEmail, fileData } = req.body;
+      const { name, uid, fileData } = req.body;
 
       // Obtener el usuario
-      const teacher = await AuthController.getUser(teacherEmail);
+      const teacher = await AuthController.getUserById(uid);
 
       // Crear la clase
       const newClass = await classModel.create({

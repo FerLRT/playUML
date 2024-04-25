@@ -19,7 +19,7 @@ import { MaterialSymbolsCheckBox } from "../assets/icons/Check";
 import "../styles/homePage.css";
 
 export function HomePage() {
-  const { user } = useAuth();
+  const { uid, uRole, email, token, user } = useAuth();
 
   const [quizzes, setQuizzes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,7 +30,7 @@ export function HomePage() {
   // Lógica para obtener la lista de tests
   useEffect(() => {
     const fetchData = () => {
-      Promise.all([getStudentStats(user.id), getQuizzes(user.id)])
+      Promise.all([getStudentStats(uid, token), getQuizzes(uid, token)])
         .then(([studentStats, quizzes]) => {
           setStudentStats(studentStats.data);
           setQuizzes(quizzes.data);
@@ -91,11 +91,13 @@ export function HomePage() {
         />
       </div>
 
-      <Ranking
-        classId={user.current_class_id}
-        userId={user.email}
-        userRole={user.role}
-      />
+      {user && (
+        <Ranking
+          classId={user.current_class_id}
+          userId={email}
+          userRole={uRole}
+        />
+      )}
 
       <h1 className="home-test-list-title">Tests disponibles</h1>
       <div className="home-test-list-container">

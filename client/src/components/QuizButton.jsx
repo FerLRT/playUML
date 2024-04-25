@@ -12,7 +12,7 @@ import { MdiClock } from "../assets/icons/Clock";
 import "../styles/quizButton.css";
 
 export function QuizButton({ to, quizId, quizName }) {
-  const { user } = useAuth();
+  const { uid, token } = useAuth();
   const navigate = useNavigate();
 
   const [quizScore, setQuizScore] = useState(null);
@@ -20,7 +20,7 @@ export function QuizButton({ to, quizId, quizName }) {
   useEffect(() => {
     const loadStudentStats = async () => {
       try {
-        const scoreObject = await getStudentQuizScore(user.id, quizId);
+        const scoreObject = await getStudentQuizScore(uid, quizId, token);
         setQuizScore(scoreObject.score);
       } catch (error) {
         console.error("Error loading student stats", error);
@@ -28,7 +28,7 @@ export function QuizButton({ to, quizId, quizName }) {
     };
 
     loadStudentStats();
-  }, [user, quizId]);
+  }, [uid, quizId]);
 
   const handleButtonClick = () => {
     navigate(`/quiz/${to}`);

@@ -5,9 +5,12 @@ import { getStudentQuizScore } from "../hooks/useQuiz";
 
 import { MdiEyeCircle } from "../assets/icons/Eye";
 
+import { useAuth } from "../context/AuthContext";
+
 import "../styles/quizButtonReview.css";
 
 export function StudentQuizButtonReview({ to, quizId, quizName }) {
+  const { token } = useAuth();
   const { classId, studentId } = useParams();
   const navigate = useNavigate();
 
@@ -16,7 +19,7 @@ export function StudentQuizButtonReview({ to, quizId, quizName }) {
   useEffect(() => {
     const loadStudentStats = async () => {
       try {
-        const scoreObject = await getStudentQuizScore(studentId, quizId);
+        const scoreObject = await getStudentQuizScore(studentId, quizId, token);
         setQuizScore(scoreObject.score);
       } catch (error) {
         console.error("Error loading student stats", error);

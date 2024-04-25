@@ -8,7 +8,9 @@ import Stack from "@mui/material/Stack";
 import "../styles/login.css";
 
 export function RegisterPage() {
-  const { setUser } = useAuth();
+  const { setToken } = useAuth();
+  const { setExpiresIn } = useAuth();
+
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +20,9 @@ export function RegisterPage() {
   const handleRegister = async () => {
     await register(email, password, confirmPassword)
       .then((response) => {
-        setUser(response.data);
+        setToken(response.data.token);
+        setExpiresIn(0);
+        setExpiresIn(response.data.expiresIn);
         navigate("/");
       })
       .catch((error) => {
