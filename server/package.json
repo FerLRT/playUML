@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./bin/www.js",
-    "start": "node ./bin/www",
-    "start:dev": "set DEBUG=* & set NODE_ENV=development & node ./bin/www"
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "start:dev": "set DEBUG=* & set NODE_ENV=development & node app.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
