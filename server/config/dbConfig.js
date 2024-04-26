@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import { config } from "dotenv";
+import pg from "pg";
 
 // Cargar las variables de entorno del archivo .env
 config();
@@ -12,6 +13,8 @@ export const sequelize = new Sequelize(connectionString, {
   define: {
     timestamps: false,
   },
+  dialect: "postgres",
+  dialectModule: pg,
 });
 
 // Verifica la conexión a la base de datos
