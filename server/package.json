@@ -9,7 +9,6 @@
     "start:dev": "set DEBUG=* & set NODE_ENV=development & node ./bin/www"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.42.5",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
