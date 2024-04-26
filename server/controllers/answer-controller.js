@@ -127,7 +127,7 @@ export class AnswerController {
         totalScore >= 0 && totalScore - score > 0
           ? parseInt(
               user.experience_points +
-                quizExperiencePoints * ((totalScore - score) / 10) * factor
+                quizExperiencePoints * ((10 - score) / 10) * factor
             )
           : user.experience_points + quizExperiencePoints;
 
