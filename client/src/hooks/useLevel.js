@@ -1,7 +1,8 @@
-import { instance } from "./axiosInstance";
+import { instanceWithAuth } from "./axiosInstance";
 
-export async function getRequiredPointsForNextLevel(currentLevel) {
-  return await instance
+export async function getRequiredPointsForNextLevel(currentLevel, token) {
+  const instanceToken = instanceWithAuth(token);
+  return await instanceToken
     .get(`/levels/${currentLevel}`)
     .then((response) => response.data)
     .catch((error) =>

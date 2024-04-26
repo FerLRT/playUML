@@ -28,7 +28,7 @@ import { MaterialSymbolsCheckBox } from "../assets/icons/Check";
 import "../styles/classPage.css";
 
 export function ClassPage() {
-  const { user } = useAuth();
+  const { uid, uRole, token } = useAuth();
   const { classId } = useParams();
 
   const [className, setClassName] = useState("");
@@ -54,12 +54,12 @@ export function ClassPage() {
   useEffect(() => {
     const fetchData = () => {
       Promise.all([
-        getClassName(classId),
-        getClassStudents(classId),
-        getClassAverageScore(classId),
-        getClassPercentage(classId),
-        getQuizzes(user.id),
-        getClassStats(classId),
+        getClassName(classId, token),
+        getClassStudents(classId, token),
+        getClassAverageScore(classId, token),
+        getClassPercentage(classId, token),
+        getQuizzes(uid, token),
+        getClassStats(classId, token),
       ])
         .then(
           ([
@@ -99,7 +99,7 @@ export function ClassPage() {
 
     setIsLoading(true);
 
-    await addStudentToClass(classId, newStudentEmail)
+    await addStudentToClass(classId, newStudentEmail, token)
       .then((response) => {
         const { newStudent, userCredentials, fileName } = response.data;
 
@@ -140,7 +140,7 @@ export function ClassPage() {
   };
 
   const handleRemoveStudent = async (studentId) => {
-    await removeStudentFromClass(studentId);
+    await removeStudentFromClass(studentId, token);
 
     // Filtrar la lista de estudiantes para eliminar al estudiante eliminado
     const updatedStudents = students.filter(
@@ -192,7 +192,7 @@ export function ClassPage() {
         />
       </div>
 
-      <Ranking classId={classId} userId={user.id} userRole={user.role} />
+      <Ranking classId={classId} userId={uid} userRole={uRole} />
 
       <h1>Tests</h1>
       <input

@@ -4,9 +4,12 @@ import { getClassRanking } from "../hooks/useRanking";
 
 import { studentColumns, teacherColumns } from "../utils/rankingTableConfig";
 
+import { useAuth } from "../context/AuthContext";
+
 import "../styles/ranking.css";
 
-export function Ranking({ classId, userId, userRole }) {
+export function Ranking({ classId }) {
+  const { uid, uRole, token } = useAuth();
   const [ranking, setRanking] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -15,7 +18,7 @@ export function Ranking({ classId, userId, userRole }) {
   useEffect(() => {
     const loadRanking = async () => {
       try {
-        const rankingData = await getClassRanking(classId, userRole);
+        const rankingData = await getClassRanking(classId, uRole, token);
 
         const sortedRanking = rankingData
           .slice()
@@ -23,9 +26,9 @@ export function Ranking({ classId, userId, userRole }) {
 
         setRanking(sortedRanking);
 
-        if (userId) {
+        if (uid) {
           const userIndex = sortedRanking.findIndex(
-            (record) => record.userId === userId
+            (record) => record.userId === uid
           );
 
           if (userIndex !== -1) {
@@ -40,7 +43,7 @@ export function Ranking({ classId, userId, userRole }) {
     };
 
     loadRanking();
-  }, [classId, userId, pageSize]);
+  }, [classId, uid, pageSize]);
 
   // Agregar posición al ranking
   const rankedData = ranking.map((student, index) => ({
@@ -50,7 +53,7 @@ export function Ranking({ classId, userId, userRole }) {
 
   // Función para agregar clase condicional a la fila
   const rowClassName = (record) => {
-    return userId && record.userId === userId ? "highlight-row" : "";
+    return uid && record.userId === uid ? "highlight-row" : "";
   };
 
   return (
@@ -59,7 +62,7 @@ export function Ranking({ classId, userId, userRole }) {
       <div className="ranking-table-scrollable">
         <Table
           dataSource={rankedData}
-          columns={userRole === "profesor" ? teacherColumns : studentColumns}
+          columns={uRole === "profesor" ? teacherColumns : studentColumns}
           pagination={{
             pageSize: pageSize,
             current: currentPage,

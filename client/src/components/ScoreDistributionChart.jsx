@@ -15,7 +15,7 @@ import { useAuth } from "../context/AuthContext";
 import { getChartStats } from "../hooks/useQuiz";
 
 export function ScoreDistributionChart({ userScore }) {
-  const { user } = useAuth();
+  const { uid, token } = useAuth();
   const { quizId } = useParams();
   const [chartData, setChartData] = useState([]);
   const [maxLastScore, setMaxLastScore] = useState(0);
@@ -24,7 +24,7 @@ export function ScoreDistributionChart({ userScore }) {
     const fetchScoreDistributionData = async () => {
       try {
         // Hacer la petición al servidor para obtener los datos de distribución de puntajes
-        const response = await getChartStats(user.id, quizId);
+        const response = await getChartStats(uid, quizId, token);
         setChartData(response.roundedChartStats);
         setMaxLastScore(response.maxScore);
       } catch (error) {
@@ -33,7 +33,7 @@ export function ScoreDistributionChart({ userScore }) {
     };
 
     fetchScoreDistributionData();
-  }, [user.id, quizId]);
+  }, [uid, quizId]);
 
   const customTooltip = (props) => {
     const { active, payload } = props;

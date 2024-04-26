@@ -20,7 +20,7 @@ import { NewAchievement } from "../components/NewAchievement";
 import "../styles/quiz.css";
 
 export function Quiz() {
-  const { user } = useAuth();
+  const { uid, token, user } = useAuth();
   const { quizId } = useParams();
 
   // Información de las preguntas
@@ -49,14 +49,14 @@ export function Quiz() {
     const loadData = async () => {
       try {
         // Obtener las preguntas
-        const questionsList = await getQuestions(quizId);
+        const questionsList = await getQuestions(quizId, token);
 
         // Obtener las respuestas e imágenes para todas las preguntas en paralelo
         const questionsWithAnswersAndImages = await Promise.all(
           questionsList.map(async (question) => {
             const [answers, images] = await Promise.all([
-              getAnswers(question.id),
-              getQuestionImages(question.id),
+              getAnswers(question.id, token),
+              getQuestionImages(question.id, token),
             ]);
 
             // Inicializa userAnswers con la misma longitud que questions
@@ -152,7 +152,7 @@ export function Quiz() {
           preparedAnswers.push({ questionId, selectedAnswerIds });
         });
 
-        submitAnswers(user.id, quizId, preparedAnswers)
+        submitAnswers(uid, quizId, preparedAnswers, token)
           .then((response) => {
             // Response contiene scores y totalScore
             setAnswersScore(response.scores);

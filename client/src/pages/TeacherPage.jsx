@@ -13,7 +13,8 @@ import { validateJSONStructure } from "../utils/jsonValidator";
 import "../styles/teacherPage.css";
 
 export function TeacherPage() {
-  const { user } = useAuth();
+  const { uid, token } = useAuth();
+
   const [teacherClasses, setTeacherClasses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -27,7 +28,7 @@ export function TeacherPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getTeacherClasses(user.email)
+    getTeacherClasses(uid, token)
       .then((response) => {
         setTeacherClasses(response.data);
       })
@@ -53,11 +54,6 @@ export function TeacherPage() {
       return;
     }
 
-    if (!user || !user.email) {
-      setError("Algo salió mal, por favor vuelve a iniciar sesión");
-      return;
-    }
-
     if (!validateJSONStructure(fileData)) {
       setError("El archivo no contiene la estructura correcta");
       return;
@@ -65,7 +61,7 @@ export function TeacherPage() {
 
     setIsLoading(true);
 
-    await createClass(newClassName, user.email, fileData)
+    await createClass(newClassName, uid, fileData, token)
       .then((response) => {
         const { newClass, usersCredentials, fileName } = response.data;
         setTeacherClasses([...teacherClasses, newClass]);

@@ -13,7 +13,10 @@ import {
   getStudentAnswers,
 } from "../hooks/useQuiz";
 
+import { useAuth } from "../context/AuthContext";
+
 export function QuizReviewPage() {
+  const { token } = useAuth();
   const { quizId, studentId, classId } = useParams();
 
   // Información de las preguntas
@@ -25,14 +28,14 @@ export function QuizReviewPage() {
     const loadData = async () => {
       try {
         // Obtener las preguntas
-        const questionsList = await getQuestions(quizId);
+        const questionsList = await getQuestions(quizId, token);
 
         // Obtener las respuestas e imágenes para todas las preguntas en paralelo
         const questionsWithAnswersAndImages = await Promise.all(
           questionsList.map(async (question) => {
             const [answers, images] = await Promise.all([
-              getAnswersWithScores(question.id),
-              getQuestionImages(question.id),
+              getAnswersWithScores(question.id, token),
+              getQuestionImages(question.id, token),
             ]);
 
             // Inicializa userAnswers con la misma longitud que questions
@@ -50,7 +53,11 @@ export function QuizReviewPage() {
 
         if (studentId) {
           // Obtener las respuestas del estudiante para todas las preguntas
-          const studentAnswers = await getStudentAnswers(studentId, quizId);
+          const studentAnswers = await getStudentAnswers(
+            studentId,
+            quizId,
+            token
+          );
 
           // Crear un array de userAnswers con la misma longitud que questionsList
           const userAnswersArray = new Array(questionsList.length).fill([]);

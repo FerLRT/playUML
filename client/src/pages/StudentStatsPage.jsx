@@ -17,7 +17,7 @@ import { EmojioneTrophy } from "../assets/icons/Trophy";
 import "../styles/studentStatsPage.css";
 
 export function StudentStatsPage() {
-  const { user } = useAuth();
+  const { uid, token } = useAuth();
   const { classId, studentId } = useParams();
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ export function StudentStatsPage() {
 
   useEffect(() => {
     const fetchData = () => {
-      Promise.all([getStudentStats(studentId), getQuizzes(user.id)])
+      Promise.all([getStudentStats(studentId, token), getQuizzes(uid, token)])
         .then(([studentStats, quizzes]) => {
           setStudentStats(studentStats.data);
           setQuizzes(quizzes.data);

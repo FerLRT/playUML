@@ -1,13 +1,13 @@
-import { instance } from "./axiosInstance";
+import { instance, instanceWithAuth } from "./axiosInstance";
 
-export async function login(email, password) {
-  return await instance
+export function login(email, password) {
+  return instance
     .post("/auth/login", { email, password })
     .then((response) => response);
 }
 
-export async function register(email, password, confirmPassword) {
-  return await instance
+export function register(email, password, confirmPassword) {
+  return instance
     .post("/auth/signup", { email, password, confirmPassword })
     .then((response) => response);
 }
@@ -19,21 +19,33 @@ export async function sendFileData(data) {
     .catch((error) => console.error("Error al enviar el archivo:", error));
 }
 
-export function getStudentStats(id) {
-  return instance.get(`/auth/student/${id}`).then((response) => response);
+export function getStudentStats(id, token) {
+  const instanceToken = instanceWithAuth(token);
+  return instanceToken.get(`/auth/student/${id}`).then((response) => response);
 }
 
 export function updatePassword(
   userId,
   currentPassword,
   password,
-  confirmPassword
+  confirmPassword,
+  token
 ) {
-  return instance
+  const instanceToken = instanceWithAuth(token);
+  return instanceToken
     .put(`/auth/update/${userId}`, {
       currentPassword,
       password,
       confirmPassword,
     })
     .then((response) => response);
+}
+
+export async function refreshToken() {
+  return await instance.get("/auth/refresh").then((response) => response);
+}
+
+export function getUserInfo(uid, token) {
+  const instanceToken = instanceWithAuth(token);
+  return instanceToken.get(`/auth/class/${uid}`).then((response) => response);
 }
