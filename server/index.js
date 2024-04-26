@@ -16,7 +16,7 @@ import { userQuizRouter } from "./routes/userQuiz-router.js";
 import { classRouter } from "./routes/class-router.js";
 
 // Crea la instancia de la aplicación Express
-export const app = express();
+const app = express();
 
 // Middleware
 app.use(logger("dev"));
@@ -43,10 +43,10 @@ app.set("port", port);
 // Crea el servidor HTTP
 const server = http.createServer(app);
 
-// Escucha en el puerto especificado
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+// Exporta una función que devuelve el servidor HTTP
+export default function handler(req, res) {
+  server(req, res);
+}
 
 // Función para normalizar el puerto
 function normalizePort(val) {
@@ -61,33 +61,4 @@ function normalizePort(val) {
   }
 
   return false;
-}
-
-// Función para manejar errores de servidor
-function onError(error) {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
-
-  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
-
-  switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
-      process.exit(1);
-      break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-// Función para manejar eventos de escucha del servidor
-function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  console.log("Listening on " + bind);
 }
