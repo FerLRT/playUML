@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import http from "http";
+import { createServer } from "http";
 
 // Importa las rutas
 import { authRouter } from "./routes/auth-router.js";
@@ -36,17 +36,19 @@ app.use("/user-achievements", userAchievementRouter);
 app.use("/user-quizzes", userQuizRouter);
 app.use("/classes", classRouter);
 
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
 // Normaliza el puerto en el que escuchará el servidor
-const port = normalizePort(process.env.PORT || "8080");
+const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 // Crea el servidor HTTP
-const server = http.createServer(app);
+const server = createServer(app);
 
-// Exporta una función que devuelve el servidor HTTP
-export default function handler(req, res) {
-  server(req, res);
-}
+// Escucha en el puerto especificado
+server.listen(port, () => {
+  console.log(`Servidor en ejecución en el puerto ${port}`);
+});
 
 // Función para normalizar el puerto
 function normalizePort(val) {
