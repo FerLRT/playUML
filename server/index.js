@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { createServer } from "http";
+import cors from "cors";
 
 // Importa las rutas
 import { authRouter } from "./routes/auth-router.js";
@@ -23,6 +24,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 // Aplica las rutas
 app.use("/auth", authRouter);
