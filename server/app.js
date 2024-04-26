@@ -25,6 +25,10 @@ const allowCors = (fn) => async (req, res) => {
 
   const origin = req.headers.origin;
 
+  console.log("Origin:", origin);
+  console.log("WhiteList:", whiteList);
+  console.log("Headers:", req.headers);
+
   if (whiteList.includes(origin)) {
     // Si el origen de la solicitud está en la lista blanca, se permite la solicitud
     res.setHeader("Access-Control-Allow-Origin", origin);
