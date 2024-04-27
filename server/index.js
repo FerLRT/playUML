@@ -26,9 +26,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
-// Cors
-app.options("*", cors());
-
 // Aplica las rutas
 app.use("/auth", authRouter);
 app.use("/quizzes", quizRouter);
