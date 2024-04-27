@@ -41,7 +41,7 @@ app.use("/classes", classRouter);
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 // Normaliza el puerto en el que escuchará el servidor
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT || "8080");
 app.set("port", port);
 
 // Crea el servidor HTTP
