@@ -24,9 +24,10 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 // Cors
-app.use(cors({ origin: true, credentials: true }));
+app.options("*", cors());
 
 // Aplica las rutas
 app.use("/auth", authRouter);
