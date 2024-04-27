@@ -24,16 +24,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.options(cors());
+
+// Utiliza el middleware CORS
+app.use(cors());
 
 // Middleware para manejar las solicitudes OPTIONS
-app.options("*", (req, res) => {
-  res.set("Access-Control-Allow-Origin", "https://play-uml.vercel.app");
-  res.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.set("Access-Control-Allow-Credentials", "true");
-  res.send();
-});
+app.options("*", cors());
 
 // Aplica las rutas
 app.use("/auth", authRouter);
