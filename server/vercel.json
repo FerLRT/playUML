@@ -1,6 +1,3 @@
 {
-  "version": 2,
-  "scripts": {
-    "build": "build --output public"
-  }
+  "version": 2
 }
