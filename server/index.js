@@ -1,7 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import { createServer } from "http";
 import cors from "cors";
 
 // Importa las rutas
@@ -17,7 +16,7 @@ import { userQuizRouter } from "./routes/userQuiz-router.js";
 import { classRouter } from "./routes/class-router.js";
 
 // Crea la instancia de la aplicación Express
-const app = express();
+export const app = express();
 
 // Middleware
 app.use(logger("dev"));
@@ -25,11 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Utiliza el middleware CORS
-app.use(cors());
-
-// Middleware para manejar las solicitudes OPTIONS
-app.options("*", cors());
+// Cors
+app.use(cors({ origin: true, credentials: true }));
 
 // Aplica las rutas
 app.use("/auth", authRouter);
@@ -45,29 +41,8 @@ app.use("/classes", classRouter);
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
-// Normaliza el puerto en el que escuchará el servidor
-const port = normalizePort(process.env.PORT || "8080");
-app.set("port", port);
+const PORT = process.env.PORT || 3000; // Si no se especifica un puerto en las variables de entorno, usa el puerto 3000
 
-// Crea el servidor HTTP
-const server = createServer(app);
-
-// Escucha en el puerto especificado
-server.listen(port, () => {
-  console.log(`Servidor en ejecución en el puerto ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-// Función para normalizar el puerto
-function normalizePort(val) {
-  const port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    return val; // Pipe
-  }
-
-  if (port >= 0) {
-    return port; // Número de puerto
-  }
-
-  return false;
-}

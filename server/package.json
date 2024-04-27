@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "echo 'No se necesita construcción para este proyecto'",
     "dev": "nodemon index.js",
     "start": "node index.js",
     "start:dev": "set DEBUG=* & set NODE_ENV=development & node index.js"
