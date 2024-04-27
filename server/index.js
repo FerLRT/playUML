@@ -16,6 +16,7 @@ import { userQuizRouter } from "./routes/userQuiz-router.js";
 import { classRouter } from "./routes/class-router.js";
 
 // Crea la instancia de la aplicación Express
+console.log("Starting server...");
 export const app = express();
 
 // Middleware
