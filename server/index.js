@@ -24,7 +24,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://play-uml.vercel.app",
+    credentials: true,
+  })
+);
 
 // Aplica las rutas
 app.use("/auth", authRouter);
