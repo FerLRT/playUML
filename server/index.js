@@ -24,12 +24,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "https://play-uml.vercel.app",
-    credentials: true,
-  })
-);
+app.options("*", cors());
 
 // Aplica las rutas
 app.use("/auth", authRouter);
@@ -46,7 +41,7 @@ app.use("/classes", classRouter);
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 // Normaliza el puerto en el que escucharÃ¡ el servidor
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT || "8080");
 app.set("port", port);
 
 // Crea el servidor HTTP
@@ -54,7 +49,7 @@ const server = createServer(app);
 
 // Escucha en el puerto especificado
 server.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`Servidor en ejecuciÃ³n en el puerto ${port}`);
 });
 
 // FunciÃ³n para normalizar el puerto
@@ -66,7 +61,7 @@ function normalizePort(val) {
   }
 
   if (port >= 0) {
-    return port; // Número de puerto
+    return port; // NÃºmero de puerto
   }
 
   return false;
