@@ -3,7 +3,6 @@
 **/package-lock.json
 
 # Database configuration
-server/config/dbConfig.js
 server/db.js
 database
 
