@@ -85,8 +85,20 @@ export function Quiz() {
           setAnswersScore(userAnswersScores);
         }
 
+        const questionsWithShuffledAnswers = questionsWithAnswersAndImages.map(
+          (question) => {
+            const shuffledAnswers = question.answers
+              .slice()
+              .sort(() => Math.random() - 0.5);
+            return {
+              ...question,
+              answers: shuffledAnswers,
+            };
+          }
+        );
+
         // Actualizar el estado con las respuestas e imágenes
-        setQuestions(questionsWithAnswersAndImages);
+        setQuestions(questionsWithShuffledAnswers);
       } catch (error) {
         console.error(
           "Error al cargar preguntas, respuestas e imágenes:",
