@@ -181,6 +181,19 @@ export function Quiz() {
     });
   };
 
+  // Preguntas marcadas con bandera
+  const [flaggedQuestions, setFlaggedQuestions] = useState([]);
+
+  const handleFlagToggle = (flagged) => {
+    if (flagged) {
+      setFlaggedQuestions([...flaggedQuestions, currentQuestionIndex]);
+    } else {
+      setFlaggedQuestions(
+        flaggedQuestions.filter((index) => index !== currentQuestionIndex)
+      );
+    }
+  };
+
   // Renderizar la pregunta actual
   const renderCurrentQuestion = () => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -213,6 +226,8 @@ export function Quiz() {
             question={currentQuestion}
             selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
+            onFlagToggle={handleFlagToggle}
+            flagged={flaggedQuestions.includes(currentQuestionIndex)}
             quizCompleted={quizCompleted}
             answersScore={answersScore.filter(
               (score) => score.questionId === currentQuestion.id
@@ -225,6 +240,8 @@ export function Quiz() {
             question={currentQuestion}
             selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
+            onFlagToggle={handleFlagToggle}
+            flagged={flaggedQuestions.includes(currentQuestionIndex)}
             quizCompleted={quizCompleted}
             answersScore={answersScore.filter(
               (score) => score.questionId === currentQuestion.id
@@ -237,6 +254,8 @@ export function Quiz() {
             question={currentQuestion}
             selectedAnswers={userAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
+            onFlagToggle={handleFlagToggle}
+            flagged={flaggedQuestions.includes(currentQuestionIndex)}
             quizCompleted={quizCompleted}
             answersScore={answersScore.filter(
               (score) => score.questionId === currentQuestion.id
@@ -260,6 +279,7 @@ export function Quiz() {
           onNext={nextQuestion}
           onPrev={prevQuestion}
           onFinish={handleFinishQuiz}
+          flaggedQuestions={flaggedQuestions}
           quizCompleted={quizCompleted}
           setShowSummaryView={setShowSummaryView}
           userAnswers={userAnswers}

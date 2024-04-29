@@ -2,12 +2,17 @@ import React from "react";
 import { DiagramImage } from "./DiagramImage";
 import { CustomRadioButton } from "./CustomRadioButton";
 
+import { MingcuteFlag4Line } from "../assets/icons/UncheckFlag";
+import { MingcuteFlag4Fill } from "../assets/icons/CheckedFlag";
+
 import "../styles/questionType1.css";
 
 export function QuestionType1({
   question,
   selectedAnswers,
   onAnswerSelect,
+  onFlagToggle,
+  flagged,
   quizCompleted,
   answersScore,
 }) {
@@ -28,6 +33,10 @@ export function QuestionType1({
     onAnswerSelect(updatedSelectedAnswers);
   };
 
+  const handleFlagToggle = () => {
+    onFlagToggle(!flagged);
+  };
+
   return (
     <div className="question-type-1-container">
       <div className="question-type-1-diagram-image-container">
@@ -35,7 +44,15 @@ export function QuestionType1({
       </div>
 
       <div className="question-type-1-question-answers-container">
-        <h2 className="question-text">{question.question_text}</h2>
+        <div className="question-type-question-flag">
+          <h2 className="question-text">{question.question_text}</h2>
+          <button
+            className={`flag-button ${flagged ? "flagged" : ""}`}
+            onClick={handleFlagToggle}
+          >
+            {flagged ? <MingcuteFlag4Fill /> : <MingcuteFlag4Line />}
+          </button>
+        </div>
         <div className="question-type-1-answers-container">
           {question.answers.map((answer, index) => {
             // Buscar el puntaje de esta respuesta específica
