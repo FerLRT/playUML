@@ -9,6 +9,8 @@ import {
 import { MaterialSymbolsZoomInRounded } from "../assets/icons/ZoomIn";
 import { MaterialSymbolsZoomOut } from "../assets/icons/ZoomOut";
 
+import { arrayBufferToUrl } from "../utils/arrayBufferToUrl";
+
 import "../styles/diagramModal.css";
 
 export function DiagramModal({ open, handleClose, image }) {
@@ -59,7 +61,7 @@ export function DiagramModal({ open, handleClose, image }) {
             <TransformComponent>
               <img
                 className="diagram-modal-image"
-                src={image}
+                src={arrayBufferToUrl(image)}
                 alt="Diagrama UML"
                 width="auto"
                 height="auto"

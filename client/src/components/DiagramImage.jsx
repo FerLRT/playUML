@@ -11,6 +11,8 @@ import { MaterialSymbolsZoomInRounded } from "../assets/icons/ZoomIn";
 import { MaterialSymbolsZoomOut } from "../assets/icons/ZoomOut";
 import { MaterialSymbolsZoomOutMap } from "../assets/icons/FullScreen";
 
+import { arrayBufferToUrl } from "../utils/arrayBufferToUrl";
+
 import "../styles/diagramImage.css";
 
 export function DiagramImage({ image }) {
@@ -69,7 +71,7 @@ export function DiagramImage({ image }) {
           <Controls />
         </div>
         <TransformComponent>
-          <img src={image} alt="Diagrama UML" width="100%" />
+          <img src={arrayBufferToUrl(image)} alt="Diagrama UML" width="100%" />
         </TransformComponent>
       </TransformWrapper>
 
