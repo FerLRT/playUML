@@ -41,7 +41,7 @@
 }
 
 .achievement.locked {
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 @media screen and (max-width: 768px) {

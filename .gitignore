@@ -30,3 +30,7 @@ Thumbs.db
 
 # Config
 config.js
+config/
+
+# Vercel
+.vercel

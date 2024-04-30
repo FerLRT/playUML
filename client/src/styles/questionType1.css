@@ -22,9 +22,21 @@
   min-width: 300px;
 }
 
-.question-type-1-question-answers-container h2 {
+.question-type-question-flag {
+  display: flex;
   padding: 10px;
   border-bottom: 1px solid #ccc;
+  justify-content: space-between;
+}
+
+.flag-button {
+  margin-left: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  border: 3px solid #fc8532;
 }
 
 .question-type-1-answers-container {

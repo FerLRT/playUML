@@ -8,6 +8,7 @@ export function QuizFooter({
   onNext,
   onPrev,
   onFinish,
+  flaggedQuestions,
   quizCompleted,
   setShowSummaryView,
   userAnswers,
@@ -54,6 +55,8 @@ export function QuizFooter({
           );
           const circleColor = quizCompleted
             ? calculateScoreColor(totalScore)
+            : flaggedQuestions.includes(index) // Verifica si la pregunta está marcada como bandera
+            ? "#fc8532" // naranja
             : index === currentQuestionIndex
             ? "#498bf9" // blue
             : userAnswerIds.length > 0
@@ -71,7 +74,11 @@ export function QuizFooter({
                   ? "completed"
                   : ""
               }`}
-              style={{ backgroundColor: circleColor }}
+              style={{
+                backgroundColor: circleColor,
+                border:
+                  index === currentQuestionIndex ? "3px solid #498bf9" : "",
+              }}
             >
               {index + 1}
             </div>

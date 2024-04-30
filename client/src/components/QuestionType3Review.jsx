@@ -36,7 +36,9 @@ export function QuestionType3Review({
       </div>
 
       <div className="question-type-1-question-answers-container">
-        <h2 className="question-text">{question.question_text}</h2>
+        <div className="question-type-question-flag">
+          <h2 className="question-text">{question.question_text}</h2>
+        </div>
         <div className="question-type-1-answers-container">
           {question.answers.map((answer, index) => {
             return (

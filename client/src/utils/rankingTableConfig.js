@@ -10,6 +10,7 @@ export const teacherColumns = [
     dataIndex: "userId",
     key: "userId",
     width: 100,
+    sorter: (a, b) => a.userId.localeCompare(b.userId),
   },
   {
     title: "Puntuación Media",

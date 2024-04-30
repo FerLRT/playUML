@@ -53,11 +53,6 @@
   min-width: 300px;
 }
 
-.question-type-2-question-answers-container h2 {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
 .question-type-2-answers-container {
   flex: 1;
 }

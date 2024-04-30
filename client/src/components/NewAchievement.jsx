@@ -25,7 +25,12 @@ export function NewAchievement({ open, onClose, achievement }) {
         }}
       >
         <div className="new-achievement-modal-content">
-          <img src={achievement.badge_url} alt={achievement.name} />
+          <img
+            src={URL.createObjectURL(
+              new Blob([new Uint8Array(achievement.badge_url.data)])
+            )}
+            alt="badge"
+          />
 
           <div className="new-achievement-modal-text">
             <Typography
