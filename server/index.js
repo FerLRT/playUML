@@ -4,6 +4,8 @@ import logger from "morgan";
 import { createServer } from "http";
 import cors from "cors";
 
+import dotenv from "dotenv";
+
 // Importa las rutas
 import { authRouter } from "./routes/auth-router.js";
 import { quizRouter } from "./routes/quiz-router.js";
@@ -26,14 +28,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://play-uml.vercel.app",
+    origin: process.env.ORIGIN || "http://localhost:3001",
     credentials: true,
   })
 );
 app.options(
-  "https://play-uml.vercel.app",
+  process.env.ORIGIN || "http://localhost:3001",
   cors({
-    origin: "https://play-uml.vercel.app",
+    origin: process.env.ORIGIN || "http://localhost:3001",
     credentials: true,
   })
 );
@@ -53,7 +55,7 @@ app.use("/classes", classRouter);
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 // Normaliza el puerto en el que escucharÃ¡ el servidor
-const port = normalizePort(process.env.PORT || "8080");
+const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 // Crea el servidor HTTP
