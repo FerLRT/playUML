@@ -1,6 +1,8 @@
 import React from "react";
 import { Modal, Box, Typography } from "@mui/material";
 
+import { arrayBufferToUrl } from "../utils/arrayBufferToUrl";
+
 import "../styles/newAchievement.css";
 
 export function NewAchievement({ open, onClose, achievement }) {
@@ -26,10 +28,8 @@ export function NewAchievement({ open, onClose, achievement }) {
       >
         <div className="new-achievement-modal-content">
           <img
-            src={URL.createObjectURL(
-              new Blob([new Uint8Array(achievement.badge_url.data)])
-            )}
-            alt="badge"
+            src={arrayBufferToUrl(achievement.badge_url, "png")}
+            alt={achievement.name}
           />
 
           <div className="new-achievement-modal-text">
