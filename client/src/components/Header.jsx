@@ -9,6 +9,8 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { useAuth } from "../context/AuthContext";
 
 import logo from "../assets/logo.png";
+import avatar from "../assets/avatar.png";
+
 import "../styles/header.css";
 
 export function Header() {
@@ -60,7 +62,7 @@ export function Header() {
             <p className="header-user">{uEmail ? `${uEmail}` : ""}</p>
             <img
               className="header-avatar"
-              src={`/src/assets/avatar.png`}
+              src={avatar}
               alt="Avatar"
               onClick={handleMenuClick}
             />
