@@ -5,6 +5,8 @@ import { getUserAchievements } from "../hooks/useAchievement";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 
+import { arrayBufferToUrl } from "../utils/arrayBufferToUrl";
+
 import "../styles/achievement.css";
 
 export function AchievementPage() {
@@ -25,7 +27,7 @@ export function AchievementPage() {
         .then((response) => {
           setAchievements(
             response.map((achievement) => ({
-              ...achievement.dataValues,
+              ...achievement,
               unlocked: achievement.unlocked,
             }))
           );
@@ -54,7 +56,10 @@ export function AchievementPage() {
               achievement.unlocked ? "unlocked" : "locked"
             }`}
           >
-            <img src={achievement.badge_url} alt={achievement.name} />
+            <img
+              src={arrayBufferToUrl(achievement.badge_url, "png")}
+              alt={achievement.name}
+            />
             <div className="achievement-text">
               <h3>{achievement.name}</h3>
               <p>{achievement.description}</p>

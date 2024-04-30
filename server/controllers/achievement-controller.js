@@ -36,7 +36,13 @@ export class AchievementController {
           allAchievements
         );
 
-      res.json(userAchievements);
+      // Mapear los resultados para devolver solo dataValues
+      const userAchievementsData = userAchievements.map((achievement) => ({
+        ...achievement.dataValues,
+        unlocked: achievement.unlocked,
+      }));
+
+      res.json(userAchievementsData);
     } catch (error) {
       console.error("Error getting user achievements:", error);
       res.status(500).send("Internal Server Error: " + error);
