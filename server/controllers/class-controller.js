@@ -61,39 +61,70 @@ export class ClassController {
       // Obtener el usuario
       const teacher = await AuthController.getUserById(uid);
 
-      // Crear la clase
-      const newClass = await classModel.create({
+      const classData = {
         name,
         teacher_id: teacher.id,
-      });
-
-      let usersCredentials = null;
-      let numberOfStudents = 0;
-
-      if (newClass) {
-        // Crear usuarios y asociarlos a la clase
-        usersCredentials = await ClassController.createUsersAndAssignToClass(
-          fileData,
-          newClass
-        );
-
-        numberOfStudents = await ClassController.getNumberOfStudentsInClass(
-          newClass.id
-        );
-      }
-
-      const formattedNewClass = {
-        id: newClass.id,
-        name: newClass.name,
-        description: newClass.description,
-        teacher_id: newClass.teacher_id,
-        numberOfStudents: numberOfStudents,
       };
 
+      const createdClasses = [];
+      let usersCredentials = [];
+      let fileName = "";
+
+      // Mapear los datos del archivo y agrupar los alumnos por grupo
+      const groupedStudents = {};
+      for (const studentGroup of fileData) {
+        for (const student of studentGroup) {
+          const group = student.grupos || "SinGrupo"; // Usar 'SinGrupo' si no se proporciona un grupo
+          if (!groupedStudents[group]) {
+            groupedStudents[group] = [];
+          }
+          groupedStudents[group].push(student);
+        }
+      }
+
+      // Recorrer los grupos y crear una clase por grupo
+      for (const [group, students] of Object.entries(groupedStudents)) {
+        const className = group !== "SinGrupo" ? `${name}_${group}` : name;
+        const groupClassData = {
+          ...classData,
+          name: `${className}`, // Nombre de la clase: nombre_grupo
+        };
+
+        // Crear la clase
+        const newClass = await classModel.create(groupClassData);
+
+        // Asociar estudiantes a la clase
+        let studentsCredentials = [];
+        if (students.length > 0) {
+          studentsCredentials =
+            await ClassController.createUsersAndAssignToClass(
+              [students],
+              newClass
+            );
+        }
+
+        // Obtener el número de estudiantes en la clase
+        const numberOfStudents =
+          await ClassController.getNumberOfStudentsInClass(newClass.id);
+
+        createdClasses.push({
+          id: newClass.id,
+          name: newClass.name,
+          description: newClass.description,
+          teacher_id: newClass.teacher_id,
+          numberOfStudents: numberOfStudents,
+        });
+
+        // Concatenar las credenciales de los estudiantes al arreglo general
+        usersCredentials = usersCredentials.concat(studentsCredentials);
+      }
+
+      fileName = `${name}-credentials.json`;
+
       res.json({
-        newClass: formattedNewClass,
-        usersCredentials: usersCredentials,
-        fileName: `${newClass.name}-credentials.json`,
+        newClasses: createdClasses,
+        usersCredentials: usersCredentials, // Incluir las credenciales de los usuarios en la respuesta
+        fileName: fileName,
       });
     } catch (error) {
       console.error("Error creating class:", error);
