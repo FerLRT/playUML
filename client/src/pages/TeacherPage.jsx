@@ -63,11 +63,15 @@ export function TeacherPage() {
 
     await createClass(newClassName, uid, fileData, token)
       .then((response) => {
-        const { newClass, usersCredentials, fileName } = response.data;
-        setTeacherClasses([...teacherClasses, newClass]);
+        const { newClasses, usersCredentials, fileName } = response.data;
+        setTeacherClasses([...teacherClasses, ...newClasses]);
         closeModal();
 
-        const jsonBlob = new Blob([JSON.stringify(usersCredentials)], {
+        // Combinar todas las credenciales en un solo arreglo
+        const allCredentials = usersCredentials.flat();
+
+        // Crear un Blob con todas las credenciales combinadas
+        const jsonBlob = new Blob([JSON.stringify(allCredentials)], {
           type: "application/json",
         });
 
