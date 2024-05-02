@@ -21,7 +21,8 @@ export async function sendCredentialsEmail(email, password) {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    // const info = await transporter.sendMail(mailOptions);
+    console.log("Correo electrónico enviado:", mailOptions);
   } catch (error) {
     console.log("Error al enviar el correo electrónico:", error);
   }
