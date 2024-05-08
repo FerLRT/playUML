@@ -8,8 +8,7 @@ import Stack from "@mui/material/Stack";
 import "../styles/login.css";
 
 export function LoginPage() {
-  const { setToken } = useAuth();
-  const { setExpiresIn } = useAuth();
+  const { setToken, setExpiresIn, setRefreshTokenJWT } = useAuth();
 
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -22,6 +21,7 @@ export function LoginPage() {
         setToken(response.data.token);
         setExpiresIn(0);
         setExpiresIn(response.data.expiresIn);
+        setRefreshTokenJWT(response.data.refreshToken);
         navigate("/");
       })
       .catch((error) => {

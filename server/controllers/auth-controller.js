@@ -29,9 +29,13 @@ export class AuthController {
         user.role
       );
 
-      generateRefreshToken(user.id, user.email, user.role, res);
+      const refreshToken = await generateRefreshToken(
+        user.id,
+        user.email,
+        user.role
+      );
 
-      return res.json({ token, expiresIn });
+      return res.json({ token, expiresIn, refreshToken });
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") {
         return res.status(409).send("El correo ya está registrado");
@@ -66,9 +70,13 @@ export class AuthController {
         user.role
       );
 
-      generateRefreshToken(user.id, user.email, user.role, res);
+      const refreshToken = await generateRefreshToken(
+        user.id,
+        user.email,
+        user.role
+      );
 
-      return res.json({ token, expiresIn });
+      return res.json({ token, expiresIn, refreshToken });
     } catch (error) {
       return res.status(500).send("Internal Server Error");
     }

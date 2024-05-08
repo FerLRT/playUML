@@ -41,8 +41,14 @@ export function updatePassword(
     .then((response) => response);
 }
 
-export async function refreshToken() {
-  return await instance.get("/auth/refresh").then((response) => response);
+export async function refreshToken(refreshTokenJWT) {
+  return await instance
+    .get("/auth/refresh", {
+      params: {
+        refreshTokenJWT: refreshTokenJWT,
+      },
+    })
+    .then((response) => response);
 }
 
 export function getUserInfo(uid, token) {

@@ -3,12 +3,11 @@ import { tokenVerificationError } from "../utils/tokenManager.js";
 
 export const requireRefreshToken = (req, res, next) => {
   try {
-    console.log(req.cookies);
-    const refreshTokenCookie = req.cookies?.refreshToken;
-    if (!refreshTokenCookie) throw new Error("No existe el token");
+    const refreshTokenJWT = req.query.refreshTokenJWT;
+    if (!refreshTokenJWT) throw new Error("No existe el token");
 
     const { uid, email, role } = jwt.verify(
-      refreshTokenCookie,
+      refreshTokenJWT,
       process.env.JWT_REFRESH
     );
 

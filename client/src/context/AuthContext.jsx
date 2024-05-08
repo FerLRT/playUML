@@ -16,6 +16,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const [expiresIn, setExpiresIn] = useState("");
+  const [refreshTokenJWT, setRefreshTokenJWT] = useState("");
   const [uid, setUid] = useState("");
   const [uEmail, setUEmail] = useState("");
   const [uRole, setURole] = useState("");
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
   const refresh = async () => {
     setExpiresIn(0);
-    refreshToken("/auth/refresh")
+    refreshToken(refreshTokenJWT)
       .then((res) => {
         setToken(res.data.token);
         setExpiresIn(res.data.expiresIn);
@@ -91,6 +92,7 @@ export const AuthProvider = ({ children }) => {
         setToken,
         expiresIn,
         setExpiresIn,
+        setRefreshTokenJWT,
       }}
     >
       {children}

@@ -14,7 +14,7 @@ export const generateToken = (uid, email, role) => {
   }
 };
 
-export const generateRefreshToken = (uid, email, role, res) => {
+export const generateRefreshToken = async (uid, email, role) => {
   const expiresIn = 60 * 60 * 24 * 30;
 
   try {
@@ -26,11 +26,7 @@ export const generateRefreshToken = (uid, email, role, res) => {
       }
     );
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.MODO === "production",
-      expires: new Date(Date.now() + expiresIn * 1000),
-    });
+    return refreshToken;
   } catch (err) {
     console.log(err);
   }
