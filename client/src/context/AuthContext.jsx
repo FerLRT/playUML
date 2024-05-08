@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     // Configurar un nuevo temporizador
     timerRef.current = setTimeout(() => {
       refresh();
-    }, expiresIn * 1000 - 4000);
+    }, expiresIn * 100 - 4000);
   };
 
   return (
