@@ -4,7 +4,7 @@
 
 # Database configuration
 server/db.js
-database
+database-local
 
 # Dependency directory
 node_modules/

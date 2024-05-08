@@ -21,8 +21,16 @@ export async function sendCredentialsEmail(email, password) {
   };
 
   try {
-    // const info = await transporter.sendMail(mailOptions);
-    console.log("Correo electrónico enviado:", mailOptions);
+    if (
+      !process.env.EMAIL_SERVICE ||
+      !process.env.EMAIL_USER ||
+      !process.env.EMAIL_PASS
+    ) {
+      console.log("No se ha configurado el servicio de correo electrónico");
+    } else {
+      await transporter.sendMail(mailOptions);
+      console.log("Correo electrónico enviado");
+    }
   } catch (error) {
     console.log("Error al enviar el correo electrónico:", error);
   }

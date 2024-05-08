@@ -6,7 +6,7 @@ import pg from "pg";
 config();
 
 // Obtén la cadena de conexión desde las variables de entorno
-const connectionString = process.env.SUPABASE_CONNECTION_STRING;
+const connectionString = process.env.DATABASE_CONNECTION_STRING;
 
 // Crea una instancia de Sequelize utilizando la cadena de conexión
 export const sequelize = new Sequelize(connectionString, {

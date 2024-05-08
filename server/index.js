@@ -28,14 +28,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.ORIGIN || "http://localhost:3001",
+    origin: process.env.ORIGIN,
     credentials: true,
   })
 );
 app.options(
-  process.env.ORIGIN || "http://localhost:3001",
+  process.env.ORIGIN,
   cors({
-    origin: process.env.ORIGIN || "http://localhost:3001",
+    origin: process.env.ORIGIN,
     credentials: true,
   })
 );
@@ -63,7 +63,7 @@ const server = createServer(app);
 
 // Escucha en el puerto especificado
 server.listen(port, () => {
-  console.log(`Servidor en ejecuciÃ³n en el puerto ${port}`);
+  console.log(`Servidor en ejecución en el puerto ${port}`);
 });
 
 // FunciÃ³n para normalizar el puerto
@@ -75,7 +75,7 @@ function normalizePort(val) {
   }
 
   if (port >= 0) {
-    return port; // NÃºmero de puerto
+    return port; // Número de puerto
   }
 
   return false;
