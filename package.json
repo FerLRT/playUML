@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "install-deps": "cd client && npm install && cd ../server && npm install",
-    "start": "cd client && npm start & cd ../server && npm start"
+    "start:client": "cd client && npm start",
+    "start:server": "cd server && npm start"
   }
 }
