@@ -116,3 +116,51 @@
 .student-button-menu-options p:hover {
   background-color: #f5f5f5;
 }
+
+.delete-student-button-confirmation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  z-index: 1000;
+}
+
+.delete-student-button-confirmation p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+.delete-student-button-confirmation button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 14px;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-student-button-confirmation button:first-of-type {
+  background-color: #d9534f;
+}
+
+.delete-student-button-confirmation button:first-of-type:hover {
+  background-color: #c9302c;
+}
+
+.delete-student-button-confirmation button:last-of-type {
+  background-color: #5bc0de;
+}
+
+.delete-student-button-confirmation button:last-of-type:hover {
+  background-color: #31b0d5;
+}

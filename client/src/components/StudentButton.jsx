@@ -20,22 +20,21 @@ export function StudentButton({
   const containerRef = useRef(null);
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [showConfirmation, setShowConfirmation] = useState(false); // Estado para la ventana de confirmación
 
   useEffect(() => {
-    // Agregar un manejador de eventos para cerrar el menú cuando se hace clic fuera de él
     function handleClickOutside(event) {
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target)
       ) {
         setShowMenu(false);
+        setShowConfirmation(false); // Cerrar la ventana de confirmación si se hace clic fuera
       }
     }
 
-    // Agregar el manejador de eventos al documento
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Limpiar el manejador de eventos al desmontar el componente
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -45,7 +44,6 @@ export function StudentButton({
     navigate(`/class/${classId}/student/${to}`);
   };
 
-  // Función para formatear la fecha y hora
   const formattedLastConnection = (last_connection) => {
     if (!last_connection) {
       return "Nunca";
@@ -99,16 +97,21 @@ export function StudentButton({
     setShowMenu(!showMenu);
   };
 
-  const handleMenuItemClick = async () => {
-    // Eliminar estudiante
-    handleRemoveStudent(to);
+  const handleRemoveClick = () => {
+    setShowConfirmation(true); // Mostrar la ventana de confirmación
+  };
 
-    // Llamar a la función setStudents para actualizar el estado de los estudiantes
+  const handleConfirmRemove = async () => {
+    handleRemoveStudent(to);
     setStudents((prevStudents) =>
       prevStudents.filter((student) => student.id !== to)
     );
-
     setShowMenu(false);
+    setShowConfirmation(false); // Cerrar la ventana de confirmación
+  };
+
+  const handleCancelRemove = () => {
+    setShowConfirmation(false); // Ocultar la ventana de confirmación
   };
 
   return (
@@ -141,7 +144,14 @@ export function StudentButton({
           className="student-button-menu-options"
           style={{ top: menuPosition.y, left: menuPosition.x }}
         >
-          <p onClick={() => handleMenuItemClick()}>Eliminar</p>
+          <p onClick={handleRemoveClick}>Eliminar</p>
+        </div>
+      )}
+      {showConfirmation && (
+        <div className="delete-student-button-confirmation">
+          <p>¿Estás seguro de que deseas eliminar este estudiante?</p>
+          <button onClick={handleConfirmRemove}>Sí</button>
+          <button onClick={handleCancelRemove}>No</button>
         </div>
       )}
     </div>
