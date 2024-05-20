@@ -13,9 +13,11 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
+    setLoading(true);
     await login(email, password)
       .then((response) => {
         setToken(response.data.token);
@@ -29,6 +31,9 @@ export function LoginPage() {
           setError(error.response.data);
           setPassword("");
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -57,13 +62,17 @@ export function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="login-button">
-            <button
-              className="button-basic"
-              type="button"
-              onClick={handleLogin}
-            >
-              Iniciar sesión
-            </button>
+            {loading ? (
+              <div className="loader"></div>
+            ) : (
+              <button
+                className="button-basic"
+                type="button"
+                onClick={handleLogin}
+              >
+                Iniciar sesión
+              </button>
+            )}
           </div>
           <Stack sx={{ width: "100%" }} spacing={2}>
             {error && <Alert severity="error">{error}</Alert>}

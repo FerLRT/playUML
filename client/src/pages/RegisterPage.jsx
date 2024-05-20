@@ -14,9 +14,11 @@ export function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleRegister = async () => {
+    setLoading(true);
     await register(email, password, confirmPassword)
       .then((response) => {
         setToken(response.data.token);
@@ -38,6 +40,9 @@ export function RegisterPage() {
         } else if (error.response && error.response.data) {
           setError(error.response.data);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -76,13 +81,17 @@ export function RegisterPage() {
           />
 
           <div className="login-button">
-            <button
-              className="button-basic"
-              type="button"
-              onClick={handleRegister}
-            >
-              Registrarse
-            </button>
+            {loading ? (
+              <div className="loader"></div>
+            ) : (
+              <button
+                className="button-basic"
+                type="button"
+                onClick={handleRegister}
+              >
+                Registrarse
+              </button>
+            )}
           </div>
           <Stack sx={{ width: "100%" }} spacing={2}>
             {error && <Alert severity="error">{error}</Alert>}
