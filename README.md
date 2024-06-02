@@ -38,9 +38,24 @@ Asegúrate de tener instalados los siguientes programas antes de comenzar la ins
    - En la sección "Servers" en la parte superior izquierda de la ventana, despliega la opción correspondiente a tu servidor PostgreSQL. Normalmente aparecerá como "PostgreSQL 16".
    - Dentro de la lista de bases de datos, haz clic derecho y selecciona "Create" → "Database...".
    - En el cuadro de diálogo que aparece, ingresa el nombre de la nueva base de datos. Por ejemplo, puedes nombrarla "playuml". Luego, haz clic en "Save" para crear la base de datos.
+
+   ### Opción 1: Usar el archivo `database.sql` (no requiere tener las imágenes)
+
    - Una vez creada la base de datos, haz clic derecho sobre ella en la lista de bases de datos y selecciona "Create Script".
    - En el panel de scripts que se abre, arrastra y suelta el archivo `database.sql` desde la carpeta `database` de tu proyecto hacia el panel.
    - Una vez que hayas agregado el script SQL, ejecútalo haciendo clic en el botón correspondiente para ejecutar el script completo.
+
+   ### Opción 2: Usar el archivo `database-images.sql` (requiere tener las imágenes)
+
+   - Abre el archivo `database-images.sql` que se encuentra en la carpeta `database` de tu proyecto en un editor de texto.
+   - Las líneas 3 y 4 de este archivo son variables para definir la ruta de las imágenes, y se ven de esta manera:
+
+   ```sql
+   achievement_path TEXT := 'C:\\Users\\...\\playUML-images\\Logros\\';
+   diagram_img_path TEXT := 'C:\\Users\\...\\playUML-images\\';
+   ```
+
+   - Debes sustituir el valor de estas variables por la ruta de la carpeta `Logros` y la carpeta `playUML-images` respectivamente siguiendo el formato dado en el ejemplo. `Logros` se encuentra en la ruta `/playUML/database/playUML-images`, mientras que `playUML-images` puedes encontrarlo en `/playUML/database`.
 
    Estos pasos te permitirán configurar la base de datos `playuml` en tu servidor PostgreSQL y ejecutar el script SQL proporcionado para inicializar la base de datos con la estructura y datos necesarios para tu proyecto.
 
