@@ -69,6 +69,7 @@ export function HomePage() {
           stat="Ranking"
           value={studentStats.positionRanking}
           openModal={null}
+          cursorPointer={false}
         />
 
         <StatButton
@@ -81,6 +82,7 @@ export function HomePage() {
               : `${studentStats.averageScore}/10`
           }
           openModal={null}
+          cursorPointer={false}
         />
 
         <StatButton
@@ -88,6 +90,7 @@ export function HomePage() {
           stat="Completado"
           value={`${studentStats.completionPercentage}%`}
           openModal={null}
+          cursorPointer={false}
         />
       </div>
 

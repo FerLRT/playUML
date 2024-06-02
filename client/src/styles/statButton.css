@@ -38,3 +38,11 @@
 .stat-button-text p {
   margin: 5px 0;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-default {
+  cursor: default;
+}

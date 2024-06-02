@@ -171,6 +171,7 @@ export function ClassPage() {
           stat="Estudiantes"
           value={students.length}
           openModal={() => setIsModalVisible(true)}
+          cursorPointer={true}
         />
 
         <StatButton
@@ -182,6 +183,7 @@ export function ClassPage() {
               : `${averageScore}/10`
           }
           openModal={null}
+          cursorPointer={false}
         />
 
         <StatButton
@@ -189,6 +191,7 @@ export function ClassPage() {
           stat="Completado"
           value={`${classPercentage}%`}
           openModal={null}
+          cursorPointer={false}
         />
       </div>
 
